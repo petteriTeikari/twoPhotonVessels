@@ -22,7 +22,7 @@ function process_SingleFile(path, tiffPath, fileName, options)
     % reconstruction
 
     % See the introduction to Bio-Formats with Matlab
-    % https://www.openmicroscopy.org/site/support/bio-formats5.1/developers/matlab-dev.html
+    % https://www.openmi3croscopy.org/site/support/bio-formats5.1/developers/matlab-dev.html
     if nargin == 0
         
         % use local test files for development
@@ -42,7 +42,7 @@ function process_SingleFile(path, tiffPath, fileName, options)
         options.useOnlyFirstTimePoint = true;
         options.useOnlySubsetOfStack = true;
         options.resizeStacks2D = true;
-        options.skipImportBioFormats = false;
+        options.skipImportBioFormats = true;
         
     else
         % function called from outside, like with a dialog to open the
