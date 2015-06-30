@@ -1,5 +1,16 @@
 # twoPhotonVessels
 
+The "main" file is <b>process_SingleFile.m</b> which calls the other functions
+- Import
+- Denoise
+- Deconvolve (needed?)
+- Vesselness Filter
+- Segmentation
+- 3D Reconstruction
+- Registration
+- Analysis
+- Export
+
 # Dependencies A (not-included)
 
 * Fiji/ImageJ, http://fiji.sc/Fiji
