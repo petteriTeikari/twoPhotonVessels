@@ -11,7 +11,7 @@ The "main" file is <b>process_SingleFile.m</b> which calls the other functions
 - Analysis
 - Export
 
-# Dependencies A (not-included)
+# Dependencies A (not included)
 
 * Fiji/ImageJ, http://fiji.sc/Fiji
 * PureDenoise, http://bigwww.epfl.ch/algorithms/denoise/
