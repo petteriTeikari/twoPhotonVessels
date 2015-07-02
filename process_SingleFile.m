@@ -155,7 +155,7 @@ function process_SingleFile(path, tiffPath, fileName, options)
     
         ch = 1; % not the same processing for all the channels anyway
         for t = 1 : options.noOfTimePoints
-            reconstruction{ch}{t} = reconstructSegmentation(segmentation{ch}{t}(:,:,:), options);
+            reconstruction{ch}{t} = reconstructSegmentation(denoisedImageStack{ch}{t}(:,:,:), segmentation{ch}{t}(:,:,:), options);
         end
     
     
