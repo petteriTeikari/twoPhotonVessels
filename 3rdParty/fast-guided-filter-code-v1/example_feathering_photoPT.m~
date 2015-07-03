@@ -1,0 +1,159 @@
+function guidedFeathering(path,fileIn,mode)
+    
+    % Modified by Petteri Teikari from example_feathering.m (fast-guided-filter-code-v1)
+    
+    % Example how to refine grayscale mask for example done in Photoshop or
+    % by some automatic segmentation algorithm
+    
+    % Input
+    % path     - where the image is stored
+    % fileIn   - image with the mask stored as an alpha channel (e.g. TIFF)
+
+    % when no inputs are given
+    if nargin == 0
+        disp('LOCAL | No file/path given as argument')
+        close all;
+        path = '/media/petteri/TOURO/Gallery/15.07.01 - Yala/guidedFilterTest';
+        fileIn = 'pt_20150701_yala_092.tif';
+        % fileIn = 'pt_20150701_yala_105.tif';
+        runMode = 'demo'; % parameter sweep with downsampled image
+        runMode = 'process'; % only one file at full-resolution
+    end
+    
+    
+    %% Read in the image
+    
+        % info
+        info = imfinfo(fullfile(path, fileIn));
+            bitDepth = max(info.BitsPerSample); % [16 16 16 16] example
+            imMode = info.PhotometricInterpretation; % RGB
+
+        % image
+        I = imread(fullfile(path, fileIn));    
+            maxIntensity = 2^bitDepth -1;
+            I = double(I) / maxIntensity;
+            
+            % Separate the RGB and alpha channel
+            if strcmp(imMode, 'RGB')
+                colorChInd = 1:3;
+            end
+            
+            % Color 
+            im = I(:,:,colorChInd);
+    
+            % Alpha
+            alphaIndex = 1 + max(colorChInd);
+            p = I(:,:,alphaIndex);                      
+                 
+            %[min(im(:)) max(im(:))]
+            % [min(p(:)) max(p(:))]
+            
+            
+    %% Guided Filter
+    
+        % DEMO
+        if strcmp(runMode, 'demo')            
+            
+            disp('Demo mode, so the image is downsampled 25%')
+            im = imresize(im, 0.25);
+            p = imresize(p, 0.25);
+            
+            % Parameters
+            rVec = [2 4 8];
+            epsVec = [10^-8 10^-6 10^-4];
+            s = 1;
+
+            % Actual filter call
+            tic; 
+            for i = 1 : length(rVec)
+                for j = 1 : length(epsVec)
+                    linearInd = (i-1)*length(epsVec) + j;
+                    r = rVec(i);
+                    eps = epsVec(j);
+                    disp([r eps linearInd])
+                    q_sub{linearInd} = fastguidedfilter_color(im, p, r, eps, s); 
+                    titStr{linearInd} = ['\epsilon = ', num2str(eps), ', r  = ', num2str(r)];                    
+                end
+            end
+            toc
+            
+            save('result.mat', 'q_sub')
+            
+        % PROCESS
+        elseif strcmp(runMode, 'process')
+            
+            disp('Process mode, no downsampling')
+            tic; 
+            r = 4;
+            eps = 10^-4;
+            s = 1; % no downsampling here either
+            q_sub = fastguidedfilter_color(im, p, r, eps, s); 
+            
+        else         
+            
+            error('Typo with the "runMode"')
+            
+        end
+        
+        % Save
+        
+        
+
+    %% Write to disk
+        
+        % scale back to uint16
+        % q_sub= q_sub - min(q_sub(:)); % subtract the minimum
+        if strcmp(runMode, 'process')
+            maxValueMask = max(q_sub(:));
+            q_sub = q_sub / maxValueMask;
+            q_sub = q_sub * maxIntensity;
+
+            maxValueMaskOut = max(q_sub(:));
+            disp(['Min Max: ', num2str([min(q_sub(:)) max(q_sub(:))]), ' of mask out']);              
+        
+            result = uint16(q_sub);
+            fileOut = strrep(fileIn, '.tif', ['eps', num2str(eps), '_r', num2str(r), '_refinedMask.tif'])
+            imwrite(result, fullfile(path, fileOut))
+        end
+        
+        % FIGURE
+        fig = figure('Color','w');
+        scrsz = get(0,'ScreenSize'); % get screen size for plotting
+        
+            if strcmp(runMode, 'demo')
+                set(fig,  'Position', [0.05*scrsz(3) 0.245*scrsz(4) 0.90*scrsz(3) 0.60*scrsz(4)])
+                rows = 2;
+                cols = 5;
+            elseif strcmp(runMode, 'process')
+                set(fig,  'Position', [0.45*scrsz(3) 0.245*scrsz(4) 0.40*scrsz(3) 0.60*scrsz(4)])
+                rows = 1;
+                cols = 2;
+            end
+        
+            i = 1;
+            sp(i) = subplot(rows, cols, i);
+                imH(i) = imshow(im);
+
+            if strcmp(runMode, 'demo')
+                
+                for i = 1 : length(rVec)
+                    for j = 1 : length(epsVec)
+                        linearInd = (i-1)*length(epsVec) + j;
+                        sp(linearInd+1) = subplot(rows, cols, linearInd+1);
+                            imH(i) = imshow(q_sub{linearInd}, []);
+                            title(titStr{linearInd})
+                    end               
+                end
+                
+                try
+                    export_fig('parameterSweep.png', '-r300', '-a1')
+                catch err
+                    err
+                    warning('export_fig not on path')
+                end
+                
+            elseif strcmp(runMode, 'process')
+                i = 1;
+                sp(i) = subplot(rows, cols, i);
+                imH(i) = imshow(result, []);
+            end
