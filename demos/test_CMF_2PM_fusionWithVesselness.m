@@ -58,7 +58,7 @@ function [uu, erriter, num, tt] = test_CMF_2PM_fusionWithVesselness
 %
 
 % ur = double(imread('cameraman.jpg'))/255;
-load testVessels2D.mat
+load(fullfile('..', 'debugMATs', 'testVessels2D.mat'))
 
 ur = im / max(im(:)); % normalize the input to 0 - 1
 imOrig = ur;
