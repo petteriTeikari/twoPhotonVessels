@@ -1,0 +1,50 @@
+POISSON NL MEANS
+================
+
+Revision:	        05 Juillet 2010
+Author:                 Charles-Alban Deledalle
+Web page:               http://perso.telecom-paristech.fr/~deledall/poisson_nlmeans.php
+
+This MATLAB software implements the denoising algorithm (Poisson NL means)
+for images damaged by Poisson noise as presented in: "Poisson NL means:
+unsupervised non local means for poisson noise", C.A. Deledalle, F. Tupin
+and L. Denis, IEEE Conf. on Image Processing, Sepetember 2010.
+
+This software is free and should be used only for nonprofit purposes. Any
+unauthorized use of this software for industrial or profit-oriented
+activities is expressively prohibited.
+
+The program has been written for MATLAB with the ImageProcessing Toolbox and the Statistics
+Toolbox for Linux 32-bit or 64-bit and Windows 32-bit.
+
+The following program files are present:
+
+- poisson_nlmeans_kernel.mex*:
+  A Mex function wich performs non local Poisson denoising with given
+  filtering parameters. This program provide first and second order
+  differentials of the risk (PURE).
+
+- poisson_nlmeans.m:
+  A matlab function wich calls iteratively the poisson_nlmeans_kernel.mex*
+  program to perform the denoising and research the optimal filtering
+  parameters via Newton's method.
+
+- poisson_nlmeans_example.m:
+  An example of how to use the poisson nl means filter. It denoises the
+  Pepper image (pepper.tif) corrupted by Poisson noise with a maximum
+  intensity of 20. A pre-filtering images is provided by moving average (MA)
+  filtering (see diskconvolution.m). The set of parameters are the same as
+  those given in the corresponding paper.
+
+- diskconvolution.m:
+  Realized a moving average filtering with a disk kernel by using
+  2 dimensional convolution.
+
+- psnr.m:
+  Computes the PSNR values given the height of the peak.
+
+- plotimage.m:
+  Plot a grayscale image with pixel values ranged on [0..255].
+
+For any comment, suggestion or question please contact Charles-Alban
+Deledalle (deledalle@telecom-paristech.fr).
