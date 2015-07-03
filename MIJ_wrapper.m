@@ -31,12 +31,31 @@
         % http://bigwww.epfl.ch/sage/soft/mij/        
 
         % these need to be copied manually to your Matlab folder
-        javaaddpath('/usr/local/MATLAB/R2013a/java/mij.jar') % MIJ
-        javaaddpath('/usr/local/MATLAB/R2013a/java/ij.jar') % comes with ImageJ
+        if isunix
+            javaaddpath('/usr/local/MATLAB/R2013a/java/mij.jar') % MIJ
+            javaaddpath('/usr/local/MATLAB/R2013a/java/ij.jar') % comes with ImageJ
+        elseif ismac
+            % add paths
+        elseif ispc
+            javaaddpath('C:/something/mij.jar') % MIJ
+            javaaddpath('C:/something/ij.jar') % comes with ImageJ
+        else
+            warning('what operating system?')
+        end
 
+        % Start MIJ
         try 
-            MIJ.start('/home/petteri/Fiji.app')
-                % see http://bigwww.epfl.ch/sage/soft/mij/doc/MIJ.html
+             % see http://bigwww.epfl.ch/sage/soft/mij/doc/MIJ.html
+            if isunix
+                MIJ.start('/home/petteri/Fiji.app')
+            elseif ismac
+                MIJ.start('?')
+            elseif ispc
+                MIJ.start('C:/something/Fiji.app')
+            else
+                warning('what operating system?')
+            end
+               
         catch err
             if strcmp(err.identifier, 'MATLAB:UndefinedFunction')
                error('MIJ(.jar) not found? Have you downloaded MIJ.jar and IJ.jar and copied them to the "java" folder of your MATLAB?')
