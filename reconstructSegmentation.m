@@ -3,9 +3,9 @@ function reconstruction = reconstructSegmentation(imageStack, segmentation, opti
     % Direct import from .mat file if needed
     if nargin == 0
         close all
-        load(fullfile('/home/petteri/Desktop', 'testReconstruction.mat'))        
+        load(fullfile('/home', 'petteri', 'Desktop', 'testPM', 'testReconstruction.mat'))        
     else
-        save(fullfile('/home/petteri/Desktop', 'testReconstruction.mat'));        
+        save(fullfile('/home', 'petteri', 'Desktop', 'testPM', 'testReconstruction.mat'));        
     end
     
     % See PDF for details
@@ -20,12 +20,14 @@ function reconstruction = reconstructSegmentation(imageStack, segmentation, opti
     
     % quick'n'dirty ploy
     fig = figure('Color','w');
+    
+    % Maximum Intensity projections of the test stack
     subplot(1,2,1)
         imshow(max(imageStack,[],3),[])
     subplot(1,2,2)    
         imshow(max(segmentation,[],3),[])
     
-
+    
     
     
     
