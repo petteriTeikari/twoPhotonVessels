@@ -10,6 +10,7 @@ function [data, imageStack, metadata, options] = importMicroscopyFile(fileName, 
         
         % debug/development flag to speed up the development, for actual
         % processing of files, put all to false
+        options.useOnlyFirstTimePoint = true;
         options.useOnlySubsetOfStack = true;
         options.resizeStacks2D = true;
         options.skipImportBioFormats = false;
@@ -119,7 +120,7 @@ function [data, imageStack, metadata, options] = importMicroscopyFile(fileName, 
         
     %% FOR QUICKER DEVELOPMENT
     
-        % only the first time point, and the first channel
+        % only the first time point, and the first channel        
         if options.useOnlyFirstTimePoint
             disp(['Using now only the first time point (1st channel also)'])
             
