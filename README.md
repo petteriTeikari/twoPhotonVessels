@@ -22,7 +22,6 @@ For the standard workflow <i>Set Path -> Add with subfolders (./3rdParty)</i>
 
 * EXPORT: export_fig, by Yair Altman, https://github.com/altmany/export_fig
 * VESSELNESS: Optimally Oriented Flux (OOF) for 3D Curvilinear Structure Detection, by Max W.K. Law, http://www.mathworks.com/matlabcentral/fileexchange/41612-optimally-oriented-flux--oof--for-3d-curvilinear-structure-detection, along with the oriented flux antisymmetry (OFA) extension.
-* 
 * SEGMENTATION: Fast Continuous Max-Flow Algorithm to 2D/3D Image Segmentation, by Jing Yua, http://www.mathworks.com/matlabcentral/fileexchange/34126-fast-continuous-max-flow-algorithm-to-2d-3d-image-segmentation
 * IMPORT: OME Bio-Formats in MATLAB, https://www.openmicroscopy.org/site/support/bio-formats5.1/developers/matlab-dev.html
 
