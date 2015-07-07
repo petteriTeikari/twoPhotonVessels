@@ -16,6 +16,10 @@ function reconstruction = reconstructSegmentation(imageStack, segmentation, opti
     % for example for batch-processed reconstructions   
 
     disp('3D Reconstruction (dummy)')
+    
+    % min-max values of the segmented data
+    minIn = min(segmentation(:)); maxIn = max(segmentation(:));
+    
     reconstruction = segmentation;    
     
     % if you just want to write the segmented version here to disk, and to
@@ -46,27 +50,51 @@ function reconstruction = reconstructSegmentation(imageStack, segmentation, opti
             title('Segmented stack')
     %}
 
-    %% EXTRACT THE POINT CLOUD
+    %% EXTRACT THE CONTOURS
     
-        % min-max values of the segmented data
-        minIn = min(segmentation(:)); maxIn = max(segmentation(:));
+        close all % close all open figures
+        fig = figure('Color', 'w');
+            scrsz = get(0,'ScreenSize'); % get screen size for plotting 
+            set(fig,  'Position', [0.03*scrsz(3) 0.045*scrsz(4) 0.35*scrsz(3) 0.90*scrsz(4)])
+    
+        sliceVector = 1:size(segmentation,3);
+        numberOfContourLevelsPerSlice = 16;
+        
+        subplot(2,1,1)
+        
+        % this does not actually return anything, it just visualizes the
+        % volumetric data
+        % http://www.mathworks.com/help/matlab/ref/contourslice.html
+        contourslice(segmentation, [], [], sliceVector, numberOfContourLevelsPerSlice);
+            view(34,-38);
+            daspect([1,1,0.01]); axis tight
+            xlabel('X'); ylabel('Y'); zlabel('Z')
+            title(['Contours (n=', num2str(numberOfContourLevelsPerSlice), ') of each slice'])            
+        
+        % if you want to interface with Point Cloud Library (PCL), see:
+        % MATLAB to Point Cloud Library by Peter Corke 
+        % http://au.mathworks.com/matlabcentral/fileexchange/40382-matlab-to-point-cloud-library
+    
+    %% EXTRACT THE MESH 
 
-        % exctract point cloud from the volumetric segmentation data
+        % extract from the volumetric segmentation data
+        % http://www.mathworks.com/help/matlab/ref/isosurface.html
         isovalue = 0.1 * maxIn;
         [f,v] = isosurface(segmentation,isovalue);
 
         % plot the vertices
+        subplot(2,1,2)
         patch('Faces',f,'Vertices',v, ...            
                 'edgecolor', 'none', ...
                 'facecolor', 'red');
-        view(-30,-54);
-        daspect([1,1,0.1])
-        view(3); axis tight
-        camlight 
-        lighting gouraud
-        xlabel('X'); ylabel('Y'); zlabel('Z')
-        title('Point Cloud with a lighting')
-    
+            
+            view(34,-38);
+            daspect([1,1,0.1]); axis tight
+            camlight 
+            lighting gouraud
+            xlabel('X'); ylabel('Y'); zlabel('Z')
+            title('Polygon mesh with a lighting')
+
   
     
    
