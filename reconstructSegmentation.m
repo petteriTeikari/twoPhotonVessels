@@ -121,6 +121,10 @@ function reconstruction = reconstructSegmentation(imageStack, segmentation, opti
         [F,V] = MarchingCubes(X,Y,Z,segmentation,isovalue);
         time.marchingCubes = toc;
         
+            % Optional arguments COLORS ans COLS can be used to produce 
+            % interpolated mesh face colors. For usage, see Matlab's isosurface.m. 
+            % [F,V,col] = MarchingCubes(x,y,z,c,iso,colors)
+        
         cubes_numberOfFaces = length(F);
         cubes_numberOfVertices = length(V);
 
