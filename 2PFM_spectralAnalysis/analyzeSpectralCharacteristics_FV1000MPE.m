@@ -1,19 +1,23 @@
 function analyzeSpectralCharacteristics_FV1000MPE()
 
     %% Import data   
+    
+        % "Master" wavelength vector. We now have spectral measurement with
+        % various wavelengths, we just pad those with NaN values for easier
+        % handling
+        nmRes = 1; % [nm]
+        wavelength = (300 : nmRes : 1100)'; 
                  
         % FLUOROPHORES
-        [fluoro, fluoro2PM] = import_fluorophoreData();                
+        [fluoro, fluoro2PM] = import_fluorophoreData(wavelength);                
         
         % Olympus FV100MPE filters
-        filters = import_filterTransmissionData();
+        filters = import_filterTransmissionData(wavelength);
 
         % Laser lines, light sources, etc.
-        wavelength = filters.emissionDichroic{1}.wavelength; % 400-700 nm
-        wavelength2PM = wavelength*2; % maybe define more formally later
         peakWavelength = 900;
         FWHM = 10; % [nm], check whether 10 nm is true for our system
-        lightSources = import_lightSources(wavelength2PM, peakWavelength, FWHM);
+        lightSources = import_lightSources(wavelength, peakWavelength, FWHM);
             % later define the "action spectrum" taking into an account the
             % excitation spectrum of the fluorophores to get the
             % excitationMatrix out of lightSources     
@@ -53,15 +57,16 @@ function analyzeSpectralCharacteristics_FV1000MPE()
         normalizeOn = true; % normalize now everything
         
         % Light source
-        lightsWanted = {'1PMequivalent'};
+        lightsWanted = {'Laser'}; % {'1PMequivalent'};
         excitationMatrix = getDataMatrix(lightSources, wavelength, lightsWanted, 'light', [], normalizeOn);
         
         % Fluorophores
         fluorophoresWanted = {'OGB-1'; 'SR-101'};
+        absType = '2PM'; % or '1PM'
         yType = 'emission';
-        fluoroEmissionMatrix = getDataMatrix(fluoro, wavelength, fluorophoresWanted, 'fluoro', yType, normalizeOn);
+        fluoroEmissionMatrix = getDataMatrix(fluoro2PM, wavelength, fluorophoresWanted, 'fluoro', yType, normalizeOn);
         yType = 'excitation';
-        fluoroExcitationMatrix = getDataMatrix(fluoro, wavelength, fluorophoresWanted, 'fluoro', yType, normalizeOn);
+        fluoroExcitationMatrix = getDataMatrix(fluoro2PM, wavelength, fluorophoresWanted, 'fluoro', yType, normalizeOn);
                 
         % Microscope filters
         filtersWanted = {'BA570-625HQ'; 'BA495-540HQ'};

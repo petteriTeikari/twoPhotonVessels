@@ -1,4 +1,4 @@
-function filters = import_filterTransmissionData()
+function filters = import_filterTransmissionData(wavelength)
 
     % extracted with Matlab "extractDataFromGraph" graphically from the plotted curves there:
     % https://pixel.univ-rennes1.fr/pdf/Light%20Pathway.pdf (pg. 3)
@@ -96,3 +96,7 @@ function filters = import_filterTransmissionData()
         filters.emissionFilter{j}.transmittance = filters.emissionFilter{j}.transmittance / ...
             max(filters.emissionFilter{j}.transmittance);
     end
+    
+    % truncate
+    filters.emissionFilter = import_truncateInput(filters.emissionFilter, wavelength, 'transmittance');
+    filters.emissionDichroic = import_truncateInput(filters.emissionDichroic, wavelength, 'transmittance');

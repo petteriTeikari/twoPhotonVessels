@@ -1,6 +1,7 @@
  function dataOut = getDataMatrix(data, wavelength, dataWanted, dataType, yType, normalizeOn)
         
     if strcmp(dataType, 'fluoro')
+        
         if strcmp(yType, 'emission')
             yFieldName = 'emission';
         elseif strcmp(yType, 'excitation')
@@ -9,7 +10,7 @@
             disp(['yFieldName = ', yFieldname])
             error('What yType you want, emission/excitation?')
         end
-
+        
     elseif strcmp(dataType, 'filter')
         yFieldName = 'transmittance';
     
@@ -50,8 +51,9 @@
         for ji = 1 : length(dataIn) % how many fluorophores
             % easier variable names for debugging (the changes in import_
             % functions often propagate here apparently)
-            x = wavelengthIn{ji};
-            y = dataIn{ji};            
+            x = wavelengthIn{ji}
+            y = dataIn{ji}
+            whos
             dataNew(:,ji) = interp1(x, y, wavelength_new);
         end
 

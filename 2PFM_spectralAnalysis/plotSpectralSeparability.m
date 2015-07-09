@@ -8,7 +8,11 @@ function plotSpectralSeparability(fig, scrsz, wavelength, excitationMatrix, fluo
     % Excitation (i) : Light Sources
     ind = 1;  excitInd = ind; fluoExcitInd = ind;
     sp(ind) = subplot(rows, cols, ind);
-        % size(excitationMatrix.data)
+        
+        size(excitationMatrix.data)
+        size(wavelength)
+        size(fluoroExcitationMatrix.data)
+        
         p{ind} = plot(wavelength, excitationMatrix.data, wavelength, fluoroExcitationMatrix.data);
         legStr = [excitationMatrix.name; fluoroExcitationMatrix.name'];
         leg(ind) = legend(legStr);
@@ -42,6 +46,7 @@ function plotSpectralSeparability(fig, scrsz, wavelength, excitationMatrix, fluo
         
     % style 
     set(sp(1:ind), 'XLim', [350 750], 'YLim', [0 1])
+    set(sp(1), 'XLim', [700 1100]) % add some switch later
     
     % correct colors
     for i = 1 : size(excitationMatrix.data,2)

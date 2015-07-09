@@ -1,4 +1,7 @@
-function [fluoro, fluoro2PM] = import_fluorophoreData()
+function [fluoro, fluoro2PM] = import_fluorophoreData(wavelength)
+
+    % TODO: repetition of the same, replace it with a function
+    % at some point
 
     %% FLUORESCENT MARKERS (Single-photon Excitation)
 
@@ -34,8 +37,8 @@ function [fluoro, fluoro2PM] = import_fluorophoreData()
             wavelengthIndexToUse = 1;
             fluoro{ind}.wavelength = (ceil(min(tmpSR101abs.data(:,1))) ...
                         : fluoro{wavelengthIndexToUse}.wavelengthRes : ....
-                        floor(max(tmpSR101ems.data(:,1))))';
-            fluoro{ind}.wavelengthRes = fluoro{2}.wavelength(2) - fluoro{2}.wavelength(1);
+                        floor(max(tmpSR101ems.data(:,1))))';                    
+            fluoro{ind}.wavelengthRes = fluoro{wavelengthIndexToUse}.wavelength(2) - fluoro{wavelengthIndexToUse}.wavelength(1);
 
             % Interpolate
             fluoro{ind}.excitation = interp1(tmpSR101abs.data(:,1), tmpSR101abs.data(:,2), fluoro{ind}.wavelength);
@@ -60,30 +63,36 @@ function [fluoro, fluoro2PM] = import_fluorophoreData()
         % OGB-1 (Mütze et al., 2012)
         ind2PM = 1;
         tmp2PM = importdata(fullfile('data','mutze2012_OGB_dataPointsBetween720-1060.txt'), ',', 1);
-            fluoro2PM{ind2PM}.wavelength = tmpOGB.data(:,1);
+            fluoro2PM{ind2PM}.wavelength = tmp2PM.data(:,1);
             fluoro2PM{ind2PM}.wavelengthRes = fluoro{1}.wavelength(2) - fluoro{1}.wavelength(1);
-            fluoro2PM{ind2PM}.excitation = tmpOGB.data(:,2);
+            fluoro2PM{ind2PM}.excitation = tmp2PM.data(:,2);
             fluoro2PM{ind2PM}.name = 'OGB-1';
+            fluoro2PM = import_truncateInput(fluoro2PM, wavelength, 'excitation');
             
             % get the emission spectrum automagically from the
             % corresponding single-photon one
             ind_1PM = find(ismember(getNameList(fluoro), fluoro2PM{ind2PM}.name));
             if isempty(ind_1PM)
-                warning(['no emission data found for fluorophore: "', fluoro2PM{ind2PM}.name, '", is that so or did you have a typo?'])
+                warning(['no emission data found for fluorophore: "', fluoro2PM{ind2PM}.name, '", is that so or did you have a typo? Check implementation as well!'])
                 fluoro2PM{ind2PM}.emission = [];
                 fluoro2PM{ind2PM}.plotColor = [0 0 0];
+                fluoro2PM{ind2PM}.wavelength = [];
             else
                 fluoro2PM{ind2PM}.emission = fluoro{ind_1PM}.emission;
                 fluoro2PM{ind2PM}.plotColor = fluoro{ind_1PM}.plotColor;
+                fluoro2PM{ind2PM}.wavelength = fluoro{ind_1PM}.wavelength;
             end
+            fluoro2PM = import_truncateInput(fluoro2PM, wavelength, 'emission');
             
         % SR-101 (Mütze et al., 2012)
         ind2PM = ind2PM + 1;
-        tmp2PM = importdata(fullfile('data','mutze2012_OGB_dataPointsBetween720-1060.txt'), ',', 1);
-            fluoro2PM{ind2PM}.wavelength = tmpOGB.data(:,1);
+        tmp2PM = importdata(fullfile('data','mutze2012_SRh101_dataPointsBetween720-1060.txt'), ',', 1);
+            
+            fluoro2PM{ind2PM}.wavelength = tmp2PM.data(:,1);
             fluoro2PM{ind2PM}.wavelengthRes = fluoro{1}.wavelength(2) - fluoro{1}.wavelength(1);
-            fluoro2PM{ind2PM}.excitation = tmpOGB.data(:,2);
+            fluoro2PM{ind2PM}.excitation = tmp2PM.data(:,2);
             fluoro2PM{ind2PM}.name = 'SR-101';
+            fluoro2PM = import_truncateInput(fluoro2PM, wavelength, 'excitation');
             
             % get the emission spectrum automagically from the
             % corresponding single-photon one
@@ -92,13 +101,15 @@ function [fluoro, fluoro2PM] = import_fluorophoreData()
                 warning(['no emission data found for fluorophore: "', fluoro2PM{ind2PM}.name, '", is that so or did you have a typo?'])
                 fluoro2PM{ind2PM}.emission = [];
                 fluoro2PM{ind2PM}.plotColor = [0 0 0];
+                fluoro2PM{ind2PM}.wavelength = [];
             else
                 fluoro2PM{ind2PM}.emission = fluoro{ind_1PM}.emission;
                 fluoro2PM{ind2PM}.plotColor = fluoro{ind_1PM}.plotColor;
+                fluoro2PM{ind2PM}.wavelength = fluoro{ind_1PM}.wavelength;
             end
+            fluoro2PM = import_truncateInput(fluoro2PM, wavelength, 'emission');
             
-                % TODO: repetition of the same, replace it with a function
-                % at some point
+
             
 
     %% AUTOFLUORESCENCE
@@ -123,28 +134,16 @@ function [fluoro, fluoro2PM] = import_fluorophoreData()
 
         
     %% FINALLY, truncate the wavelength vectors to be the same
-    
-        % get limits of all the fluorophores defined
-        for ind = 1 : length(fluoro)
-            minValues(ind) = min(fluoro{ind}.wavelength);
-            maxValues(ind) = max(fluoro{ind}.wavelength); 
-        end
         
-        wavelengthRes = 1; % [nm]
-        wavelengthOut = ( min(minValues) : wavelengthRes : max(maxValues) )';
+        fluoro = import_truncateInput(fluoro, wavelength, 'emission');
+        fluoro = import_truncateInput(fluoro, wavelength, 'excitation');
+        
+        % everything should be okay now, check later, this could be
+        % redundant simply
+        fluoro2PM = import_truncateInput(fluoro2PM, wavelength, 'emission');
+        fluoro2PM = import_truncateInput(fluoro2PM, wavelength, 'excitation');
     
-        for ind = 1 : length(fluoro)
-
-            % Interpolate
-            fluoro{ind}.excitation = interp1(fluoro{ind}.wavelength, fluoro{ind}.excitation, wavelengthOut);
-            fluoro{ind}.emission = interp1(fluoro{ind}.wavelength, fluoro{ind}.emission, wavelengthOut); 
-            
-            % re-assign wavelength
-            fluoro{ind}.wavelength = wavelengthOut;
-            fluoro{ind}.wavelengthRes = fluoro{ind}.wavelength(2) - fluoro{ind}.wavelength(1);
-            % fluoro{ind}
-            
-        end
+    
         
         
         

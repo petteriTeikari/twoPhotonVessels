@@ -29,9 +29,6 @@ function lightSources = import_lightSources(wavelength, peakWavelength, FWHM)
                 % Measurements of multiphoton action cross sections for multiphoton microscopy. 
                 % Biomedical Optics Express 5:3427. 
                 % http://dx.doi.org/10.1364/BOE.5.003427.
-
-
-
     
     ind = 2;
     % quick'n'dirty 1-photon equivalent, same shape but divide the
