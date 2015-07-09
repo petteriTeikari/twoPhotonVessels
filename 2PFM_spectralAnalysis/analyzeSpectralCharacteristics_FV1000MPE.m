@@ -3,7 +3,7 @@ function analyzeSpectralCharacteristics_FV1000MPE()
     %% Import data   
                  
         % FLUOROPHORES
-        fluoro = import_fluorophoreData();                
+        [fluoro, fluoro2PM] = import_fluorophoreData();                
         
         % Olympus FV100MPE filters
         filters = import_filterTransmissionData();
@@ -57,7 +57,7 @@ function analyzeSpectralCharacteristics_FV1000MPE()
         excitationMatrix = getDataMatrix(lightSources, wavelength, lightsWanted, 'light', [], normalizeOn);
         
         % Fluorophores
-        fluorophoresWanted = {'OGB-1 488'; 'SR-101'; 'Texas Red'};
+        fluorophoresWanted = {'OGB-1'; 'SR-101'};
         yType = 'emission';
         fluoroEmissionMatrix = getDataMatrix(fluoro, wavelength, fluorophoresWanted, 'fluoro', yType, normalizeOn);
         yType = 'excitation';

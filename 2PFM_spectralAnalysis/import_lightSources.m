@@ -13,9 +13,31 @@ function lightSources = import_lightSources(wavelength, peakWavelength, FWHM)
     lightSources{ind}.irradiance = SPD;
     lightSources{ind}.plotColor = [0 0 0];
     
+        % for 2-PM excitation spectra, see e.g.
+        
+            % OGB, SR-101, Rhodamines, Alexas etc.
+            % Mütze J, Iyer V, Macklin JJ, Colonell J, Karsh B, Petrášek Z, Schwille P, Looger LL, Lavis LD, Harris TD. 2012. 
+            % Excitation Spectra and Brightness Optimization of Two-Photon Excited Probes. Biophys J 102:934–944. 
+            % http://dx.doi.org/10.1016/j.bpj.2011.12.056.            
+            
+            % Fluorescent Probes for Two-Photon Microscopy—Note 1.5
+            % https://www.lifetechnologies.com/ca/en/home/references/molecular-probes-the-handbook/technical-notes-and-product-highlights/fluorescent-probes-for-two-photon-microscopy.html
+            
+            % No excitation spectrum, but of an interest probably still
+            
+                % Cheng L-C, Horton NG, Wang K, Chen S-J, Xu C. 2014. 
+                % Measurements of multiphoton action cross sections for multiphoton microscopy. 
+                % Biomedical Optics Express 5:3427. 
+                % http://dx.doi.org/10.1364/BOE.5.003427.
+
+
+
+    
     ind = 2;
     % quick'n'dirty 1-photon equivalent, same shape but divide the
-    % wavelength vector by 2
+    % wavelength vector by 2. In practice probably a bit useless this fix.
+    % We can just use the original laser SPD and try to find 2-PM
+    % excitation spectra for our probes
     
     % In practice, the absorption spectrum should get broader with 2-photon
     % excitation compared to 1-photon excitation, but how much?
