@@ -7,7 +7,7 @@
 % Journal of Electronic Imaging 19(3), pp. 033007-1--15, 2010.
 %
 % The image size is assumed to be divisible by 5!
-%
+% Yang and Tai (2010)
 % Parameters:
 % img        Image array
 % valrange   Value range of the image type for clipped pixel identification.

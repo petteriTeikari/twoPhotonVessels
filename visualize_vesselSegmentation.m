@@ -12,6 +12,7 @@ function visualize_vesselSegmentation(imageStack, tubularity, segmentation, titl
     fig = figure('Name', titleString);
         rows = 2;
         cols = 3;
+        
         drawnow
     
         % INPUT

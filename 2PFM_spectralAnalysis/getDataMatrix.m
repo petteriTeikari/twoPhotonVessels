@@ -1,17 +1,23 @@
- function dataOut = getDataMatrix(data, wavelength, dataWanted, dataType, normalizeOn)
+ function dataOut = getDataMatrix(data, wavelength, dataWanted, dataType, yType, normalizeOn)
         
     if strcmp(dataType, 'fluoro')
-        yFieldName = 'emission';
+        if strcmp(yType, 'emission')
+            yFieldName = 'emission';
+        elseif strcmp(yType, 'excitation')
+            yFieldName = 'excitation';
+        else
+            disp(['yFieldName = ', yFieldname])
+            error('What yType you want, emission/excitation?')
+        end
 
     elseif strcmp(dataType, 'filter')
         yFieldName = 'transmittance';
     
     elseif strcmp(dataType, 'light')
-        warning('Nothing implemented yet for light sources, returning input as output for now')
-        dataOut = data;
-        return
+        yFieldName = 'irradiance';
         
     else
+        disp(['dataType = ', dataType])
         error('What dataType you want, fluoro/filter/light?')
     end
 
@@ -55,8 +61,7 @@
         end
     end
     
-    
-    
+    % output the actual data as well    
     dataOut.data = matrixOut;
     
 

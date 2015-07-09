@@ -1,4 +1,4 @@
-function results = computeSpectralMixing(excitationMatrix, fluoroMatrix, filterMatrix, Xijk, Eijk, options)
+function results = computeSpectralMixing(excitationMatrix, fluoroEmissionMatrix, fluoroExcitationMatrix, filterMatrix, Xijk, Eijk, options)
     
     results = [];
 
@@ -7,6 +7,9 @@ function results = computeSpectralMixing(excitationMatrix, fluoroMatrix, filterM
         % Linear spectral unmixing of Fluorescence spectra
         % Asked by Thomas on 16 Dec 2014
         % http://www.mathworks.com/matlabcentral/answers/166822-linear-spectral-unmixing-of-fluorescence-spectra
+        
+        % Spectral Bleed-Through Artifacts in Confocal Microscopy
+        % http://www.olympusconfocal.com/theory/bleedthrough.html
 
         % Zimmermann T, Marrison J, Hogg K, O’Toole P. 2014. 
         % Clearing Up the Signal: Spectral Imaging and Linear Unmixing in Fluorescence Microscopy
@@ -54,4 +57,10 @@ function results = computeSpectralMixing(excitationMatrix, fluoroMatrix, filterM
         % Peyvandi S, Amirshahi SH. 2011. 
         % Generalized spectral decomposition: a theory and practice to spectral reconstruction. 
         % J. Opt. Soc. Am. A 28:1545–1553. http://dx.doi.org/10.1364/JOSAA.28.001545
+        
+        
+    % MATLAB
+    
+        % MATLAB Hyperspectral Toolbox
+        % https://github.com/isaacgerg/matlabHyperspectralToolbox
         
