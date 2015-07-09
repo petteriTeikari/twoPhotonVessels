@@ -62,7 +62,7 @@ function [fluoro, fluoro2PM] = import_fluorophoreData(wavelength)
             
         % OGB-1 (Mütze et al., 2012)
         ind2PM = 1;
-        tmp2PM = importdata(fullfile('data','mutze2012_OGB_dataPointsBetween720-1060.txt'), ',', 1);
+        tmp2PM = importdata(fullfile('data','mutze2012_OGB_dataPointsBetween720-1020.txt'), ',', 1);
             fluoro2PM{ind2PM}.wavelength = tmp2PM.data(:,1);
             fluoro2PM{ind2PM}.wavelengthRes = fluoro{1}.wavelength(2) - fluoro{1}.wavelength(1);
             fluoro2PM{ind2PM}.excitation = tmp2PM.data(:,2);
