@@ -16,6 +16,9 @@ function lightSources = import_lightSources(wavelength, peakWavelength, FWHM)
     ind = 2;
     % quick'n'dirty 1-photon equivalent, same shape but divide the
     % wavelength vector by 2
+    
+    % In practice, the absorption spectrum should get broader with 2-photon
+    % excitation compared to 1-photon excitation, but how much?
     lightSources{ind}.name = '1PMequivalent';
     lightSources{ind}.description = ['MaiTai_1PMequiv', num2str(peakWavelength/2), '_nm_hbw', num2str(FWHM), 'nm'];
     lightSources{ind}.wavelength = wavelength / 2;

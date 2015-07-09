@@ -4,30 +4,46 @@ function fluoro = import_fluorophoreData()
 
         % OGB
         % https://www.lifetechnologies.com/order/catalog/product/O6807
+        ind = 1;
         tmpOGB = importdata(fullfile('data','OregonGreen488_BAPTA.csv'), ',', 1);
-            fluoro{1}.wavelength = tmpOGB.data(:,1);
-            fluoro{1}.wavelengthRes = fluoro{1}.wavelength(2) - fluoro{1}.wavelength(1);
-            fluoro{1}.excitation = tmpOGB.data(:,2);
-            fluoro{1}.emission = tmpOGB.data(:,3);
-            fluoro{1}.name = 'OGB-1 488';
-            fluoro{1}.plotColor = [0 1 0];
+            fluoro{ind}.wavelength = tmpOGB.data(:,1);
+            fluoro{ind}.wavelengthRes = fluoro{1}.wavelength(2) - fluoro{1}.wavelength(1);
+            fluoro{ind}.excitation = tmpOGB.data(:,2);
+            fluoro{ind}.emission = tmpOGB.data(:,3);
+            fluoro{ind}.name = 'OGB-1 488';
+            fluoro{ind}.plotColor = [0 1 0];
 
+        % Texas Red
+        % http://www.lifetechnologies.com/ca/en/home/life-science/cell-analysis/fluorophores/texas-red.html
+        ind = ind + 1;
+        tmpTexasRed = importdata(fullfile('data','TexasRed.csv'), ',', 1);
+            fluoro{ind}.wavelength = tmpTexasRed.data(:,1);
+            fluoro{ind}.wavelengthRes = fluoro{1}.wavelength(2) - fluoro{1}.wavelength(1);
+            fluoro{ind}.excitation = tmpTexasRed.data(:,2);
+            fluoro{ind}.emission = tmpTexasRed.data(:,3);
+            fluoro{ind}.name = 'Texas Red';
+            fluoro{ind}.plotColor = [1 0 0];
+            
         % SR-101
         % http://omlc.org/spectra/PhotochemCAD/html/012.html
+        ind = ind + 1;
         tmpSR101abs = importdata(fullfile('data','SR101_012-abs.txt'), '\t', 23);
         tmpSR101ems = importdata(fullfile('data','SR101_012-ems.txt'), '\t', 23);
 
-            % combine the wavelength vectors (use resolution of OGB)            
-            fluoro{2}.wavelength = (ceil(min(tmpSR101abs.data(:,1))) ...
-                        : fluoro{1}.wavelengthRes : ....
+            % combine the wavelength vectors (use resolution of OGB)       
+            wavelengthIndexToUse = 1;
+            fluoro{ind}.wavelength = (ceil(min(tmpSR101abs.data(:,1))) ...
+                        : fluoro{wavelengthIndexToUse}.wavelengthRes : ....
                         floor(max(tmpSR101ems.data(:,1))))';
-            fluoro{2}.wavelengthRes = fluoro{2}.wavelength(2) - fluoro{2}.wavelength(1);
+            fluoro{ind}.wavelengthRes = fluoro{2}.wavelength(2) - fluoro{2}.wavelength(1);
 
             % Interpolate
-            fluoro{2}.excitation = interp1(tmpSR101abs.data(:,1), tmpSR101abs.data(:,2), fluoro{2}.wavelength);
-            fluoro{2}.emission = interp1(tmpSR101ems.data(:,1), tmpSR101ems.data(:,2), fluoro{2}.wavelength);
-            fluoro{2}.name = 'SR-101';
-            fluoro{2}.plotColor = [1 0 0];
+            fluoro{ind}.excitation = interp1(tmpSR101abs.data(:,1), tmpSR101abs.data(:,2), fluoro{ind}.wavelength);
+            fluoro{ind}.emission = interp1(tmpSR101ems.data(:,1), tmpSR101ems.data(:,2), fluoro{ind}.wavelength); 
+            fluoro{ind}.name = 'SR-101';
+            fluoro{ind}.plotColor = [0.5 0.1 0.15];
+           
+            
 
     %% AUTOFLUORESCENCE
     
@@ -50,5 +66,28 @@ function fluoro = import_fluorophoreData()
         % http://dx.doi.org/10.1117/12.2076102.
 
         
+    %% FINALLY, truncate the wavelength vectors to be the same
+    
+        % get limits of all the fluorophores defined
+        for ind = 1 : length(fluoro)
+            minValues(ind) = min(fluoro{ind}.wavelength);
+            maxValues(ind) = max(fluoro{ind}.wavelength); 
+        end
+        
+        wavelengthRes = 1; % [nm]
+        wavelengthOut = ( min(minValues) : wavelengthRes : max(maxValues) )';
+    
+        for ind = 1 : length(fluoro)
+
+            % Interpolate
+            fluoro{ind}.excitation = interp1(fluoro{ind}.wavelength, fluoro{ind}.excitation, wavelengthOut);
+            fluoro{ind}.emission = interp1(fluoro{ind}.wavelength, fluoro{ind}.emission, wavelengthOut); 
+            
+            % re-assign wavelength
+            fluoro{ind}.wavelength = wavelengthOut;
+            fluoro{ind}.wavelengthRes = fluoro{ind}.wavelength(2) - fluoro{ind}.wavelength(1);
+            % fluoro{ind}
+            
+        end
         
         

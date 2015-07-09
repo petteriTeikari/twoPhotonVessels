@@ -18,7 +18,7 @@ function plotSpectralSeparability(fig, scrsz, wavelength, excitationMatrix, fluo
         lab(ind,2) = ylabel('Normalized Irradiance');
     
     % Fluorophores (j) : Fluorophores
-    ind = ind+1; fluoInd = ind;
+    ind = ind+1; fluoEmisInd = ind;
     sp(ind) = subplot(rows, cols, ind);
         % size(fluoroMatrix.data)
         p{ind} = plot(wavelength, fluoroEmissionMatrix.data);
@@ -46,15 +46,15 @@ function plotSpectralSeparability(fig, scrsz, wavelength, excitationMatrix, fluo
     % correct colors
     for i = 1 : size(excitationMatrix.data,2)
         set(p{excitInd}(i), 'Color', 'k')
-    end
-    
-    for i = 1 : size(excitationMatrix.data,2)
-        set(p{excitInd}(i), 'Color', 'k')
-    end
+    end    
     
     for i = 1 : size(fluoroExcitationMatrix.data,2)
         offset = 1; % number of light sources before (kinda non-elegant)
         set(p{fluoExcitInd}(offset+i), 'Color', fluoroExcitationMatrix.plotColor(i,:))
+    end
+    
+    for i = 1 : size(fluoroEmissionMatrix.data, 2)
+        set(p{fluoEmisInd}(i), 'Color', fluoroEmissionMatrix.plotColor(i,:))
     end
     
     for i = 1 : size(filterMatrix.data,2)

@@ -35,6 +35,9 @@
             disp(names)
         end
     end
+    
+    % remove the not-found indices
+    ind = ind(ind ~= 0);
 
     % truncate the fluorophore matrix (if needed), a bit of a hassle
     % but maybe better to keep it like this and not throw away the
@@ -45,7 +48,11 @@
 
         dataNew = zeros(length(wavelength), length(dataIn));
         for ji = 1 : length(dataIn) % how many fluorophores
-            dataNew(:,ji) = interp1(wavelengthIn{ji}, dataIn{ji}, wavelength_new);
+            % easier variable names for debugging (the changes in import_
+            % functions often propagate here apparently)
+            x = wavelengthIn{ji};
+            y = dataIn{ji};            
+            dataNew(:,ji) = interp1(x, y, wavelength_new);
         end
 
     % get only the wanted fluorophores from the truncated matrix
