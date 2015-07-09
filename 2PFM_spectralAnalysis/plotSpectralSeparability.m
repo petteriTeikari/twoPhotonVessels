@@ -65,5 +65,7 @@ function plotSpectralSeparability(fig, scrsz, wavelength, excitationMatrix, fluo
     for i = 1 : size(filterMatrix.data,2)
         set(p{filterInd}(i), 'Color', filterMatrix.plotColor(i,:))
     end
+    
+    % export_fig(fullfile('figuresOut', 'Xijk_plot.png'), '-r200', '-a1')
         
     
