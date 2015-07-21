@@ -55,7 +55,7 @@ function reconstruction = reconstructSegmentation(imageStack, segmentation, opti
         close all % close all open figures
         fig = figure('Color', 'w');
             scrsz = get(0,'ScreenSize'); % get screen size for plotting 
-            set(fig,  'Position', [0.03*scrsz(3) 0.045*scrsz(4) 0.9*scrsz(3) 0.50*scrsz(4)])
+            set(fig,  'Position', [0.3*scrsz(3) 0.545*scrsz(4) 0.7*scrsz(3) 0.40*scrsz(4)])
     
         sliceVector = 1:size(segmentation,3);
         numberOfContourLevelsPerSlice = 16;
@@ -144,4 +144,30 @@ function reconstruction = reconstructSegmentation(imageStack, segmentation, opti
             title(titStr2)
     
         % save the figure
-        export_fig(fullfile('figuresOut', 'reconstructionTesting.png'), '-r300', '-a1')
+        % export_fig(fullfile('figuresOut', 'reconstructionTesting.png'), '-r300', '-a1')
+           
+    
+    %% Condition data
+
+        % triangulate the faces, vertices
+        % http://www.mathworks.com/matlabcentral/answers/25865-how-to-export-3d-image-from-matlab-and-import-it-into-maya
+        % see also : 
+        tr = triangulation(F, V);
+
+        % Delauney
+        DT = delaunayTriangulation(tr.Points); 
+
+        % save the reconstruction out as .mat file
+        save(fullfile('debugMATs', 'reconstructionOut.mat'), 'F', 'V');
+
+    %% External formats
+    
+
+
+        % STLWrite
+        % http://www.mathworks.com/matlabcentral/fileexchange/20922-stlwrite-filename--varargin-
+        stlwrite(fullfile('figuresOut', 'testReconstruction.stl'), F, V)
+
+
+        % as a Wavefront/Alias Obj file
+        % http://www.aleph.se/Nada/Ray/matlabobj.html
