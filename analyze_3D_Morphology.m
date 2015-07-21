@@ -1,4 +1,4 @@
-function out = analyze_3D_Morphology(volume, options, visualizeOn)
+function out = analyze_3D_Morphology(mesh, options, visualizeOn)
 
     disp(' - Analyze the 3D Morphology, e.g. vessel diameters (dummy)')
 

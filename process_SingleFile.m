@@ -40,9 +40,9 @@ function process_SingleFile(path, tiffPath, fileName, options)
         % debug/development flag to speed up the development, for actual
         % processing of files, put all to false
         options.useOnlyFirstTimePoint = true;
-        options.useOnlySubsetOfStack = true;
-        options.resizeStacks2D = true;
-        options.skipImportBioFormats = true;
+        options.useOnlySubsetOfStack = false;
+        options.resizeStacks2D = false;
+        options.skipImportBioFormats = false;
         
     else
         % function called from outside, like with a dialog to open the

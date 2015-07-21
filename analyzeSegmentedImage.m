@@ -1,30 +1,44 @@
 function analysis = analyzeSegmentedImage(regReconstruction, segmentation, denoisedImageStack, options)
 
-    disp('Analysis of the segmented and reconstructed image (dummy)')
-
     if nargin == 0        
         
-        load('./debugMATs/testAnalysis.mat')
-        %{
-        slicesDebug = [7 10 13 16 19];
-        denoisedImageStack = denoisedImageStack(:,:,slicesDebug);
-        segmentation = segmentation(:,:,slicesDebug);
-        save('./debugMATs/testAnalysis_reduced.mat')
-        %}
-        % load('./debugMATs/testAnalysis_reduced.mat')
+        % forget about the input arguments now, and we can work locally
         
+        % The Faces are vertices
+        
+            load(fullfile('.', 'debugMATs', 'reconstructionOut_fullResolution.mat'))
+            stlFile = fullfile('.', 'figuresOut', 'testReconstruction_fullResolution.stl');
+                % F            1728980x3             41495520  double              
+                % V            1184768x3             28434432  double
+
+            %load(fullfile('.', 'debugMATs', 'reconstructionOut_halfRes_4slicesOnly.mat'))
+            %stlFile = fullfile('.', 'figuresOut', 'testReconstruction_4slicesOnly.stl');
+                % F            43468x3             1043232  double              
+                % V            34093x3              818232  double 
+        
+        % ImageStack if you need 
+        
+            load(fullfile('/home', 'petteri', 'Desktop', 'testPM', 'testReconstruction_fullResolution.mat'))        
+            %load(fullfile('/home', 'petteri', 'Desktop', 'testPM', 'testReconstruction_halfRes_4slicesOnly.mat'))
+                
     else
         save('./debugMATs/testAnalysis.mat')
     end
     
+    disp('Analysis of the segmented and reconstructed image')
+    
     %% Permeability coefficient
     
-        analysis.P = analyze_permeabilityCoefficient(segmentation, denoisedImageStack, options);
+        % not that urgent
+        % analysis.P = analyze_permeabilityCoefficient(segmentation, denoisedImageStack, options);
 
     %% Computational 3D Morphology
         
         visualizeOn = true;
-        out = analyze_3D_Morphology(regReconstruction, options, visualizeOn);
+        reconst.F = F; % faces
+        reconst.V = V; % vertices
+        
+        out = analyze_3D_Morphology(reconst, options, visualizeOn);
     
    
     

@@ -3,10 +3,12 @@ function reconstruction = reconstructSegmentation(imageStack, segmentation, opti
     % Direct import from .mat file if needed
     if nargin == 0
         close all
-        load(fullfile('/home', 'petteri', 'Desktop', 'testPM', 'testReconstruction.mat'))        
+        load(fullfile('/home', 'petteri', 'Desktop', 'testPM', 'testReconstruction_fullResolution.mat'))        
+        %load(fullfile('/home', 'petteri', 'Desktop', 'testPM', 'testReconstruction_halfRes_4slicesOnly.mat'))        
     else
         save(fullfile('/home', 'petteri', 'Desktop', 'testPM', 'testReconstruction.mat'));        
     end
+    whos
     
     % See PDF for details
     
@@ -50,35 +52,48 @@ function reconstruction = reconstructSegmentation(imageStack, segmentation, opti
             title('Segmented stack')
     %}
 
+    debugPlot = false
+    
     %% EXTRACT THE CONTOURS
+       
+        % we don't really need these for anymore, but might be good for
+        % visualization
     
-        close all % close all open figures
-        fig = figure('Color', 'w');
-            scrsz = get(0,'ScreenSize'); % get screen size for plotting 
-            set(fig,  'Position', [0.3*scrsz(3) 0.545*scrsz(4) 0.7*scrsz(3) 0.40*scrsz(4)])
-    
-        sliceVector = 1:size(segmentation,3);
-        numberOfContourLevelsPerSlice = 16;
-        
-        subplot(1,3,1)
-        
-        % this does not actually return anything, it just visualizes the
-        % volumetric data
-        % http://www.mathworks.com/help/matlab/ref/contourslice.html
-        contourslice(segmentation, [], [], sliceVector, numberOfContourLevelsPerSlice);
+        if debugPlot
+            fig = figure('Color', 'w');
+                scrsz = get(0,'ScreenSize'); % get screen size for plotting 
+                set(fig,  'Position', [0.3*scrsz(3) 0.545*scrsz(4) 0.7*scrsz(3) 0.40*scrsz(4)])
+                
+            sliceVector = 1:size(segmentation,3);
+            numberOfContourLevelsPerSlice = 16;
+            subplot(1,2,1)
+            
+            % this does not actually return anything, it just visualizes the
+            % volumetric data
+            % http://www.mathworks.com/help/matlab/ref/contourslice.html
+            contourslice(segmentation, [], [], sliceVector, numberOfContourLevelsPerSlice);
             view(34,-38);
             daspect([1,1,0.01]); axis tight
             xlabel('X'); ylabel('Y'); zlabel('Z')
             title(['Contours (n=', num2str(numberOfContourLevelsPerSlice), ') of each slice'])            
+        end
+    
+        
+    %% EXTRACT POINT CLOUD
         
         % if you want to interface with Point Cloud Library (PCL), see:
         % MATLAB to Point Cloud Library by Peter Corke 
         % http://au.mathworks.com/matlabcentral/fileexchange/40382-matlab-to-point-cloud-library
     
-    %% EXTRACT THE MESH 
+    %% EXTRACT THE MESH (Standard isosurface)
 
+        % Horribly slow (20x slower than the Marching Cubes below) 
+        % especially for large stacks (i.e. 512 x 512 x 67),
+        % Do not use!
+    
         % extract from the volumetric segmentation data
         % http://www.mathworks.com/help/matlab/ref/isosurface.html
+        %{
         isovalue = 0.1 * maxIn;
         tic;
         [f,v] = isosurface(segmentation,isovalue);
@@ -102,6 +117,7 @@ function reconstruction = reconstructSegmentation(imageStack, segmentation, opti
                              ['no of faces = ', num2str(isosurf_numberOfFaces), ', no of vertices = ', num2str(isosurf_numberOfVertices)], ...
                              ['computation time = ', num2str(time.isosurface,3), ' sec']);
             title(titStr)
+        %}
 
     %% EXTRACT THE MESH #2
     
@@ -118,6 +134,7 @@ function reconstruction = reconstructSegmentation(imageStack, segmentation, opti
         [X,Y,Z] = meshgrid(xgv,ygv,zgv);        
         
         tic;
+        isovalue = 0.1 * maxIn;
         [F,V] = MarchingCubes(X,Y,Z,segmentation,isovalue);
         time.marchingCubes = toc;
         
@@ -128,23 +145,26 @@ function reconstruction = reconstructSegmentation(imageStack, segmentation, opti
         cubes_numberOfFaces = length(F);
         cubes_numberOfVertices = length(V);
 
-        subplot(1,3,3)
-        patch('Faces',F,'Vertices', V, ...            
-                'edgecolor', 'none', ...
-                'facecolor', 'red');
+        if debugPlot
+            subplot(1,2,2)
+            patch('Faces',F,'Vertices', V, ...            
+                    'edgecolor', 'none', ...
+                    'facecolor', 'red');
+
+                view(34,-38);
+                daspect([1,1,0.1]); axis tight
+                camlight 
+                lighting gouraud
+                xlabel('X'); ylabel('Y'); zlabel('Z')
+                titStr2 = sprintf('%s\n%s\n%s', ['"Marching Cubes" (isovalue = ', num2str(isovalue,4), ') with a lighting'], ...
+                                 ['no of faces = ', num2str(cubes_numberOfFaces), ', no of vertices = ', num2str(cubes_numberOfVertices)], ...
+                                 ['computation time = ', num2str(time.marchingCubes,3), ' sec']);
+                title(titStr2)
+
+            % save the figure
+            % export_fig(fullfile('figuresOut', 'reconstructionTesting.png'), '-r300', '-a1')
             
-            view(34,-38);
-            daspect([1,1,0.1]); axis tight
-            camlight 
-            lighting gouraud
-            xlabel('X'); ylabel('Y'); zlabel('Z')
-            titStr2 = sprintf('%s\n%s\n%s', ['"Marching Cubes" (isovalue = ', num2str(isovalue,4), ') with a lighting'], ...
-                             ['no of faces = ', num2str(cubes_numberOfFaces), ', no of vertices = ', num2str(cubes_numberOfVertices)], ...
-                             ['computation time = ', num2str(time.marchingCubes,3), ' sec']);
-            title(titStr2)
-    
-        % save the figure
-        % export_fig(fullfile('figuresOut', 'reconstructionTesting.png'), '-r300', '-a1')
+        end
            
     
     %% Condition data
@@ -162,11 +182,18 @@ function reconstruction = reconstructSegmentation(imageStack, segmentation, opti
 
     %% External formats
     
-
-
         % STLWrite
         % http://www.mathworks.com/matlabcentral/fileexchange/20922-stlwrite-filename--varargin-
         stlwrite(fullfile('figuresOut', 'testReconstruction.stl'), F, V)
+    
+        % Paraview export (VTK)
+        % http://www.mathworks.com/matlabcentral/fileexchange/47814-export-3d-data-to-paraview-in-vtk-legacy-file-format
+        whos
+        x = 1:1:size(imageStack,1); y = 1:1:size(imageStack,2); z = 1:1:size(imageStack,3);
+        size(DT.ConnectivityList)
+        vtkwrite(fullfile('debugMATs', 'reconstructionOut.vtk'), 'polydata','tetrahedron',x,y,z,DT.ConnectivityList);
+
+       
 
 
         % as a Wavefront/Alias Obj file
