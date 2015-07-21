@@ -1,6 +1,6 @@
 function out = analyze_3D_Morphology(mesh, options, visualizeOn)
 
-    disp(' - Analyze the 3D Morphology, e.g. vessel diameters (dummy)')
+    
 
     %% BACKGROUND
     
@@ -167,6 +167,10 @@ function out = analyze_3D_Morphology(mesh, options, visualizeOn)
             save('./debugMATs/testMorphology.mat')    
         end
         out = [];
+        imSize = [512 512 67] % manual definition
+        mesh
+        whos
+        disp(' - Analyze the 3D Morphology, e.g. vessel diameters (dummy)')
     
     % DISPLAY THE INPUT    
         % vol3d('CDATA', uint8(volume))    
