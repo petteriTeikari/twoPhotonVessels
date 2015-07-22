@@ -186,6 +186,9 @@ function reconstruction = reconstructSegmentation(imageStack, segmentation, opti
         % http://www.mathworks.com/matlabcentral/fileexchange/20922-stlwrite-filename--varargin-
         stlwrite(fullfile('figuresOut', 'testReconstruction.stl'), F, V)
     
+        % Write to OFF (or PLY, SMF, WRL, OBJ) using the Toolbox Graph by 
+        write_mesh(fullfile('figuresOut', 'reconstructionOut.off'), V, F)
+        
         % Paraview export (VTK)
         % http://www.mathworks.com/matlabcentral/fileexchange/47814-export-3d-data-to-paraview-in-vtk-legacy-file-format
         whos
