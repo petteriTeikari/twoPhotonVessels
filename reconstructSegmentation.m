@@ -131,8 +131,15 @@ function reconstruction = reconstructSegmentation(imageStack, segmentation, opti
         xgv = 1:size(segmentation,1);
         ygv = 1:size(segmentation,2);
         zgv = 1:size(segmentation,3);
-        [X,Y,Z] = meshgrid(xgv,ygv,zgv);        
         
+            % we could scale now the indices to physical units (see e.g.
+            % import_parseMetadata.m), the x and y resolution are
+            % conveniently ~1 um (and z direction 5 um).
+            % TODO: add later to be automagic
+            zgv = zgv * 5;
+
+        [X,Y,Z] = meshgrid(xgv,ygv,zgv);        
+            
         tic;
         isovalue = 0.1 * maxIn;
         [F,V] = MarchingCubes(X,Y,Z,segmentation,isovalue);
@@ -187,7 +194,7 @@ function reconstruction = reconstructSegmentation(imageStack, segmentation, opti
         stlwrite(fullfile('figuresOut', 'testReconstruction.stl'), F, V)
     
         % Write to OFF (or PLY, SMF, WRL, OBJ) using the Toolbox Graph by 
-        write_mesh(fullfile('figuresOut', 'reconstructionOut.off'), V, F)
+        write_mesh(fullfile('figuresOut', 'testReconstruction.off'), V, F)
         
         % Paraview export (VTK)
         % http://www.mathworks.com/matlabcentral/fileexchange/47814-export-3d-data-to-paraview-in-vtk-legacy-file-format
