@@ -4,7 +4,7 @@ function reconstruction = reconstructSegmentation(imageStack, segmentation, opti
     if nargin == 0
         close all
         load(fullfile('/home', 'petteri', 'Desktop', 'testPM', 'testReconstruction_fullResolution.mat'))        
-        %load(fullfile('/home', 'petteri', 'Desktop', 'testPM', 'testReconstruction_halfRes_4slicesOnly.mat'))        
+        load(fullfile('/home', 'petteri', 'Desktop', 'testPM', 'testReconstruction_halfRes_4slicesOnly.mat'))        
     else
         save(fullfile('/home', 'petteri', 'Desktop', 'testPM', 'testReconstruction.mat'));        
     end
@@ -194,6 +194,7 @@ function reconstruction = reconstructSegmentation(imageStack, segmentation, opti
         stlwrite(fullfile('figuresOut', 'testReconstruction.stl'), F, V)
     
         % Write to OFF (or PLY, SMF, WRL, OBJ) using the Toolbox Graph by 
+        % http://www.mathworks.com/matlabcentral/fileexchange/5355-toolbox-graph
         write_mesh(fullfile('figuresOut', 'testReconstruction.off'), V, F)
         
         % Paraview export (VTK)
