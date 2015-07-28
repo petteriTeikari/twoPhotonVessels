@@ -2,11 +2,27 @@ function reconstruction = reconstructSegmentation(imageStack, segmentation, opti
 
     % Direct import from .mat file if needed
     if nargin == 0
+        
         close all
-        load(fullfile('/home', 'petteri', 'Desktop', 'testPM', 'testReconstruction_fullResolution.mat'))        
-        load(fullfile('/home', 'petteri', 'Desktop', 'testPM', 'testReconstruction_halfRes_4slicesOnly.mat'))        
+        [~, name] = system('hostname')
+        if strcmp(name, 'C7Pajek') % Petteri   
+            path = fullfile('/home', 'petteri', 'Desktop', 'testPM');
+            load(fullfile(path, 'testReconstruction_fullResolution.mat'))        
+            load(fullfile(path, 'testReconstruction_halfRes_4slicesOnly.mat'))        
+        elseif strcmp(name, '??????') % Sharan
+            path = fullfile('/home', 'petteri', 'Desktop', 'testPM');
+            load(fullfile(path, 'testReconstruction_fullResolution.mat'))        
+            load(fullfile(path, 'testReconstruction_halfRes_4slicesOnly.mat'))        
+        end
     else
-        save(fullfile('/home', 'petteri', 'Desktop', 'testPM', 'testReconstruction.mat'));        
+        [~, name] = system('hostname')
+        if strcmp(name, 'C7Pajek') % Petteri    
+            path = fullfile('/home', 'petteri', 'Desktop', 'testPM');
+            save(fullfile(path, 'testReconstruction.mat'));     
+        elseif strcmp(name, '??????') % Sharan
+            path = fullfile('/home', 'petteri', 'Desktop', 'testPM');
+            save(fullfile(path, 'testReconstruction.mat'));
+        end
     end
     whos
     
