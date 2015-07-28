@@ -2,11 +2,12 @@ function reconstruction = reconstructSegmentation(imageStack, segmentation, opti
 
     % Direct import from .mat file if needed
     if nargin == 0
-        
+        a = 2
         close all
-        [~, name] = system('hostname')
+        [~, name] = system('hostname');
+        name = strtrim(name); % remove white space
         if strcmp(name, 'C7Pajek') % Petteri   
-            path = fullfile('/home', 'petteri', 'Desktop', 'testPM');
+            path = fullfile('/home', 'petteri', 'Desktop', 'testPM')
             load(fullfile(path, 'testReconstruction_fullResolution.mat'))        
             load(fullfile(path, 'testReconstruction_halfRes_4slicesOnly.mat'))        
         elseif strcmp(name, '??????') % Sharan
@@ -16,6 +17,7 @@ function reconstruction = reconstructSegmentation(imageStack, segmentation, opti
         end
     else
         [~, name] = system('hostname')
+        name = strtrim(name); % remove white space
         if strcmp(name, 'C7Pajek') % Petteri    
             path = fullfile('/home', 'petteri', 'Desktop', 'testPM');
             save(fullfile(path, 'testReconstruction.mat'));     
@@ -25,6 +27,9 @@ function reconstruction = reconstructSegmentation(imageStack, segmentation, opti
         end
     end
     whos
+    
+    % if you wanna write to disk
+    export_stack_toDisk('fullResolution_67slices.tif', segmentation)
     
     % See PDF for details
     
