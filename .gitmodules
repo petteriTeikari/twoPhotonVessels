@@ -1,0 +1,3 @@
+[submodule "3rdParty/asetsMatlabLevelSets"]
+	path = 3rdParty/asetsMatlabLevelSets
+	url = https://github.com/ASETS/asetsMatlabLevelSets
