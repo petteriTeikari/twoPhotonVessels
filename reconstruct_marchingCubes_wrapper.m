@@ -1,4 +1,4 @@
-function [F,V] = reconstruct_marchingCubes_wrapper(segmentation, isoValue, debugPlot)
+function [F,V] = reconstruct_marchingCubes_wrapper(segmentation, isoValue, downSampleFactor, physicalScaling, debugPlot)
 
     % Using Marching Cubes algorithm from Matlab FEX
     % http://www.mathworks.com/matlabcentral/fileexchange/32506-marching-cubes
@@ -12,15 +12,27 @@ function [F,V] = reconstruct_marchingCubes_wrapper(segmentation, isoValue, debug
     minIn = min(segmentation(:)); 
     maxIn = max(segmentation(:));
     
-    xgv = 1:size(segmentation,1);
-    ygv = 1:size(segmentation,2);
-    zgv = 1:size(segmentation,3);
+    xgv = 1 : 1*downSampleFactor(1) : size(segmentation,1);
+    ygv = 1 : 1*downSampleFactor(1) : size(segmentation,2);
+    zgv = 1 : 1*downSampleFactor(2) : size(segmentation,3);
+    
+    % downsample segmentation
+    segmentTemp = zeros(size(segmentation,1)/downSampleFactor(1), ...
+                        size(segmentation,2)/downSampleFactor(1), ...
+                        size(segmentation,3));
+                    
+    for i = 1 : size(segmentation,3)
+       segmentTemp(:,:,i) = imresize(segmentation(:,:,i), 1/downSampleFactor(1));
+    end
+    segmentation = segmentTemp;
 
         % we could scale now the indices to physical units (see e.g.
         % import_parseMetadata.m), the x and y resolution are
         % conveniently ~1 um (and z direction 5 um).
         % TODO: add later to be automagic
-        zgv = zgv * 5;
+        xgv = xgv * physicalScaling(1);
+        ygv = ygv * physicalScaling(2);
+        zgv = zgv * physicalScaling(3);
 
     [X,Y,Z] = meshgrid(xgv,ygv,zgv);        
 
@@ -37,7 +49,7 @@ function [F,V] = reconstruct_marchingCubes_wrapper(segmentation, isoValue, debug
     cubes_numberOfVertices = length(V);
 
     if debugPlot
-        subplot(1,2,2)
+        
         patch('Faces',F,'Vertices', V, ...            
                 'edgecolor', 'none', ...
                 'facecolor', 'red');

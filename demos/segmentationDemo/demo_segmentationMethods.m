@@ -5,24 +5,54 @@ function demo_segmentationMethods()
 
     %% INPUT DATA
     
-        fileMat = fullfile('testData', 'slices10_16_wVesselnessEdgesGVF.mat');
+        fileName = 'slices10_16_wVesselnessEdgesGVF.mat';
+        fileMat = fullfile('testData', fileName);
         resizeOn = true;
-        plotOn = true;
-        [img, vessel, edges, GVF] = input_segmentationTestData(fileMat, resizeOn, plotOn);
-        pause
-    
+        resizeFactor = 1/16;
+        plotOn = false;
+        [img, vessel, edges, GVF] = input_segmentationTestData(fileMat, resizeOn, resizeFactor, plotOn);
+ 
+        saveAs_MHD = false;
+        if saveAs_MHD            
+            % save as MHD so for example OpenCL segmentations can be run
+            % write_mhd_wrapper(strrep(fileMat, '_wVesselnessEdgesGVF.', '.mhd'), img)
+        end
+        
     %% SEGMENT
     
-        % 3D Level set
-        asets_demoWrapper(img, vessel, edges, sliceIndex, '3D')
+        sliceIndex = 1;
+    
+        %% 3D Level set        
+        
+            % asets_demoWrapper_3D(img, vessel, edges, sliceIndex)
 
+        %% 3D Snake
+        
+            % create a mesh from vesselness image
+            debugPlot = false;
+            isoValue = 0.1; % relative to max
+            downSampleFactor = [1 1]; % [xy z] downsample to get less vertices/faces
+            physicalScaling = [1 1 1]; % physical units of FOV
+            [FV.faces,FV.vertices] = reconstruct_marchingCubes_wrapper(vessel, isoValue, downSampleFactor, physicalScaling, debugPlot);
+            FV
+            
+            Options.Mu = 0.2; % Trade of between real edge vectors, and noise vectors,
+                              % default 0.2. (Warning setting this to high >0.5 gives an instable Vector Flow)            
+            Options.GIterations = 0; % Number of GVF iterations, default 0
+            Options.Sigma3 = 1.0; % Sigma used to calculate the laplacian in GVF, default 1.0
+            % OV = Snake3D(img, FV, Options);
+        
+        
     
     
     
     
+function write_mhd_wrapper(fileOut, img)
+
+    % would require some metadata for the img
+    % write_mhd(fileOut, img)
     
-    
-function asets_demoWrapper(img, vessel, edges, sliceIndex, dimensionString)
+function asets_demoWrapper_3D(img, vessel, edges, sliceIndex)
 
     %% Tutorial 02: Time-implicit level set segmentation
     %  Martin Rajchl, Imperial College London, 2015
@@ -39,8 +69,8 @@ function asets_demoWrapper(img, vessel, edges, sliceIndex, dimensionString)
     %       IEEE Transactions on Medical Imaging, 2013
     
     % include max-flow solver
-    addpath(fullfile('..', '3rdParty', 'asetsMatlabLevelSets', 'maxflow'));
-    addpath(fullfile('..', '3rdParty', 'asetsMatlabLevelSets', 'lib'));
+    addpath(fullfile('..', '..', '3rdParty', 'asetsMatlabLevelSets', 'maxflow'));
+    addpath(fullfile('..', '..', '3rdParty', 'asetsMatlabLevelSets', 'lib'));
     
     %% 1) LOAD IMAGE
     
@@ -119,7 +149,7 @@ function asets_demoWrapper(img, vessel, edges, sliceIndex, dimensionString)
         end
 
             % debug plot
-            if t == 1
+            if t == -2
                 figure
                 subplot(1,2,1)
                 imshow(d_speed_inside(:,:,sliceIndex))
@@ -183,7 +213,7 @@ function asets_demoWrapper(img, vessel, edges, sliceIndex, dimensionString)
         subplot(rows,cols,6); loglog(conv); title(['convergence(',num2str(t),')']);
         drawnow();
 
-        export_fig(['vesselProgress_t', num2str(t), '.png'], '-r150', '-a1')
+        % export_fig(['vesselProgress_t', num2str(t), '.png'], '-r150', '-a1')
 
     end
 

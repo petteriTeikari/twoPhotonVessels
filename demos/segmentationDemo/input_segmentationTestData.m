@@ -1,4 +1,4 @@
-function [img, vessel, edgeCheat, GVF] = input_segmentationTestData(fileMat, resizeOn, plotOn)
+function [img, vessel, edgeCheat, GVF] = input_segmentationTestData(fileMat, resizeOn, resizeFactor, plotOn)
         
     load(fileMat)   
 
@@ -8,8 +8,6 @@ function [img, vessel, edgeCheat, GVF] = input_segmentationTestData(fileMat, res
     % resize to speed up things
 
     if resizeOn
-
-        resizeFactor = 0.25;
 
         for i = 1 : size(im,3)
             
@@ -36,6 +34,8 @@ function [img, vessel, edgeCheat, GVF] = input_segmentationTestData(fileMat, res
         GVF = gvf_OOF;
 
     end
+    
+    img = double(img);
     
     if plotOn
         

@@ -110,18 +110,19 @@ function reconstruction = reconstructSegmentation(imageStack, segmentation, opti
         % Using Marching Cubes algorithm from Matlab FEX
         % http://www.mathworks.com/matlabcentral/fileexchange/32506-marching-cubes
         isoValue = 0.1;
-        [F,V] = reconstruct_marchingCubes_wrapper(segmentation, isoValue, debugPlot);
+        downSampleFactor = [1 1]; % [xy z] downsample to get less vertices/faces
+        physicalScaling = [1 1 5]; % physical units of FOV
+        [F,V] = reconstruct_marchingCubes_wrapper(segmentation, isoValue, downSampleFactor, physicalScaling, debugPlot);
         
     
     %% Condition data
 
         % triangulate the faces, vertices
         % http://www.mathworks.com/matlabcentral/answers/25865-how-to-export-3d-image-from-matlab-and-import-it-into-maya
-        % see also : 
-        tr = triangulation(F, V);
+        % tr = triangulation(F, V);
 
         % Delauney
-        DT = delaunayTriangulation(tr.Points); 
+        % DT = delaunayTriangulation(tr.Points); 
 
         % save the reconstruction out as .mat file
         save(fullfile('debugMATs', 'reconstructionOut.mat'), 'F', 'V');
