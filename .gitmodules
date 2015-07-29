@@ -1,3 +1,6 @@
 [submodule "3rdParty/asetsMatlabLevelSets"]
 	path = 3rdParty/asetsMatlabLevelSets
 	url = https://github.com/ASETS/asetsMatlabLevelSets
+[submodule "3rdParty/3D-Gradient-Vector-Flow-for-Matlab"]
+	path = 3rdParty/3D-Gradient-Vector-Flow-for-Matlab
+	url = https://github.com/smistad/3D-Gradient-Vector-Flow-for-Matlab.git
