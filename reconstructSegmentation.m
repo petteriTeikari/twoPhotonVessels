@@ -2,21 +2,21 @@ function reconstruction = reconstructSegmentation(imageStack, segmentation, opti
 
     % Direct import from .mat file if needed
     if nargin == 0
-        a = 2
+        
         close all
         [~, name] = system('hostname');
         name = strtrim(name); % remove white space
         if strcmp(name, 'C7Pajek') % Petteri   
-            path = fullfile('/home', 'petteri', 'Desktop', 'testPM')
+            path = fullfile('/home', 'petteri', 'Desktop', 'testPM');
             load(fullfile(path, 'testReconstruction_fullResolution.mat'))        
             load(fullfile(path, 'testReconstruction_halfRes_4slicesOnly.mat'))        
         elseif strcmp(name, '??????') % Sharan
             path = fullfile('/home', 'petteri', 'Desktop', 'testPM');
             load(fullfile(path, 'testReconstruction_fullResolution.mat'))        
-            load(fullfile(path, 'testReconstruction_halfRes_4slicesOnly.mat'))        
+            %load(fullfile(path, 'testReconstruction_halfRes_4slicesOnly.mat'))        
         end
     else
-        [~, name] = system('hostname')
+        [~, name] = system('hostname');
         name = strtrim(name); % remove white space
         if strcmp(name, 'C7Pajek') % Petteri    
             path = fullfile('/home', 'petteri', 'Desktop', 'testPM');
@@ -73,7 +73,7 @@ function reconstruction = reconstructSegmentation(imageStack, segmentation, opti
             title('Segmented stack')
     %}
 
-    debugPlot = false
+    debugPlot = false;
     
     %% EXTRACT THE CONTOURS
        
@@ -220,13 +220,11 @@ function reconstruction = reconstructSegmentation(imageStack, segmentation, opti
         
         % Paraview export (VTK)
         % http://www.mathworks.com/matlabcentral/fileexchange/47814-export-3d-data-to-paraview-in-vtk-legacy-file-format
-        whos
         x = 1:1:size(imageStack,1); y = 1:1:size(imageStack,2); z = 1:1:size(imageStack,3);
-        size(DT.ConnectivityList)
+        % size(DT.ConnectivityList)
         % vtkwrite(fullfile('debugMATs', 'reconstructionOut.vtk'), 'polydata','tetrahedron',x,y,z,DT.ConnectivityList);
-
-       
-
-
+     
         % as a Wavefront/Alias Obj file
         % http://www.aleph.se/Nada/Ray/matlabobj.html
+        
+        pause

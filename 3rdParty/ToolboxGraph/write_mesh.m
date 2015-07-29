@@ -7,7 +7,11 @@ function write_mesh(file, vertex, face)
 %   'vertex' is a 'nb.vert x 3' array specifying the position of the vertices.
 %   'face' is a 'nb.face x 3' array specifying the connectivity of the mesh.
 %
-%   Copyright (c) 2005 Gabriel Peyré
+%   Copyright (c) 2005 Gabriel Peyrï¿½
+
+disp('write_mesh.m')
+disp(['  - input: ', num2str(length(vertex)), ' vertices (', num2str(size(vertex,2)), ' cols)'])
+disp(['  - input: ', num2str(length(face)), ' faces (', num2str(size(vertex,2)), ' cols)'])
 
 ext = file(end-2:end);
 ext = lower(ext);
