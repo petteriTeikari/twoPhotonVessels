@@ -1,4 +1,4 @@
-function [F,V] = reconstruct_marchingCubes_wrapper(segmentation, debugPlot)
+function [F,V] = reconstruct_marchingCubes_wrapper(segmentation, isoValue, debugPlot)
 
     % Using Marching Cubes algorithm from Matlab FEX
     % http://www.mathworks.com/matlabcentral/fileexchange/32506-marching-cubes
@@ -25,7 +25,7 @@ function [F,V] = reconstruct_marchingCubes_wrapper(segmentation, debugPlot)
     [X,Y,Z] = meshgrid(xgv,ygv,zgv);        
 
     tic;
-    isovalue = 0.1 * maxIn;
+    isovalue = isoValue * maxIn;
     [F,V] = MarchingCubes(X,Y,Z,segmentation,isovalue);
     time.marchingCubes = toc;
 

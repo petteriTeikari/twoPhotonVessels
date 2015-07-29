@@ -109,7 +109,8 @@ function reconstruction = reconstructSegmentation(imageStack, segmentation, opti
     
         % Using Marching Cubes algorithm from Matlab FEX
         % http://www.mathworks.com/matlabcentral/fileexchange/32506-marching-cubes
-        [F,V] = reconstruct_marchingCubes_wrapper(segmentation, debugPlot)
+        isoValue = 0.1;
+        [F,V] = reconstruct_marchingCubes_wrapper(segmentation, isoValue, debugPlot);
         
     
     %% Condition data
