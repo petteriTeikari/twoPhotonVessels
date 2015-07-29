@@ -1,0 +1,1589 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!-- saved from url=(0089)http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      
+      	<script type="text/javascript" async="" src="./Medical Image Processing Toolbox - File Exchange - MATLAB Central_files/ahy.js"></script><script src="http://edge.quantserve.com/aquant.js?a=p-zfNtLVVEHXE-1" async="" type="text/javascript"></script><script type="text/javascript" src="./Medical Image Processing Toolbox - File Exchange - MATLAB Central_files/jquery-latest.js"></script>
+      <!-- START OF GLOBAL NAV -->
+  <link rel="stylesheet" href="./Medical Image Processing Toolbox - File Exchange - MATLAB Central_files/sitewide.css" type="text/css">
+  <link rel="stylesheet" href="./Medical Image Processing Toolbox - File Exchange - MATLAB Central_files/mlc.css" type="text/css">
+  <!--[if lt IE 7]>
+  <link href="/matlabcentral/css/ie6down.css" type="text/css" rel="stylesheet">
+  <![endif]-->
+
+      
+      
+<meta name="keywords" content="file exchange, matlab answers, newsgroup access, link exchange, matlab blog, matlab central, simulink blog, matlab community, matlab and simulink community">
+<meta name="description" content="File exchange, MATLAB Answers, newsgroup access, Links, and Blogs for the MATLAB &amp; Simulink user community">
+<link rel="stylesheet" href="./Medical Image Processing Toolbox - File Exchange - MATLAB Central_files/fileexchange.css" type="text/css">
+<link rel="stylesheet" type="text/css" media="print" href="./Medical Image Processing Toolbox - File Exchange - MATLAB Central_files/print.css">
+<title>Medical Image Processing Toolbox -  File Exchange - MATLAB Central</title>
+<script src="./Medical Image Processing Toolbox - File Exchange - MATLAB Central_files/application.js" type="text/javascript"></script><style type="text/css"></style>
+<link href="./Medical Image Processing Toolbox - File Exchange - MATLAB Central_files/application.css" media="screen" rel="stylesheet" type="text/css">
+<link href="./Medical Image Processing Toolbox - File Exchange - MATLAB Central_files/application(1).css" media="all" rel="stylesheet" type="text/css">
+<link href="./Medical Image Processing Toolbox - File Exchange - MATLAB Central_files/mw_font.css" media="all" rel="stylesheet" type="text/css">
+<script src="./Medical Image Processing Toolbox - File Exchange - MATLAB Central_files/application(2).js" type="text/javascript"></script>
+<link href="./Medical Image Processing Toolbox - File Exchange - MATLAB Central_files/Medical Image Processing Toolbox - File Exchange - MATLAB Central.html" rel="canonical">
+<meta content="Medical Image Processing Toolbox - File Exchange - MATLAB Central" property="og:title"><meta content="website" property="og:type"><meta content="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox" property="og:url"><meta content="/matlabcentral/fileexchange/screenshots/62744/original.jpg" property="og:image"><meta content="Classes and functions for N-dimensional medical image processing, inspired by ITK" property="og:description">
+
+<link rel="search" type="application/opensearchdescription+xml" title="Search File Exchange" href="http://se.mathworks.com/matlabcentral/fileexchange/search.xml">
+
+
+  <style type="text/css" id="ki-gy1-g_"></style><style type="text/css" id="ki-gy1-gh"></style></head>
+    <body data-pinterest-extension-installed="cr1.38.2">
+      <div id="header">
+  <div class="wrapper">
+  <!--put nothing in left div - only 11px wide shadow --> 
+    <div class="main">
+        	<div id="logo"><a href="http://se.mathworks.com/matlabcentral/?s_tid=gn_mlc_logo" title="MATLAB Central Home"><img src="./Medical Image Processing Toolbox - File Exchange - MATLAB Central_files/mlclogo-whitebgd.gif" alt="MATLAB Central"></a></div>
+      
+        <div id="headertools">      
+
+
+<script language="JavaScript1.3" type="text/javascript">
+
+function submitForm(query){
+
+	choice = document.forms['searchForm'].elements['search_submit'].value;
+	
+	if (choice == "entire1" || choice == "contest" || choice == "matlabcentral" || choice == "blogs"){
+	
+	   var newElem = document.createElement("input");
+	   newElem.type = "hidden";
+	   newElem.name = "q";
+	   newElem.value = query.value;
+	   document.forms['searchForm'].appendChild(newElem);
+	      
+	   submit_action = '/search/site_search.html';
+	}
+	
+	switch(choice){
+	   case "matlabcentral":
+	      var newElem = document.createElement("input");
+	      newElem.type = "hidden";
+	      newElem.name = "c[]";
+	      newElem.value = "matlabcentral";
+	      document.forms['searchForm'].appendChild(newElem);
+	
+	      selected_index = 0;
+	      break
+	   case "fileexchange":
+	      var newElem = document.createElement("input");
+	      newElem.type = "hidden";
+	      newElem.name = "term";
+	      newElem.value = query.value;
+	      newElem.classname = "formelem";
+	      document.forms['searchForm'].appendChild(newElem);
+	
+	      submit_action = "/matlabcentral/fileexchange/";
+	      selected_index = 1;
+	      break
+	   case "answers":
+	      var newElem = document.createElement("input");
+	      newElem.type = "hidden";
+	      newElem.name = "term";
+	      newElem.value = query.value;
+	      newElem.classname = "formelem";
+	      document.forms['searchForm'].appendChild(newElem);
+	
+	      submit_action = "/matlabcentral/answers/";
+	      selected_index = 2;
+	      break
+	   case "cssm":
+	      var newElem = document.createElement("input");
+	      newElem.type = "hidden";
+	      newElem.name = "search_string";
+	      newElem.value = query.value;
+	      newElem.classname = "formelem";
+	      document.forms['searchForm'].appendChild(newElem);
+	
+		  submit_action = "/matlabcentral/newsreader/search_results";
+	      selected_index = 3;
+	      break
+	   case "linkexchange":
+	      var newElem = document.createElement("input");
+	      newElem.type = "hidden";
+	      newElem.name = "term";
+	      newElem.value = query.value;
+	      newElem.classname = "formelem";
+	      document.forms['searchForm'].appendChild(newElem);
+	
+	      submit_action = "/matlabcentral/linkexchange/";
+	      selected_index = 4;
+	      break
+	   case "blogs":
+	      var newElem = document.createElement("input");
+	      newElem.type = "hidden";
+	      newElem.name = "c[]";
+	      newElem.value = "blogs_en";
+	      document.forms['searchForm'].appendChild(newElem);
+	
+	      selected_index = 5;
+	      break
+	   case "trendy":
+	      var newElem = document.createElement("input");
+	      newElem.type = "hidden";
+	      newElem.name = "search";
+	      newElem.value = query.value;
+	      newElem.classname = "formelem";
+	      document.forms['searchForm'].appendChild(newElem);
+	
+	      submit_action = "/matlabcentral/trendy";
+	      selected_index = 6;
+	      break
+	   case "cody":
+	      var newElem = document.createElement("input");
+	      newElem.type = "hidden";
+	      newElem.name = "term";
+	      newElem.value = query.value;
+	      newElem.classname = "formelem";
+	      document.forms['searchForm'].appendChild(newElem);
+	
+	      submit_action = "/matlabcentral/cody/";
+	      selected_index = 7;
+	      break
+	   case "contest":
+	      var newElem = document.createElement("input");
+	      newElem.type = "hidden";
+	      newElem.name = "c[]";
+	      newElem.value = "contest_en";
+	      document.forms['searchForm'].appendChild(newElem);
+	
+	      selected_index = 8;
+	      break
+	   case "entire1":
+	      var newElem = document.createElement("input");
+	      newElem.type = "hidden";
+	      newElem.name = "c[]";
+			newElem.value = "entire_site_en";
+	      document.forms['searchForm'].appendChild(newElem);
+	      
+	      selected_index = 9;
+	      break
+	   default:
+	      var newElem = document.createElement("input");
+	      newElem.type = "hidden";
+	      newElem.name = "c[]";
+			newElem.value = "entire_site_en";
+	      document.forms['searchForm'].appendChild(newElem);
+	   
+	      selected_index = 9;
+	      break
+	}
+
+	document.forms['searchForm'].elements['search_submit'].selectedIndex = selected_index;
+	document.forms['searchForm'].elements['query'].value = query.value;
+	document.forms['searchForm'].action = submit_action;
+}
+
+</script>
+
+
+  <form name="searchForm" method="GET" action="" style="margin:0px; margin-top:5px; font-size:90%" onsubmit="submitForm(query)">
+          <label for="search">Search: </label>
+        <select name="search_submit" style="font-size:9px ">
+         	 <option value="matlabcentral">MATLAB Central</option>
+          	<option value="fileexchange" selected="">&nbsp;&nbsp;&nbsp;File Exchange</option>
+          	<option value="answers">&nbsp;&nbsp;&nbsp;Answers</option>
+            <option value="cssm">&nbsp;&nbsp;&nbsp;Newsgroup</option>
+          	<option value="linkexchange">&nbsp;&nbsp;&nbsp;Link Exchange</option>
+          	<option value="blogs">&nbsp;&nbsp;&nbsp;Blogs</option>
+          	<option value="trendy">&nbsp;&nbsp;&nbsp;Trendy</option>
+          	<option value="cody">&nbsp;&nbsp;&nbsp;Cody</option>
+          	<option value="contest">&nbsp;&nbsp;&nbsp;Contest</option>
+          <option value="entire1">MathWorks.com</option>
+        </select>
+<input type="text" name="query" size="10" class="formelem" value="">
+<input type="submit" value="Go" class="formelem gobutton">
+</form>
+
+		  <ol id="access2">
+  <li class="first">
+    <a href="https://se.mathworks.com/accesslogin/createProfile.do?uri=http%3A%2F%2Fse.mathworks.com%2Fmatlabcentral%2Ffileexchange%2F41594-medical-image-processing-toolbox" id="create_account_link">Create Account</a>
+  </li>
+  <li>
+    <a href="https://se.mathworks.com/accesslogin/index_fe.do?uri=http%3A%2F%2Fse.mathworks.com%2Fmatlabcentral%2Ffileexchange%2F41594-medical-image-processing-toolbox" id="login_link">Log In</a>
+  </li>
+</ol>
+
+
+      </div>
+	  
+        <div id="globalnav">
+        <!-- from includes/global_nav.html -->
+        <ol>
+                <li class=";">
+                        <a href="http://se.mathworks.com/matlabcentral/fileexchange/?s_tid=gn_mlc_fx">File Exchange</a> 
+                </li>
+                <li class=";">
+                        <a href="http://se.mathworks.com/matlabcentral/answers/?s_tid=gn_mlc_an">Answers</a> 
+                </li>
+                <li class=";">
+                        <a href="http://se.mathworks.com/matlabcentral/newsreader/?s_tid=gn_mlc_ng">Newsgroup</a> 
+                </li>
+                <li class=";">
+                        <a href="http://se.mathworks.com/matlabcentral/linkexchange/?s_tid=gn_mlc_lx">Link Exchange</a> 
+                </li>
+                <li class=";">
+                        <a href="http://blogs.mathworks.com/?s_tid=gn_mlc_blg">Blogs</a> 
+                </li>
+                <li class=";">
+                        <a href="http://se.mathworks.com/matlabcentral/trendy/?s_tid=gn_mlc_tnd">Trendy</a> 
+                </li>
+                <li class=";">
+                        <a href="http://se.mathworks.com/matlabcentral/cody/?s_tid=gn_mlc_cody">Cody</a> 
+                </li>
+                <li class=";">
+                        <a href="http://se.mathworks.com/matlabcentral/contest/?s_tid=gn_mlc_cn">Contest</a> 
+                </li>
+                <li class="icon mathworks">
+                        <a href="http://se.mathworks.com/?s_tid=gn_mlc_main">MathWorks.com</a> 
+                </li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
+
+      <div id="middle">
+  <div class="wrapper">
+
+    <div id="mainbody" class="columns2">
+
+  
+
+  <div itemscope="" itemtype="http://schema.org/CreativeWork">
+    
+    
+    
+    <div class="manifest">
+
+    <div id="download_toolbox_button">
+            <div class="btnCont ctaBtn ctaBlueBtn btnSmall">
+              <div class="btn download"><a href="http://se.mathworks.com/matlabcentral/fileexchange/submissions/41594/v/3/download/mltbx" class="link--download " title="Download Now">Download Toolbox</a></div>
+            </div>
+          </div>
+    <div id="download_zip_button">
+            <div class="btnCont ctaBtn ctaBlueBtn btnSmall">
+              <div class="btn download"><a href="http://se.mathworks.com/matlabcentral/fileexchange/submissions/41594/v/3/download/zip" class="link--download  nologin" title="Download Now">Download Zip</a></div>
+            </div>
+          </div>
+
+
+      <p class="license">
+      Code covered by the <a href="http://se.mathworks.com/matlabcentral/fileexchange/view_license?file_info_id=41594" popup="new_window height=500,width=640,scrollbars=yes">BSD License</a>
+      <a href="http://se.mathworks.com/matlabcentral/fileexchange/help_license#bsd" class="info notext preview_help" onclick="window.open(this.href,&#39;small&#39;,&#39;toolbar=no,resizable=yes,status=yes,menu=no,scrollbars=yes,width=600,height=550&#39;);return false;">&nbsp;</a>
+  </p>
+
+
+
+  
+  <h3 class="highlights_title">Highlights from <br>
+    <a href="./Medical Image Processing Toolbox - File Exchange - MATLAB Central_files/Medical Image Processing Toolbox - File Exchange - MATLAB Central.html" class="manifest_title">Medical Image Processing Toolbox</a>
+  </h3>
+  <ul class="manifest">
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/Geometry/PointInFrustum.m" class="function" title="Function">PointInFrustum(p, frustum...</a><span class="description">returns true if the point p is inside the frustum (in 3D)</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/Geometry/PointInTriangle.m" class="function" title="Function">PointInTriangle(p, a,b,c,...</a><span class="description">returns true if the point p is inside the triangle defined by a,b,c (in 2D)</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/Geometry/PointInTriangle3D.m" class="function" title="Function">PointInTriangle3D(p, a,b,c)</a><span class="description">returns true if the point p is inside the triangle defined by a,b,c (in 3D)</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/Misc/angleInRange.m" class="function" title="Function">angleInRange( angle,range...</a><span class="description">This function gives true if the angle(s) (in degrees) is in the given</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/Meshes/angleSort3d.m" class="function" title="Function">angleSort3d(pts, varargin)</a><span class="description">ANGLESORT3D Sort 3D coplanar points according to their angles in plane
+</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/Geometry/barycentricCoordinates.m" class="function" title="Function">barycentricCoordinates(p,...</a><span class="description">returns the barycentriuc coordinates of p. The user must guarantee that p</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/Sources/boxMesh.m" class="function" title="Function">boxMesh(centre,dimensions)</a><span class="description">dimensions is a 3 element vector with depth, width and height.</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/Sources/circle3DMesh.m" class="function" title="Function">circle3DMesh(c,r,d,varargin)</a></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/Meshes/closeMeshWithPlanes.m" class="function" title="Function">closeMeshWithPlanes(meshI...</a><span class="description">only works for two planes</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/Meshes/combineMeshes.m" class="function" title="Function">combineMeshes(m1,m2)</a><span class="description">c = combineMeshes(m1,m2)</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/Sources/coneImage.m" class="function" title="Function">coneImage(points_axis, po...</a><span class="description">test_generateCone</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/Misc/cropImage.m" class="function" title="Function">cropImage(imag,boundaries)</a><span class="description">CROPIMAGE crops an image given a bounding box in world coordinates</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/Meshes/csgMeshes.m" class="function" title="Function">csgMeshes(m1,m2,varargin)</a><span class="description">outMesh = csgMeshes(m1,m2)</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/Meshes/csgSpheres.m" class="function" title="Function">csgSpheres(m1,m2,varargin)</a><span class="description">outMesh = csgSpheres(m1,m2)</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/Sources/cylinderImage.m" class="function" title="Function">cylinderImage(points_axis...</a><span class="description">test_generateCone</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/Sources/cylinderMesh.m" class="function" title="Function">cylinderMesh(axis,centre,...</a><span class="description">topology</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/Geometry/dQuadratic.m" class="function" title="Function">dQuadratic(A)</a></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/Meshes/distanceMeshToMesh.m" class="function" title="Function">distanceMeshToMesh( m1,m2 )</a><span class="description">DISTANCEMESHTOMESH calculate distance between meshes</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/Meshes/imageToMesh.m" class="function" title="Function">imageToMesh( in,varargin )</a><span class="description">IMAGETOMESH Converts an image (2D) into a mesh (2D) with the image values</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/Meshes/intersectEdgePlane.m" class="function" title="Function">intersectEdgePlane(edge, ...</a><span class="description">INTERSECTEDGEPLANE Return intersection point between a plane and a edge
+</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/Geometry/intersect_frustumSphere.m" class="function" title="Function">intersect_frustumSphere(f...</a><span class="description">function point = intersectionCircleFrustum(n1,p1,n2,p2)</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/Geometry/intersect_meshSphere.m" class="function" title="Function">intersect_meshSphere(frus...</a></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/Geometry/intersectionCircleCircle.m" class="function" title="Function">intersectionCircleCircle(...</a><span class="description">function point = intersectionCircleCircle(circle1, circle2)</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/Geometry/intersectionCircleFrustum.m" class="function" title="Function">intersectionCircleFrustum...</a><span class="description">function point = intersectionCircleFrustum(n1,p1,n2,p2)</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/Geometry/intersectionCircleTriangle.m" class="function" title="Function">intersectionCircleTriangl...</a><span class="description">function point = intersectionCircleTriangle(circle,triangle)</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/Geometry/intersectionLineLine.m" class="function" title="Function">intersectionLineLine(Up,P...</a><span class="description">function point = intersectionLineLine(n1,p1,n2,p2)</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/Geometry/intersectionLineSphere.m" class="function" title="Function">intersectionLineSphere(li...</a><span class="description">function point = intersectionLineSphere(line,sphere2)</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/Geometry/intersectionPlanePlane.m" class="function" title="Function">intersectionPlanePlane(n1...</a><span class="description">returns a point and the director vector which define the line of</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/Geometry/intersectionSphereSphere.m" class="function" title="Function">intersectionSphereSphere(...</a><span class="description">function point = intersectionSphereSphere(sphere1,sphere2)</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/Meshes/intersectionSpheremeshPlane.m" class="function" title="Function">intersectionSpheremeshPla...</a><span class="description">INTERSECTIONSPHEREMESHPLANE Intersect a mesh with a plane.
+</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/Geometry/intersectionTriangleTriangle.m" class="function" title="Function">intersectionTriangleTrian...</a><span class="description">returns the two points of intersection between two triangular patches and</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/Basic/matrixToRGB.m" class="function" title="Function">matrixToRGB(input, cmap,l...</a><span class="description">if I do not specify otherwise...</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/Meshes/meshBinarize.m" class="function" title="Function">meshBinarize(meshIn, imag...</a><span class="description">converts a mesh into a binary image (rasterization), on the grid defined</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/Meshes/meshClip.m" class="function" title="Function">meshClip(meshIn, meshSten...</a><span class="description">Clips the input mesh, meshIn, using another mesh as a stencil</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/Meshes/meshConditionalDilate.m" class="function" title="Function">meshConditionalDilate(mes...</a><span class="description">Do conditional dilate one mesh seeded by another mesh.</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/Meshes/meshConditionalErode.m" class="function" title="Function">meshConditionalErode(mesh...</a><span class="description">Do morphological reconstruction of one mesh seeded by another mesh.</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/Meshes/meshDilate.m" class="function" title="Function">meshDilate(meshIn, varargin)</a><span class="description">Permorms mathematicall morphology on the surface.</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/Meshes/meshErode.m" class="function" title="Function">meshErode(meshIn, varargin)</a><span class="description">Permorms mathematicall morphology on the surface.</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/Meshes/meshFillHoles.m" class="function" title="Function">meshFillHoles(meshIn, see...</a><span class="description">Do morphological hole filling  of one mesh seeded by another mesh.</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/Meshes/meshIntersectImage.m" class="function" title="Function">meshIntersectImage(meshIn...</a><span class="description">returns true if the mesh and the image intersect at voxels where the</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/Sources/meshPatch.m" class="function" title="Function">meshPatch( patch,varargin)</a><span class="description">UNTITLED Summary of this function goes here</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/Meshes/meshReconstruct.m" class="function" title="Function">meshReconstruct(meshIn, s...</a><span class="description">Do morphological reconstruction of one mesh seeded by another mesh.</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/Meshes/meshToImage.m" class="function" title="Function">meshToImage(meshIn, field...</a><span class="description">converts a mesh into an image (rasterization), on the grid defined by</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/Meshes/meshTransform.m" class="function" title="Function">meshTransform(meshIn, mat...</a><span class="description">converts a mesh into a binary image (rasterization), on the grid defined</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/Sources/planeImage.m" class="function" title="Function">planeImage(p, n, ref_im,v...</a><span class="description">lets say that the plane is defined by the point p and the</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/Sources/planeMesh.m" class="function" title="Function">planeMesh(point, normalVe...</a><span class="description">m =  planeMesh(point, normalVector)</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/Visu/plotAxis.m" class="function" title="Function">plotAxis(direction, varar...</a><span class="description">plots 3 vectors with xyz, (columns of the 3x3 matrix direction)</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/Visu/plotboundingbox.m" class="function" title="Function">plotboundingbox(bounds,va...</a><span class="description">bounds is a column vector</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/Visu/plotpoints.m" class="function" title="Function">plotpoints(p_,varargin)</a><span class="description">plots points using plot3</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/Visu/plotpoints2.m" class="function" title="Function">plotpoints2(p_,varargin)</a><span class="description">plots points using plot3</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/Sources/prismImage.m" class="function" title="Function">prismImage(roi_file, ref_...</a><span class="description">test_generateCone</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/Sources/prismMesh.m" class="function" title="Function">prismMesh(roi_file, varar...</a><span class="description">generate a prism  from a roi, using the roi as base section and extruding</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/Geometry/quadratic2D.m" class="function" title="Function">quadratic2D(A,x)</a></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/Geometry/quadraticValue.m" class="function" title="Function">quadraticValue(A,x)</a></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/Geometry/quadraticX.m" class="function" title="Function">quadraticX(x)</a></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/IO/read_CHeartMesh.m" class="function" title="Function">read_CHeartMesh(filenameT...</a></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/IO/read_CubitMesh.m" class="function" title="Function">read_CubitMesh(filenameFac)</a><span class="description">Function for reading a mesh in a Cubit *.fac format
+</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/IO/read_FacetMesh.m" class="function" title="Function">read_FacetMesh(filename)</a><span class="description">Function for reading a mesh in a Visualization Toolkit (VTK) format
+</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/IO/read_FacetTessFile.m" class="function" title="Function">read_FacetTessFile(filena...</a><span class="description">Function for reading a mesh in a Visualization Toolkit (VTK) format
+</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/IO/read_ITKMatrix.m" class="function" title="Function">read_ITKMatrix(filename)</a></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/IO/read_gipl.m" class="function" title="Function">read_gipl(filename)</a><span class="description">function for reading header of  Guys Image Processing Lab (Gipl) volume file
+</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/IO/read_gipl2.m" class="function" title="Function">read_gipl2(filename)</a><span class="description">function for reading header of  Guys Image Processing Lab (Gipl) volume file
+</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/IO/read_meshMesh.m" class="function" title="Function">read_meshMesh(filename)</a><span class="description">Function for reading a mesh in a Visualization Toolkit (VTK) format
+</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/IO/read_mhd.m" class="function" title="Function">read_mhd(filename)</a><span class="description">This function is based upon "read_mhd" function from the package</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/IO/read_offMesh.m" class="function" title="Function">read_offMesh(filename)</a><span class="description">Function for reading a mesh in a Visualization Toolkit (VTK) format
+</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/IO/read_parrec.m" class="function" title="Function">read_parrec(filein,varargin)</a></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/IO/read_parrec2DFlow.m" class="function" title="Function">read_parrec2DFlow(filename)</a><span class="description">Split the 5D 2Dflow data</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/IO/read_roi.m" class="function" title="Function">read_roi(roi_file)</a><span class="description">[roinormal, roiorigin, points2D, points3D] =  read_roi(roi_file)</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/IO/read_stlMesh.m" class="function" title="Function">read_stlMesh(filename)</a><span class="description">Function for reading a mesh in a Visualization Toolkit (VTK) format
+</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/IO/read_vtkMesh.m" class="function" title="Function">read_vtkMesh(filename)</a><span class="description">Function for reading a mesh in a Visualization Toolkit (VTK) format
+</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/IO/readpar.m" class="function" title="Function">readpar(parfile)</a></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/IO/readrec.m" class="function" title="Function">readrec(fname,par,format,...</a></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/Basic/resampleImage.m" class="function" title="Function">resampleImage(im,ref_,var...</a><span class="description">out = resampleImage(im,ref)</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/Meshes/resample_lines_mesh.m" class="function" title="Function">resample_lines_mesh(mesh,...</a><span class="description">This function assumes that the mesh is provided as scanlines. resamples</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/Basic/resliceImage.m" class="function" title="Function">resliceImage(im,varargin)</a><span class="description">out = resliceImage(im,mat)</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/Basic/setOrientation.m" class="function" title="Function">setOrientation(im,mat,var...</a><span class="description">out = setOrientation(im,mat)</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/Sources/sphereMesh.m" class="function" title="Function">sphereMesh(c,r,varargin)</a></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/Sources/sphereSquarePatch.m" class="function" title="Function">sphereSquarePatch(c,r,var...</a></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/Meshes/surfaceFlattening.m" class="function" title="Function">surfaceFlattening( inm_,v...</a><span class="description">SURFACEFLATTENING Flattens a surface mesh into a flat mesh</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/Meshes/surfaceFlatteningConstrained.m" class="function" title="Function">surfaceFlatteningConstrai...</a><span class="description">SURFACEFLATTENING Flattens a surface mesh into a flat mesh</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/Basic/transformImage.m" class="function" title="Function">transformImage(matrix, in...</a><span class="description">matrix is the transform from target to source!</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/Meshes/transformPointsBetweenMeshes.m" class="function" title="Function">transformPointsBetweenMes...</a><span class="description">TRANSFORMPOINTSBETWEENMESHES Transforms points on the surface of a 2D mesh</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/Visu/viewMesh.m" class="function" title="Function">viewMesh(mesh,varargin)</a><span class="description">VIEWMESH mesh display using matlab</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/Geometry/vtkMathPerpendiculars.m" class="function" title="Function">vtkMathPerpendiculars(x_,...</a></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/IO/writeDOFToFile.m" class="function" title="Function">writeDOFToFile(DOF,DOFfn,n)</a><span class="description">DOF: matrix with the dof values</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/IO/write_CubitMesh.m" class="function" title="Function">write_CubitMesh(filenameF...</a><span class="description">Function for reading a mesh in a Visualization Toolkit (VTK) format
+</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/IO/write_gipl.m" class="function" title="Function">write_gipl(fname,im,varar...</a><span class="description">Function for writing Guys Image Processing Lab (Gipl) files.
+</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/IO/write_gridAsVTKMesh.m" class="function" title="Function">write_gridAsVTKMesh(filen...</a><span class="description">Function for writing an image as a grid mesh in a Visualization Toolkit (VTK) format
+</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/IO/write_mhd.m" class="function" title="Function">write_mhd(filename,image,...</a><span class="description">Write mhd</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/IO/write_rec.m" class="function" title="Function">write_rec(fname,data,format)</a><span class="description">save REC file</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/IO/write_stlMesh.m" class="function" title="Function">write_stlMesh(filename, m...</a><span class="description">Function for writing a mesh in a Visualization Toolkit (VTK) format
+</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/IO/write_vtkMesh.m" class="function" title="Function">write_vtkMesh(filename, m...</a><span class="description">Function for writing a mesh in a Visualization Toolkit (VTK) format
+</span></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/Meshes/AABB_node.m" class="class" title="Class">AABB_node</a></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/processing/Meshes/AABB_tree.m" class="class" title="Class">AABB_tree</a></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/class_mesh/AttributeType.m" class="class" title="Class">AttributeType</a></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/class_image/ImageType.m" class="class" title="Class">ImageType</a></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/class_mesh/MeshType.m" class="class" title="Class">MeshType</a></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/class_mesh/QuadMeshType.m" class="class" title="Class">QuadMeshType</a></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/class_mesh/QuadTetMeshType.m" class="class" title="Class">QuadTetMeshType</a></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/class_image/VectorImageType.m" class="class" title="Class">VectorImageType</a></li>
+      <li class="manifest"><a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox/demo.m" class="script" title="Script">demo.m</a><span class="description">Medical Image Processing Toolbox</span></li>
+    <li class="manifest_allfiles">
+      <a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/MedicalImageProcessingToolbox.zip" id="view_all_files">View all files</a>
+    </li>
+  </ul>
+
+</div>
+
+
+    <table cellpadding="0" cellspacing="0" class="details file">
+      <tbody><tr>
+        <th class="maininfo">
+          
+        <div id="rankinfo">
+
+
+            <div class="rating" title="90.0%;">
+              <div class="rate_scale">
+                <div class="rated" style="width: 90.0%;">4.5</div>
+              </div>
+            </div>
+
+            <span itemprop="aggregateRating" itemscope="" itemtype="http://schema.org/AggregateRating" class="numberrating">
+              <span itemprop="ratingValue">4.5</span>
+              <span class="divider"> | </span>
+              <a href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox#feedback"><span itemprop="ratingCount">4</span> ratings</a>
+            </span>
+            <a id="ratelink" href="http://se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox#comments">Rate this file</a>
+          <span id="downloads">128 Downloads (last 30 days)</span>
+          <span id="filesize">File Size: 143 KB</span>
+          <span id="fileid">File ID: #41594</span>
+          <span id="userversion">Version: 1.2</span>
+        </div>
+
+          
+  <div id="thumbnail" style="padding-bottom: 3px;">
+    <a href="http://se.mathworks.com/matlabcentral/fileexchange/screenshots/8672/original.jpg" border="0"><img itemprop="image" src="./Medical Image Processing Toolbox - File Exchange - MATLAB Central_files/preview.jpg" width="100" alt="image thumbnail"></a>
+  </div>
+
+
+<div id="details">
+  <h1 itemprop="name">Medical Image Processing Toolbox</h1>
+  <p id="author">
+    by 
+    <span itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <span itemprop="name"><a href="http://se.mathworks.com/matlabcentral/profile/authors/3296411-alberto-gomez" class="author_inline results_author" data-cp-link-id="1">Alberto Gomez</a>
+
+</span></span></p><div class="profile mlc_author_popover" data-cp-popup-id="1" vocab="http://schema.org/" typeof="Person">
+  <h3 class="profile__name" property="name"><a href="http://se.mathworks.com/matlabcentral/profile/authors/3296411-alberto-gomez">Alberto Gomez <span>(view profile)</span></a></h3>
+
+    <div class="profile__image">
+      <a href="http://se.mathworks.com/matlabcentral/profile/authors/3296411-alberto-gomez"><img src="./Medical Image Processing Toolbox - File Exchange - MATLAB Central_files/profilepic_default.gif"></a>
+    </div>
+  <div class="profile__stats" typeof="CreativeWork">
+    
+  <ul>
+    <li property="fileExchange">
+      <span class="icon-fileexchange"></span> <a href="http://se.mathworks.com/matlabcentral/fileexchange/?term=authorid%3A218373"><span property="fileExchange_count">2</span> files</a>
+    </li>
+    <li property="downloads">
+      <span class="icon-download"></span> <span property="downloads_count">153</span> downloads
+    </li>
+      <li property="rating">
+
+        <div class="rating" title="4.5">
+          <div class="rate_scale">
+            <div class="rated" property="aggregateRating" style="width: 90.0%">4.5</div>
+          </div>
+        </div>
+
+      </li>
+  </ul>
+
+  </div>
+</div>
+
+    
+  <p></p>
+  <p>&nbsp;</p>
+  <p>
+    <span id="submissiondate">
+      01 May 2013
+    </span>
+      <span id="date_updated">(Updated 
+        <span itemprop="datePublished" content="2015-03-06">06 Mar 2015</span>)
+      </span>
+  </p>
+
+  <p id="summary">Classes and functions for N-dimensional medical image processing, inspired by ITK</p>
+
+
+  <p id="filetools">
+  <span class="divider"> | </span>
+    <a href="http://se.mathworks.com/matlabcentral/fileexchange/watchlists/new?type=file&uri=%2Fmatlabcentral%2Ffileexchange%2F41594-medical-image-processing-toolbox&watching=41594" class="addwatch" title="Watch this file">Watch this File</a>
+</p>
+
+</div>
+
+        </th>
+      </tr>
+      <tr>
+        <td class="file">
+          <table cellpadding="0" cellspacing="0" border="0" class="fileview section">
+          <tbody><tr class="title">
+            <th colspan="2"><span class="heading">File Information</span></th>
+          </tr>
+          <tr>
+            <td class="label">Description</td>
+            <td><p>This package contains a collection of classes and functions, which allow to comfortably work with medical images and meshes. It provides  a intuitive and transparent way of dealing with spacing, origin, image orientation, etc. The package includes functions for input-output with common image formats (mhd, gipl) and mesh formats (vtk, stl), and basic (although not necessarily simple) image processing operations such as image resample, image reslice and image transform.
+<br>Please do not hesitate to propose new features, examples or any constructive comments! </p></td>
+          </tr>
+
+            <tr>
+    <td class="label">Acknowledgements</td>
+    <td>
+      <p><a href="http://se.mathworks.com/matlabcentral/fileexchange/29344-read-medical-data-3d">Read Medical Data 3 D</a> inspired <i>this file.</i></p>
+      <p><i>This file</i> inspired <a href="http://se.mathworks.com/matlabcentral/fileexchange/47457-simple-viewer-3d">Simple Viewer 3 D</a>.</p>
+    </td>
+  </tr>
+
+
+            <tr>
+              <td class="label"> Required Products </td>
+              <td>
+                  <a href="http://se.mathworks.com/products/image/" id="product_link_Image Processing Toolbox">Image Processing Toolbox</a><br>
+                  <a href="http://se.mathworks.com/products/signal/" id="product_link_Signal Processing Toolbox">Signal Processing Toolbox</a><br>
+                  <a href="http://se.mathworks.com/products/statistics/" id="product_link_Statistics and Machine Learning Toolbox">Statistics and Machine Learning Toolbox</a><br>
+                  <a href="http://se.mathworks.com/products/matlab/" id="product_link_MATLAB">MATLAB</a><br>
+              </td>
+            </tr>
+
+          <tr>
+            <td class="label">MATLAB release</td>
+            <td>
+              MATLAB 8.0 (R2012b)
+            </td>
+          </tr>
+
+            <tr>
+              <td class="label">MATLAB Search Path</td>
+              <td><pre class="path_list">/
+/MedicalImageProcessingToolbox
+/MedicalImageProcessingToolbox/class_image
+/MedicalImageProcessingToolbox/class_mesh
+/MedicalImageProcessingToolbox/processing
+/MedicalImageProcessingToolbox/processing/Basic
+/MedicalImageProcessingToolbox/processing/Geometry
+/MedicalImageProcessingToolbox/processing/IO
+/MedicalImageProcessingToolbox/processing/Meshes
+/MedicalImageProcessingToolbox/processing/Misc
+/MedicalImageProcessingToolbox/processing/Sources
+/MedicalImageProcessingToolbox/processing/Visu</pre></td>
+            </tr>
+
+
+        </tbody></table>
+
+          <table cellpadding="0" cellspacing="0" class="fileview section">
+  <tbody><tr class="title">
+    <th colspan="3">
+      <span class="heading">Tags for This File </span>
+      <a href="http://se.mathworks.com/matlabcentral/fileexchange/help_tags" class="info notext" onclick="window.open(this.href,&#39;small&#39;,&#39;toolbar=no,resizable=yes,status=yes,menu=no,scrollbars=yes,width=600,height=550&#39;);return false;">&nbsp;</a>
+      <span class="tags-add-link">
+        <a href="https://se.mathworks.com/accesslogin/index_fe.do?uri=http%3A%2F%2Fse.mathworks.com%2Fmatlabcentral%2Ffileexchange%2F41594-medical-image-processing-toolbox">Please login</a> to tag files.
+      </span>
+    </th>
+  </tr>
+  <tr>
+    <td colspan="3">
+      <div id="all_tags" class="tag-list">
+        <ul><li><a href="http://se.mathworks.com/matlabcentral/fileexchange/?term=tag%3A%22biotech%22" rel="nofollow">biotech</a><span class="separator"></span></li><li><a href="http://se.mathworks.com/matlabcentral/fileexchange/?term=tag%3A%22data+export%22" rel="nofollow">data export</a><span class="separator"></span></li><li><a href="http://se.mathworks.com/matlabcentral/fileexchange/?term=tag%3A%22data+import%22" rel="nofollow">data import</a><span class="separator"></span></li><li><a href="http://se.mathworks.com/matlabcentral/fileexchange/?term=tag%3A%22how+can+i+transform+3d+image+by+transform+matrix%22" rel="nofollow">how can i transform 3d image by transform matrix</a><span class="separator"></span></li><li><a href="http://se.mathworks.com/matlabcentral/fileexchange/?term=tag%3A%22image+processing%22" rel="nofollow">image processing</a><span class="separator"></span></li><li><a href="http://se.mathworks.com/matlabcentral/fileexchange/?term=tag%3A%22medical%22" rel="nofollow">medical</a><span class="separator"></span></li><li><a href="http://se.mathworks.com/matlabcentral/fileexchange/?term=tag%3A%22modeling%22" rel="nofollow">modeling</a><span class="separator"></span></li><li><a href="http://se.mathworks.com/matlabcentral/fileexchange/?term=tag%3A%22toolbox%22" rel="nofollow">toolbox</a></li></ul>
+
+    </div>
+  </td>
+</tr>
+<tr>
+  <td colspan="3">
+    <div class="add_tags_form">
+      <form accept-charset="UTF-8" action="http://se.mathworks.com/matlabcentral/fileexchange/tags/new" data-remote="true" id="add_new_tags_form" method="get"><div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="✓"></div>
+        <input type="hidden" name="id" value="41594">
+        <div class="multicomplete"><input class="text multicomplete-input ui-autocomplete-input" id="add_tags" type="text" value="" autocomplete="off"><span role="status" aria-live="polite" class="ui-helper-hidden-accessible"></span></div>
+        <div class="buttons">
+          <input type="submit" value="Save">
+          <a href="./Medical Image Processing Toolbox - File Exchange - MATLAB Central_files/Medical Image Processing Toolbox - File Exchange - MATLAB Central.html" rel="nofollow">Cancel</a>
+        </div>
+</form>      </div>
+    </td>
+  </tr>
+</tbody></table>
+
+<script type="text/javascript">
+  $("#add_tags").multicomplete({
+    data_source: { url: "/matlabcentral/fileexchange/tags" }
+  });
+
+  $(".add_tags").click(function() {
+    $(".add_tags_form").show();
+    $("#add_tags").focus();
+    return false;
+  });
+
+  $(".add_tags_form .buttons a").click(function() {
+    $("#add_tags").val('').blur();
+    $(".add_tags_form").hide();
+    return false;
+  });
+
+  $("#add_new_tags_form").on('ajax:complete', function(){
+    $('.multicomplete > .multicomplete-selected-item').remove()
+    $("#add_tags").val('').blur();
+    $(".add_tags_form").hide();
+    return false;
+  });
+
+</script>
+
+                  <a name="comments"></a>
+        <div id="comment_block">
+          <table cellpadding="0" cellspacing="0" class="fileview inlineform">
+              <tbody><tr>
+                <td>
+                  <a href="https://se.mathworks.com/accesslogin/index_fe.do?uri=http%3A%2F%2Fse.mathworks.com%2Fmatlabcentral%2Ffileexchange%2F41594-medical-image-processing-toolbox">Please login</a> to add a comment or rating.
+                </td>
+              </tr>
+          </tbody></table>
+        </div>
+
+          <a name="feedback"></a>
+<div id="feedbacks_table">
+      
+<table cellpadding="0" cellspacing="0" border="0" class="fileview section">
+
+  <thead>
+    <tr class="title">
+      <th colspan="4"><span class="heading">Comments and Ratings</span> <span class="info">(17)</span></th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td class="date"><span class="date">18 Jul 2015</span></td>
+        <td>
+          <a href="http://se.mathworks.com/matlabcentral/profile/authors/273576-mehdi" class="author_inline" data-cp-link-id="2">mehdi</a>
+
+<div class="profile mlc_author_popover" data-cp-popup-id="2" vocab="http://schema.org/" typeof="Person">
+  <h3 class="profile__name" property="name"><a href="http://se.mathworks.com/matlabcentral/profile/authors/273576-mehdi">mehdi <span>(view profile)</span></a></h3>
+
+    <div class="profile__image">
+      <a href="http://se.mathworks.com/matlabcentral/profile/authors/273576-mehdi"><img src="./Medical Image Processing Toolbox - File Exchange - MATLAB Central_files/profilepic_default.gif"></a>
+    </div>
+  <div class="profile__stats" typeof="CreativeWork">
+    
+  <ul>
+    <li property="fileExchange">
+      <span class="icon-fileexchange"></span> <a href="http://se.mathworks.com/matlabcentral/fileexchange/?term=authorid%3A670556"><span property="fileExchange_count">0</span> files</a>
+    </li>
+    <li property="downloads">
+      <span class="icon-download"></span> <span property="downloads_count">0</span> downloads
+    </li>
+      <li property="rating">
+
+        <div class="rating" title="0.0">
+          <div class="rate_scale">
+            <div class="rated" property="aggregateRating" style="width: 0.0%">0.0</div>
+          </div>
+        </div>
+
+      </li>
+  </ul>
+
+  </div>
+</div>
+
+        </td>
+        <td><span class="comment"><p>how can i trannsform mhd image by 4*4 matrix??
+<br>my code:
+<br>matrix=[ -0.9357    0.2129    0.2815 -424.3918
+<br>    0.2370   -0.2120    0.9481 -329.0604
+<br>    0.2615    0.9538    0.1479  363.3647
+<br>         0         0         0    1.0000];
+<br>       inputImg='E:\patient0020.mhd'%imageMoving;
+<br>referenceImage='E:patient0003.mhd'%imageFixed
+<br>      
+<br>outputImage = transformImage(matrix,volinputImg,volreferenceImage,'debug' );</p>
+
+<p>error=
+<br>% % % Error is appeared in ImageType(referenceImage)  function;      inputImg=Vol_moving;
+<br>% % % Error is appeared in sub function ImageType(referenceImage);referenceImage=Vol_fixed;</p></span></td>
+        <td width="80">
+            <div class="rating comment_only" title="Comment Only">
+              <div class="rate_scale icon-mw-comment">
+                <span>Comment only</span>
+              </div>
+            </div>
+        </td>
+      </tr>
+      <tr class="&quot;odd&quot;">
+        <td class="date"><span class="date">01 Apr 2015</span></td>
+        <td>
+          <a href="http://se.mathworks.com/matlabcentral/profile/authors/3170350-alberto-gomez" class="author_inline" data-cp-link-id="3">Alberto Gomez</a>
+
+<div class="profile mlc_author_popover" data-cp-popup-id="3" vocab="http://schema.org/" typeof="Person">
+  <h3 class="profile__name" property="name"><a href="http://se.mathworks.com/matlabcentral/profile/authors/3170350-alberto-gomez">Alberto Gomez <span>(view profile)</span></a></h3>
+
+    <div class="profile__image">
+      <a href="http://se.mathworks.com/matlabcentral/profile/authors/3170350-alberto-gomez"><img src="./Medical Image Processing Toolbox - File Exchange - MATLAB Central_files/profilepic_default.gif"></a>
+    </div>
+  <div class="profile__stats" typeof="CreativeWork">
+    
+  <ul>
+    <li property="fileExchange">
+      <span class="icon-fileexchange"></span> <a href="http://se.mathworks.com/matlabcentral/fileexchange/?term=authorid%3A398655"><span property="fileExchange_count">0</span> files</a>
+    </li>
+    <li property="downloads">
+      <span class="icon-download"></span> <span property="downloads_count">0</span> downloads
+    </li>
+      <li property="rating">
+
+        <div class="rating" title="0.0">
+          <div class="rate_scale">
+            <div class="rated" property="aggregateRating" style="width: 0.0%">0.0</div>
+          </div>
+        </div>
+
+      </li>
+  </ul>
+
+  </div>
+</div>
+
+        </td>
+        <td><span class="comment"><p>You can currently import meshes in VTK ASCII format. For vtk images, you need to convert them to mhd first. You can use Paraview for that.</p>
+
+<p></p></span></td>
+        <td width="80">
+            <div class="rating comment_only" title="Comment Only">
+              <div class="rate_scale icon-mw-comment">
+                <span>Comment only</span>
+              </div>
+            </div>
+        </td>
+      </tr>
+      <tr>
+        <td class="date"><span class="date">31 Mar 2015</span></td>
+        <td>
+          <a href="http://se.mathworks.com/matlabcentral/profile/authors/6326960-amol" class="author_inline" data-cp-link-id="4">AMol</a>
+
+<div class="profile mlc_author_popover" data-cp-popup-id="4" vocab="http://schema.org/" typeof="Person">
+  <h3 class="profile__name" property="name"><a href="http://se.mathworks.com/matlabcentral/profile/authors/6326960-amol">AMol <span>(view profile)</span></a></h3>
+
+    <div class="profile__image">
+      <a href="http://se.mathworks.com/matlabcentral/profile/authors/6326960-amol"><img src="./Medical Image Processing Toolbox - File Exchange - MATLAB Central_files/profilepic_default.gif"></a>
+    </div>
+  <div class="profile__stats" typeof="CreativeWork">
+    
+  <ul>
+    <li property="fileExchange">
+      <span class="icon-fileexchange"></span> <a href="http://se.mathworks.com/matlabcentral/fileexchange/?term=authorid%3A593836"><span property="fileExchange_count">0</span> files</a>
+    </li>
+    <li property="downloads">
+      <span class="icon-download"></span> <span property="downloads_count">0</span> downloads
+    </li>
+      <li property="rating">
+
+        <div class="rating" title="0.0">
+          <div class="rate_scale">
+            <div class="rated" property="aggregateRating" style="width: 0.0%">0.0</div>
+          </div>
+        </div>
+
+      </li>
+  </ul>
+
+  </div>
+</div>
+
+        </td>
+        <td><span class="comment"><p>Hi Guys, I have to import data from VTK file to Matlab and show them. Do you have some tutorial for it ? Thx</p></span></td>
+        <td width="80">
+            <div class="rating comment_only" title="Comment Only">
+              <div class="rate_scale icon-mw-comment">
+                <span>Comment only</span>
+              </div>
+            </div>
+        </td>
+      </tr>
+      <tr class="&quot;odd&quot;">
+        <td class="date"><span class="date">10 Mar 2015</span></td>
+        <td>
+          <a href="http://se.mathworks.com/matlabcentral/profile/authors/5235482-anna-varfolomeeva" class="author_inline" data-cp-link-id="5">Anna Varfolomeeva</a>
+
+<div class="profile mlc_author_popover" data-cp-popup-id="5" vocab="http://schema.org/" typeof="Person">
+  <h3 class="profile__name" property="name"><a href="http://se.mathworks.com/matlabcentral/profile/authors/5235482-anna-varfolomeeva">Anna Varfolomeeva <span>(view profile)</span></a></h3>
+
+    <div class="profile__image">
+      <a href="http://se.mathworks.com/matlabcentral/profile/authors/5235482-anna-varfolomeeva"><img src="./Medical Image Processing Toolbox - File Exchange - MATLAB Central_files/profilepic_default.gif"></a>
+    </div>
+  <div class="profile__stats" typeof="CreativeWork">
+    
+  <ul>
+    <li property="fileExchange">
+      <span class="icon-fileexchange"></span> <a href="http://se.mathworks.com/matlabcentral/fileexchange/?term=authorid%3A578034"><span property="fileExchange_count">0</span> files</a>
+    </li>
+    <li property="downloads">
+      <span class="icon-download"></span> <span property="downloads_count">0</span> downloads
+    </li>
+      <li property="rating">
+
+        <div class="rating" title="0.0">
+          <div class="rate_scale">
+            <div class="rated" property="aggregateRating" style="width: 0.0%">0.0</div>
+          </div>
+        </div>
+
+      </li>
+  </ul>
+
+  </div>
+</div>
+
+        </td>
+        <td><span class="comment"><p>Thanks!</p></span></td>
+        <td width="80">
+
+            <div class="rating" title="5">
+              <div class="rate_scale">
+                <div class="rated" style="width: 100%;
+                "></div>
+              </div>
+            </div>
+
+        </td>
+      </tr>
+      <tr>
+        <td class="date"><span class="date">06 Mar 2015</span></td>
+        <td>
+          <a href="http://se.mathworks.com/matlabcentral/profile/authors/3296411-alberto-gomez" class="author_inline" data-cp-link-id="6">Alberto Gomez</a>
+
+<div class="profile mlc_author_popover" data-cp-popup-id="6" vocab="http://schema.org/" typeof="Person">
+  <h3 class="profile__name" property="name"><a href="http://se.mathworks.com/matlabcentral/profile/authors/3296411-alberto-gomez">Alberto Gomez <span>(view profile)</span></a></h3>
+
+    <div class="profile__image">
+      <a href="http://se.mathworks.com/matlabcentral/profile/authors/3296411-alberto-gomez"><img src="./Medical Image Processing Toolbox - File Exchange - MATLAB Central_files/profilepic_default.gif"></a>
+    </div>
+  <div class="profile__stats" typeof="CreativeWork">
+    
+  <ul>
+    <li property="fileExchange">
+      <span class="icon-fileexchange"></span> <a href="http://se.mathworks.com/matlabcentral/fileexchange/?term=authorid%3A218373"><span property="fileExchange_count">2</span> files</a>
+    </li>
+    <li property="downloads">
+      <span class="icon-download"></span> <span property="downloads_count">153</span> downloads
+    </li>
+      <li property="rating">
+
+        <div class="rating" title="4.5">
+          <div class="rate_scale">
+            <div class="rated" property="aggregateRating" style="width: 90.0%">4.5</div>
+          </div>
+        </div>
+
+      </li>
+  </ul>
+
+  </div>
+</div>
+
+        </td>
+        <td><span class="comment"><p>The toolbox currently supports gipl and mhd only.</p>
+
+<p>I have added some mising files like vtkMathPerpendiculars.m</p>
+
+<p>Thanks for rating</p></span></td>
+        <td width="80">
+            <div class="rating comment_only" title="Comment Only">
+              <div class="rate_scale icon-mw-comment">
+                <span>Comment only</span>
+              </div>
+            </div>
+        </td>
+      </tr>
+      <tr class="&quot;odd&quot;">
+        <td class="date"><span class="date">05 Mar 2015</span></td>
+        <td>
+          <a href="http://se.mathworks.com/matlabcentral/profile/authors/5235482-anna-varfolomeeva" class="author_inline" data-cp-link-id="7">Anna Varfolomeeva</a>
+
+<div class="profile mlc_author_popover" data-cp-popup-id="7" vocab="http://schema.org/" typeof="Person">
+  <h3 class="profile__name" property="name"><a href="http://se.mathworks.com/matlabcentral/profile/authors/5235482-anna-varfolomeeva">Anna Varfolomeeva <span>(view profile)</span></a></h3>
+
+    <div class="profile__image">
+      <a href="http://se.mathworks.com/matlabcentral/profile/authors/5235482-anna-varfolomeeva"><img src="./Medical Image Processing Toolbox - File Exchange - MATLAB Central_files/profilepic_default.gif"></a>
+    </div>
+  <div class="profile__stats" typeof="CreativeWork">
+    
+  <ul>
+    <li property="fileExchange">
+      <span class="icon-fileexchange"></span> <a href="http://se.mathworks.com/matlabcentral/fileexchange/?term=authorid%3A578034"><span property="fileExchange_count">0</span> files</a>
+    </li>
+    <li property="downloads">
+      <span class="icon-download"></span> <span property="downloads_count">0</span> downloads
+    </li>
+      <li property="rating">
+
+        <div class="rating" title="0.0">
+          <div class="rate_scale">
+            <div class="rated" property="aggregateRating" style="width: 0.0%">0.0</div>
+          </div>
+        </div>
+
+      </li>
+  </ul>
+
+  </div>
+</div>
+
+        </td>
+        <td><span class="comment"><p>And is it possible to open analyze(.hdr and .img)? NiFTi (.nii) and .nrrd files with your code?</p></span></td>
+        <td width="80">
+            <div class="rating comment_only" title="Comment Only">
+              <div class="rate_scale icon-mw-comment">
+                <span>Comment only</span>
+              </div>
+            </div>
+        </td>
+      </tr>
+      <tr>
+        <td class="date"><span class="date">05 Mar 2015</span></td>
+        <td>
+          <a href="http://se.mathworks.com/matlabcentral/profile/authors/5235482-anna-varfolomeeva" class="author_inline" data-cp-link-id="8">Anna Varfolomeeva</a>
+
+<div class="profile mlc_author_popover" data-cp-popup-id="8" vocab="http://schema.org/" typeof="Person">
+  <h3 class="profile__name" property="name"><a href="http://se.mathworks.com/matlabcentral/profile/authors/5235482-anna-varfolomeeva">Anna Varfolomeeva <span>(view profile)</span></a></h3>
+
+    <div class="profile__image">
+      <a href="http://se.mathworks.com/matlabcentral/profile/authors/5235482-anna-varfolomeeva"><img src="./Medical Image Processing Toolbox - File Exchange - MATLAB Central_files/profilepic_default.gif"></a>
+    </div>
+  <div class="profile__stats" typeof="CreativeWork">
+    
+  <ul>
+    <li property="fileExchange">
+      <span class="icon-fileexchange"></span> <a href="http://se.mathworks.com/matlabcentral/fileexchange/?term=authorid%3A578034"><span property="fileExchange_count">0</span> files</a>
+    </li>
+    <li property="downloads">
+      <span class="icon-download"></span> <span property="downloads_count">0</span> downloads
+    </li>
+      <li property="rating">
+
+        <div class="rating" title="0.0">
+          <div class="rate_scale">
+            <div class="rated" property="aggregateRating" style="width: 0.0%">0.0</div>
+          </div>
+        </div>
+
+      </li>
+  </ul>
+
+  </div>
+</div>
+
+        </td>
+        <td><span class="comment"><p>Hi! Thanks for sharing code!
+<br>When I try to run test_image.m I get a message "Undefined function 'vtkMathPerpendiculars'". Where I can get it?</p></span></td>
+        <td width="80">
+            <div class="rating comment_only" title="Comment Only">
+              <div class="rate_scale icon-mw-comment">
+                <span>Comment only</span>
+              </div>
+            </div>
+        </td>
+      </tr>
+      <tr class="&quot;odd&quot;">
+        <td class="date"><span class="date">27 Jan 2015</span></td>
+        <td>
+          <a href="http://se.mathworks.com/matlabcentral/profile/authors/3170350-alberto-gomez" class="author_inline" data-cp-link-id="9">Alberto Gomez</a>
+
+<div class="profile mlc_author_popover" data-cp-popup-id="9" vocab="http://schema.org/" typeof="Person">
+  <h3 class="profile__name" property="name"><a href="http://se.mathworks.com/matlabcentral/profile/authors/3170350-alberto-gomez">Alberto Gomez <span>(view profile)</span></a></h3>
+
+    <div class="profile__image">
+      <a href="http://se.mathworks.com/matlabcentral/profile/authors/3170350-alberto-gomez"><img src="./Medical Image Processing Toolbox - File Exchange - MATLAB Central_files/profilepic_default.gif"></a>
+    </div>
+  <div class="profile__stats" typeof="CreativeWork">
+    
+  <ul>
+    <li property="fileExchange">
+      <span class="icon-fileexchange"></span> <a href="http://se.mathworks.com/matlabcentral/fileexchange/?term=authorid%3A398655"><span property="fileExchange_count">0</span> files</a>
+    </li>
+    <li property="downloads">
+      <span class="icon-download"></span> <span property="downloads_count">0</span> downloads
+    </li>
+      <li property="rating">
+
+        <div class="rating" title="0.0">
+          <div class="rate_scale">
+            <div class="rated" property="aggregateRating" style="width: 0.0%">0.0</div>
+          </div>
+        </div>
+
+      </li>
+  </ul>
+
+  </div>
+</div>
+
+        </td>
+        <td><span class="comment"><p>Hi, 
+<br>you can display the image by doing imshow(im.data)</p>
+
+<p>hth
+</p></span></td>
+        <td width="80">
+            <div class="rating comment_only" title="Comment Only">
+              <div class="rate_scale icon-mw-comment">
+                <span>Comment only</span>
+              </div>
+            </div>
+        </td>
+      </tr>
+      <tr>
+        <td class="date"><span class="date">22 Jan 2015</span></td>
+        <td>
+          <a href="http://se.mathworks.com/matlabcentral/profile/authors/6016570-shruti-naik" class="author_inline" data-cp-link-id="10">Shruti naik</a>
+
+<div class="profile mlc_author_popover" data-cp-popup-id="10" vocab="http://schema.org/" typeof="Person">
+  <h3 class="profile__name" property="name"><a href="http://se.mathworks.com/matlabcentral/profile/authors/6016570-shruti-naik">Shruti naik <span>(view profile)</span></a></h3>
+
+    <div class="profile__image">
+      <a href="http://se.mathworks.com/matlabcentral/profile/authors/6016570-shruti-naik"><img src="./Medical Image Processing Toolbox - File Exchange - MATLAB Central_files/profilepic_default.gif"></a>
+    </div>
+  <div class="profile__stats" typeof="CreativeWork">
+    
+  <ul>
+    <li property="fileExchange">
+      <span class="icon-fileexchange"></span> <a href="http://se.mathworks.com/matlabcentral/fileexchange/?term=authorid%3A546132"><span property="fileExchange_count">0</span> files</a>
+    </li>
+    <li property="downloads">
+      <span class="icon-download"></span> <span property="downloads_count">0</span> downloads
+    </li>
+      <li property="rating">
+
+        <div class="rating" title="0.0">
+          <div class="rate_scale">
+            <div class="rated" property="aggregateRating" style="width: 0.0%">0.0</div>
+          </div>
+        </div>
+
+      </li>
+  </ul>
+
+  </div>
+</div>
+
+        </td>
+        <td><span class="comment"><p>hi alberto, thanks! :) do we directly need to run read_mhd and how exactly display the .mha files using imshow()? do revert :) waiting!! regards</p></span></td>
+        <td width="80">
+
+            <div class="rating" title="5">
+              <div class="rate_scale">
+                <div class="rated" style="width: 100%;
+                "></div>
+              </div>
+            </div>
+
+        </td>
+      </tr>
+      <tr class="&quot;odd&quot;">
+        <td class="date"><span class="date">10 Dec 2014</span></td>
+        <td>
+          <a href="http://se.mathworks.com/matlabcentral/profile/authors/3563505-ruzgar-yanik" class="author_inline" data-cp-link-id="11">RÜZGAR YANIK</a>
+
+<div class="profile mlc_author_popover" data-cp-popup-id="11" vocab="http://schema.org/" typeof="Person">
+  <h3 class="profile__name" property="name"><a href="http://se.mathworks.com/matlabcentral/profile/authors/3563505-ruzgar-yanik">RÜZGAR YANIK <span>(view profile)</span></a></h3>
+
+    <div class="profile__image">
+      <a href="http://se.mathworks.com/matlabcentral/profile/authors/3563505-ruzgar-yanik"><img src="./Medical Image Processing Toolbox - File Exchange - MATLAB Central_files/profilepic_default.gif"></a>
+    </div>
+  <div class="profile__stats" typeof="CreativeWork">
+    
+  <ul>
+    <li property="fileExchange">
+      <span class="icon-fileexchange"></span> <a href="http://se.mathworks.com/matlabcentral/fileexchange/?term=authorid%3A312733"><span property="fileExchange_count">0</span> files</a>
+    </li>
+    <li property="downloads">
+      <span class="icon-download"></span> <span property="downloads_count">0</span> downloads
+    </li>
+      <li property="rating">
+
+        <div class="rating" title="0.0">
+          <div class="rate_scale">
+            <div class="rated" property="aggregateRating" style="width: 0.0%">0.0</div>
+          </div>
+        </div>
+
+      </li>
+  </ul>
+
+  </div>
+</div>
+
+        </td>
+        <td><span class="comment"><p>first of all thanks sharing code</p>
+
+<p>i want to ask a question</p>
+
+<p>i have dwi brain image .gipl format.i want to tick on .gipl image with roi and then want to make logic one in roi area and logic zero outside of roi area</p>
+
+<p>if someone knows how it is done, kindly help me</p>
+
+<p>waiting feedback</p>
+
+<p>thanks </p></span></td>
+        <td width="80">
+
+            <div class="rating" title="5">
+              <div class="rate_scale">
+                <div class="rated" style="width: 100%;
+                "></div>
+              </div>
+            </div>
+
+        </td>
+      </tr>
+      <tr>
+        <td class="date"><span class="date">06 Oct 2014</span></td>
+        <td>
+          <a href="http://se.mathworks.com/matlabcentral/profile/authors/3296411-alberto-gomez" class="author_inline" data-cp-link-id="12">Alberto Gomez</a>
+
+<div class="profile mlc_author_popover" data-cp-popup-id="12" vocab="http://schema.org/" typeof="Person">
+  <h3 class="profile__name" property="name"><a href="http://se.mathworks.com/matlabcentral/profile/authors/3296411-alberto-gomez">Alberto Gomez <span>(view profile)</span></a></h3>
+
+    <div class="profile__image">
+      <a href="http://se.mathworks.com/matlabcentral/profile/authors/3296411-alberto-gomez"><img src="./Medical Image Processing Toolbox - File Exchange - MATLAB Central_files/profilepic_default.gif"></a>
+    </div>
+  <div class="profile__stats" typeof="CreativeWork">
+    
+  <ul>
+    <li property="fileExchange">
+      <span class="icon-fileexchange"></span> <a href="http://se.mathworks.com/matlabcentral/fileexchange/?term=authorid%3A218373"><span property="fileExchange_count">2</span> files</a>
+    </li>
+    <li property="downloads">
+      <span class="icon-download"></span> <span property="downloads_count">153</span> downloads
+    </li>
+      <li property="rating">
+
+        <div class="rating" title="4.5">
+          <div class="rate_scale">
+            <div class="rated" property="aggregateRating" style="width: 90.0%">4.5</div>
+          </div>
+        </div>
+
+      </li>
+  </ul>
+
+  </div>
+</div>
+
+        </td>
+        <td><span class="comment"><p>Hi Noha,
+<br>You do not need to change paths for this package in particular. You will need to add the files to your matlab path (as you would do for any other package) or put the file in your working directory. Usually it is enough to right click in the folder where the files are from the matlab file browser and click on "add to path"-&gt; "selected folders and subfolders".</p></span></td>
+        <td width="80">
+            <div class="rating comment_only" title="Comment Only">
+              <div class="rate_scale icon-mw-comment">
+                <span>Comment only</span>
+              </div>
+            </div>
+        </td>
+      </tr>
+      <tr class="&quot;odd&quot;">
+        <td class="date"><span class="date">04 Oct 2014</span></td>
+        <td>
+          <a href="http://se.mathworks.com/matlabcentral/profile/authors/4455646-noha-asas" class="author_inline" data-cp-link-id="13">Noha Asas</a>
+
+<div class="profile mlc_author_popover" data-cp-popup-id="13" vocab="http://schema.org/" typeof="Person">
+  <h3 class="profile__name" property="name"><a href="http://se.mathworks.com/matlabcentral/profile/authors/4455646-noha-asas">Noha Asas <span>(view profile)</span></a></h3>
+
+    <div class="profile__image">
+      <a href="http://se.mathworks.com/matlabcentral/profile/authors/4455646-noha-asas"><img src="./Medical Image Processing Toolbox - File Exchange - MATLAB Central_files/profilepic_default.gif"></a>
+    </div>
+  <div class="profile__stats" typeof="CreativeWork">
+    
+  <ul>
+    <li property="fileExchange">
+      <span class="icon-fileexchange"></span> <a href="http://se.mathworks.com/matlabcentral/fileexchange/?term=authorid%3A487953"><span property="fileExchange_count">0</span> files</a>
+    </li>
+    <li property="downloads">
+      <span class="icon-download"></span> <span property="downloads_count">0</span> downloads
+    </li>
+      <li property="rating">
+
+        <div class="rating" title="0.0">
+          <div class="rate_scale">
+            <div class="rated" property="aggregateRating" style="width: 0.0%">0.0</div>
+          </div>
+        </div>
+
+      </li>
+  </ul>
+
+  </div>
+</div>
+
+        </td>
+        <td><span class="comment"><p>How could I deploy that package, so as to use the functions immediately without the need to change paths??</p></span></td>
+        <td width="80">
+            <div class="rating comment_only" title="Comment Only">
+              <div class="rate_scale icon-mw-comment">
+                <span>Comment only</span>
+              </div>
+            </div>
+        </td>
+      </tr>
+      <tr>
+        <td class="date"><span class="date">11 Apr 2014</span></td>
+        <td>
+          <a href="http://se.mathworks.com/matlabcentral/profile/authors/3170350-alberto-gomez" class="author_inline" data-cp-link-id="14">Alberto Gomez</a>
+
+<div class="profile mlc_author_popover" data-cp-popup-id="14" vocab="http://schema.org/" typeof="Person">
+  <h3 class="profile__name" property="name"><a href="http://se.mathworks.com/matlabcentral/profile/authors/3170350-alberto-gomez">Alberto Gomez <span>(view profile)</span></a></h3>
+
+    <div class="profile__image">
+      <a href="http://se.mathworks.com/matlabcentral/profile/authors/3170350-alberto-gomez"><img src="./Medical Image Processing Toolbox - File Exchange - MATLAB Central_files/profilepic_default.gif"></a>
+    </div>
+  <div class="profile__stats" typeof="CreativeWork">
+    
+  <ul>
+    <li property="fileExchange">
+      <span class="icon-fileexchange"></span> <a href="http://se.mathworks.com/matlabcentral/fileexchange/?term=authorid%3A398655"><span property="fileExchange_count">0</span> files</a>
+    </li>
+    <li property="downloads">
+      <span class="icon-download"></span> <span property="downloads_count">0</span> downloads
+    </li>
+      <li property="rating">
+
+        <div class="rating" title="0.0">
+          <div class="rate_scale">
+            <div class="rated" property="aggregateRating" style="width: 0.0%">0.0</div>
+          </div>
+        </div>
+
+      </li>
+  </ul>
+
+  </div>
+</div>
+
+        </td>
+        <td><span class="comment"><p>Unfortunately it currently reads/writes ASCII vtk mesh files only. Mhd binary files are supported though.</p></span></td>
+        <td width="80">
+            <div class="rating comment_only" title="Comment Only">
+              <div class="rate_scale icon-mw-comment">
+                <span>Comment only</span>
+              </div>
+            </div>
+        </td>
+      </tr>
+      <tr class="&quot;odd&quot;">
+        <td class="date"><span class="date">10 Apr 2014</span></td>
+        <td>
+          <a href="http://se.mathworks.com/matlabcentral/profile/authors/2873758-arso" class="author_inline" data-cp-link-id="15">Arso</a>
+
+<div class="profile mlc_author_popover" data-cp-popup-id="15" vocab="http://schema.org/" typeof="Person">
+  <h3 class="profile__name" property="name"><a href="http://se.mathworks.com/matlabcentral/profile/authors/2873758-arso">Arso <span>(view profile)</span></a></h3>
+
+    <div class="profile__image">
+      <a href="http://se.mathworks.com/matlabcentral/profile/authors/2873758-arso"><img src="./Medical Image Processing Toolbox - File Exchange - MATLAB Central_files/profilepic_default.gif"></a>
+    </div>
+  <div class="profile__stats" typeof="CreativeWork">
+    
+  <ul>
+    <li property="fileExchange">
+      <span class="icon-fileexchange"></span> <a href="http://se.mathworks.com/matlabcentral/fileexchange/?term=authorid%3A144901"><span property="fileExchange_count">2</span> files</a>
+    </li>
+    <li property="downloads">
+      <span class="icon-download"></span> <span property="downloads_count">22</span> downloads
+    </li>
+      <li property="rating">
+
+        <div class="rating" title="5.0">
+          <div class="rate_scale">
+            <div class="rated" property="aggregateRating" style="width: 100.0%">5.0</div>
+          </div>
+        </div>
+
+      </li>
+  </ul>
+
+  </div>
+</div>
+
+        </td>
+        <td><span class="comment"><p>Can it read binary VTK?</p></span></td>
+        <td width="80">
+            <div class="rating comment_only" title="Comment Only">
+              <div class="rate_scale icon-mw-comment">
+                <span>Comment only</span>
+              </div>
+            </div>
+        </td>
+      </tr>
+      <tr>
+        <td class="date"><span class="date">20 Nov 2013</span></td>
+        <td>
+          <a href="http://se.mathworks.com/matlabcentral/profile/authors/3170350-alberto-gomez" class="author_inline" data-cp-link-id="16">Alberto Gomez</a>
+
+<div class="profile mlc_author_popover" data-cp-popup-id="16" vocab="http://schema.org/" typeof="Person">
+  <h3 class="profile__name" property="name"><a href="http://se.mathworks.com/matlabcentral/profile/authors/3170350-alberto-gomez">Alberto Gomez <span>(view profile)</span></a></h3>
+
+    <div class="profile__image">
+      <a href="http://se.mathworks.com/matlabcentral/profile/authors/3170350-alberto-gomez"><img src="./Medical Image Processing Toolbox - File Exchange - MATLAB Central_files/profilepic_default.gif"></a>
+    </div>
+  <div class="profile__stats" typeof="CreativeWork">
+    
+  <ul>
+    <li property="fileExchange">
+      <span class="icon-fileexchange"></span> <a href="http://se.mathworks.com/matlabcentral/fileexchange/?term=authorid%3A398655"><span property="fileExchange_count">0</span> files</a>
+    </li>
+    <li property="downloads">
+      <span class="icon-download"></span> <span property="downloads_count">0</span> downloads
+    </li>
+      <li property="rating">
+
+        <div class="rating" title="0.0">
+          <div class="rate_scale">
+            <div class="rated" property="aggregateRating" style="width: 0.0%">0.0</div>
+          </div>
+        </div>
+
+      </li>
+  </ul>
+
+  </div>
+</div>
+
+        </td>
+        <td><span class="comment"><p>Yes Akshay, among several other functionalities that is exactly what it does</p></span></td>
+        <td width="80">
+            <div class="rating comment_only" title="Comment Only">
+              <div class="rate_scale icon-mw-comment">
+                <span>Comment only</span>
+              </div>
+            </div>
+        </td>
+      </tr>
+      <tr class="&quot;odd&quot;">
+        <td class="date"><span class="date">20 Nov 2013</span></td>
+        <td>
+          <a href="http://se.mathworks.com/matlabcentral/profile/authors/4476653-akshay-gore" class="author_inline" data-cp-link-id="17">Akshay Gore</a>
+
+<div class="profile mlc_author_popover" data-cp-popup-id="17" vocab="http://schema.org/" typeof="Person">
+  <h3 class="profile__name" property="name"><a href="http://se.mathworks.com/matlabcentral/profile/authors/4476653-akshay-gore">Akshay Gore <span>(view profile)</span></a></h3>
+
+    <div class="profile__image">
+      <a href="http://se.mathworks.com/matlabcentral/profile/authors/4476653-akshay-gore"><img src="./Medical Image Processing Toolbox - File Exchange - MATLAB Central_files/4476653.jpg"></a>
+    </div>
+  <div class="profile__stats" typeof="CreativeWork">
+    
+  <ul>
+    <li property="fileExchange">
+      <span class="icon-fileexchange"></span> <a href="http://se.mathworks.com/matlabcentral/fileexchange/?term=authorid%3A376638"><span property="fileExchange_count">8</span> files</a>
+    </li>
+    <li property="downloads">
+      <span class="icon-download"></span> <span property="downloads_count">267</span> downloads
+    </li>
+      <li property="rating">
+
+        <div class="rating" title="4.16667">
+          <div class="rate_scale">
+            <div class="rated" property="aggregateRating" style="width: 83.3334%">4.16667</div>
+          </div>
+        </div>
+
+      </li>
+  </ul>
+
+  </div>
+</div>
+
+        </td>
+        <td><span class="comment"><p>Is this function used to read raw/mhd file?</p></span></td>
+        <td width="80">
+            <div class="rating comment_only" title="Comment Only">
+              <div class="rate_scale icon-mw-comment">
+                <span>Comment only</span>
+              </div>
+            </div>
+        </td>
+      </tr>
+      <tr>
+        <td class="date"><span class="date">03 Jul 2013</span></td>
+        <td>
+          <a href="http://se.mathworks.com/matlabcentral/profile/authors/3850388-bo-sun" class="author_inline" data-cp-link-id="18">Bo Sun</a>
+
+<div class="profile mlc_author_popover" data-cp-popup-id="18" vocab="http://schema.org/" typeof="Person">
+  <h3 class="profile__name" property="name"><a href="http://se.mathworks.com/matlabcentral/profile/authors/3850388-bo-sun">Bo Sun <span>(view profile)</span></a></h3>
+
+    <div class="profile__image">
+      <a href="http://se.mathworks.com/matlabcentral/profile/authors/3850388-bo-sun"><img src="./Medical Image Processing Toolbox - File Exchange - MATLAB Central_files/profilepic_default.gif"></a>
+    </div>
+  <div class="profile__stats" typeof="CreativeWork">
+    
+  <ul>
+    <li property="fileExchange">
+      <span class="icon-fileexchange"></span> <a href="http://se.mathworks.com/matlabcentral/fileexchange/?term=authorid%3A367841"><span property="fileExchange_count">0</span> files</a>
+    </li>
+    <li property="downloads">
+      <span class="icon-download"></span> <span property="downloads_count">0</span> downloads
+    </li>
+      <li property="rating">
+
+        <div class="rating" title="0.0">
+          <div class="rate_scale">
+            <div class="rated" property="aggregateRating" style="width: 0.0%">0.0</div>
+          </div>
+        </div>
+
+      </li>
+  </ul>
+
+  </div>
+</div>
+
+        </td>
+        <td><span class="comment"><p>Could this toolbox read and write '.mha' files? Since i only found the function used to read and write '.mhd' files.Thanks</p></span></td>
+        <td width="80">
+
+            <div class="rating" title="3">
+              <div class="rate_scale">
+                <div class="rated" style="width: 60%;
+                "></div>
+              </div>
+            </div>
+
+        </td>
+      </tr>
+    </tbody>
+    </table>
+
+</div>
+            <table cellpadding="0" cellspacing="0" border="0" class="fileview section">
+    <tbody><tr class="title">
+      <th colspan="3"><span class="heading">Updates</span></th>
+    </tr>
+      <tr>
+        <td class="date">06 Mar 2015</td>
+        <td>1.2</td>
+        <td><p>Some bug fixing
+<br>Added some missing functions</p></td>
+      </tr>
+  </tbody></table>
+
+        </td>
+      </tr>
+    </tbody></table>
+    
+    <script src="./Medical Image Processing Toolbox - File Exchange - MATLAB Central_files/show.js" type="text/javascript"></script>
+  </div>
+
+<p id="contactus"><a href="http://se.mathworks.com/company/feedback/">Contact us</a></p>
+<!-- Quantcast Tag -->
+<script>
+(function(){
+var elem = document.createElement('script');
+elem.src = (document.location.protocol == "https:" ? "https://secure" : "http://edge") + ".quantserve.com/aquant.js?a=p-zfNtLVVEHXE-1";
+elem.async = true;
+elem.type = "text/javascript";
+var scpt = document.getElementsByTagName('script')[0];
+scpt.parentNode.insertBefore(elem,scpt);
+}());
+var smarttagdata={qacct: 'p-zfNtLVVEHXE-1',
+orderid: '',
+revenue: '',
+};
+</script>
+<noscript>
+&lt;img src="//pixel.quantserve.com/pixel/p-zfNtLVVEHXE-1.gif?labels=_fp.event.Default;" style="display: none;" border="0" height="1" width="1" alt="Quantcast"/&gt;
+</noscript>
+<!-- End Quantcast tag -->
+<!-- BEGIN Google Code for UK and .COM Domains-->
+<script type="text/javascript">
+/* <![CDATA[ */
+var google_conversion_id = 1023777138;
+var google_conversion_label = "SVIBCMq3xwIQ8rKW6AM";
+var google_custom_params = window.google_tag_params;
+var google_remarketing_only = true;
+/* ]]> */
+</script>
+<script type="text/javascript" src="./Medical Image Processing Toolbox - File Exchange - MATLAB Central_files/conversion.js">
+</script><iframe name="google_conversion_frame" title="Google conversion frame" width="0" height="0" src="about:blank" frameborder="0" marginwidth="0" marginheight="0" vspace="0" hspace="0" allowtransparency="true" scrolling="no" style="display: none !important; visibility: hidden !important; opacity: 0 !important; background-position: 300px 13px;">&lt;img height="1" width="1" border="0" alt="" src="http://googleads.g.doubleclick.net/pagead/viewthroughconversion/1023777138/?frame=0&amp;random=1438194320509&amp;cv=7&amp;fst=1438194320509&amp;num=1&amp;fmt=1&amp;label=SVIBCMq3xwIQ8rKW6AM&amp;guid=ON&amp;u_h=900&amp;u_w=1600&amp;u_ah=852&amp;u_aw=1600&amp;u_cd=24&amp;u_his=4&amp;u_tz=-240&amp;u_java=true&amp;u_nplug=4&amp;u_nmime=5&amp;frm=0&amp;url=http%3A//se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox&amp;ref=http%3A//se.mathworks.com/matlabcentral/fileexchange/41594-medical-image-processing-toolbox/content/Medical_Image_Processing_Toolkit_/IO/write_mhd.m" /&gt;</iframe>
+<noscript>
+&lt;div style="display:inline;"&gt;
+&lt;img height="1" width="1" style="border-style:none;" alt="" src="//googleads.g.doubleclick.net/pagead/viewthroughconversion/1023777138/?value=0&amp;label=SVIBCMq3xwIQ8rKW6AM&amp;guid=ON&amp;script=0"/&gt;
+&lt;/div&gt;
+</noscript>
+<!-- END Google Code for UK and .COM Domains-->
+
+      	
+      
+</div>
+<div class="clearboth">&nbsp;</div>
+</div>
+</div>
+<!-- footer.html -->
+<!-- START OF FOOTER -->
+
+<div id="mlc-footer">
+  <script type="text/javascript">
+function clickDynamic(obj, target_url, tracking_code) {
+	var pos=target_url.indexOf("?");
+	if (pos<=0) { 
+		var linkComponents = target_url + tracking_code;
+		obj.href=linkComponents;
+	} 
+}
+</script>
+  <div class="wrapper">
+    <div>
+      <ul id="matlabcentral">
+        <li class="copyright first">© 1994-2015 The MathWorks, Inc.</li>
+        <li class="first"><a href="http://se.mathworks.com/company/aboutus/policies_statements/patents.html?s_tid=gf_pat" title="patents" rel="nofollow">Patents</a></li>
+        <li><a href="http://se.mathworks.com/company/aboutus/policies_statements/trademarks.html?s_tid=gf_trd" title="trademarks" rel="nofollow">Trademarks</a></li>
+        <li><a href="http://se.mathworks.com/company/aboutus/policies_statements/?s_tid=gf_priv" title="privacy policy" rel="nofollow">Privacy Policy</a></li>
+        <li><a href="http://se.mathworks.com/company/aboutus/policies_statements/piracy.html?s_tid=gf_pir" title="preventing piracy" rel="nofollow">Preventing Piracy</a></li>
+        <li class="last"><a href="http://se.mathworks.com/matlabcentral/termsofuse.html?s_tid=gf_com_trm" title="Terms of Use" rel="nofollow">Terms of Use</a></li>
+        <li class="icon"><a href="http://se.mathworks.com/company/rss/" title="RSS" class="rssfeed" rel="nofollow"><span class="text">RSS</span></a></li>
+        <li class="icon"><a href="http://se.mathworks.com/programs/bounce_hub_generic.html?s_tid=mlc_lkd&url=http://www.linkedin.com/company/the-mathworks_2" title="LinkedIn" class="linkedin" rel="nofollow" target="_blank"></a></li>
+        <li class="icon"><a href="http://se.mathworks.com/programs/bounce_hub_generic.html?s_tid=mlc_fbk&url=https://plus.google.com/117177960465154322866?prsrc=3" title="Google+" class="google" rel="nofollow" target="_blank"><span class="text">Google+</span></a></li>
+        <li class="icon"><a href="http://se.mathworks.com/programs/bounce_hub_generic.html?s_tid=mlc_fbk&url=http://www.facebook.com/MATLAB" title="Facebook" class="facebook" rel="nofollow" target="_blank"><span class="text">Facebook</span></a></li>
+        		<li class="last icon"><a href="http://se.mathworks.com/programs/bounce_hub_generic.html?s_tid=mlc_twt&url=http://www.twitter.com/MATLAB" title="Twitter" class="twitter" rel="nofollow" target="_blank"><span class="text">Twitter</span></a></li>        
+        
+      </ul>
+      <ul id="mathworks">
+        <li class="first sectionhead">Featured MathWorks.com Topics:</li>
+        <li class="first"><a href="http://se.mathworks.com/products/new_products/latest_features.html" onclick="clickDynamic(this, this.href, &#39;?s_cid=MLC_new&#39;)">New Products</a></li>
+        <li><a href="http://se.mathworks.com/support/" title="support" onclick="clickDynamic(this, this.href, &#39;?s_cid=MLC_support&#39;)">Support</a></li>
+        <li><a href="http://se.mathworks.com/help" title="documentation" onclick="clickDynamic(this, this.href, &#39;?s_cid=MLC_doc&#39;)">Documentation</a></li>
+        <li><a href="http://se.mathworks.com/services/training/" title="training" onclick="clickDynamic(this, this.href, &#39;?s_cid=MLC_training&#39;)">Training</a></li>
+        <li><a href="http://se.mathworks.com/company/events/webinars/" title="Webinars" onclick="clickDynamic(this, this.href, &#39;?s_cid=MLC_webinars&#39;)">Webinars</a></li>
+        <li><a href="http://se.mathworks.com/company/newsletters/" title="newsletters" onclick="clickDynamic(this, this.href, &#39;?s_cid=MLC_newsletters&#39;)">Newsletters</a></li>
+        <li><a href="http://se.mathworks.com/programs/trials/trial_request.html?prodcode=ML&s_cid=MLC_trials" title="MATLAB Trials">MATLAB Trials</a></li>
+        
+        		<li class="last"><a href="http://se.mathworks.com/company/jobs/opportunities/index_en_US.html" title="Careers" onclick="clickDynamic(this, this.href, &#39;?s_cid=MLC_careers&#39;)">Careers</a></li>
+                 
+      </ul>
+    </div>
+  </div>
+</div>
+<!-- END OF FOOTER -->
+
+
+      
+      
+<!-- SiteCatalyst code version: H.24.4.
+Copyright 1996-2012 Adobe, Inc. All Rights Reserved
+More info available at http://www.omniture.com -->
+<script language="JavaScript" type="text/javascript" src="./Medical Image Processing Toolbox - File Exchange - MATLAB Central_files/s_code.js"></script>
+
+
+<script language="JavaScript" type="text/javascript">
+
+
+
+<!--
+/************* DO NOT ALTER ANYTHING BELOW THIS LINE ! **************/
+var s_code=s.t();if(s_code)document.write(s_code)//--></script>
+<script language="JavaScript" type="text/javascript"><!--
+if(navigator.appVersion.indexOf('MSIE')>=0)document.write(unescape('%3C')+'\!-'+'-')
+//--></script>
+<!--/DO NOT REMOVE/-->
+<!-- End SiteCatalyst code version: H.24.4. -->
+
+
+  
+
+     
+<!-- BEGIN Qualaroo --> 
+<script type="text/javascript">
+  var _kiq = _kiq || [];
+  (function(){
+    setTimeout(function(){
+			var d = document, f = d.getElementsByTagName('script')[0], s = d.createElement('script'); s.type = 'text/javascript';
+			s.async = true; s.src = '//s3.amazonaws.com/ki.js/49559/ahy.js'; f.parentNode.insertBefore(s, f);
+    }, 1);
+  })();
+</script>
+<!-- END Qualaroo --> 
+
+    
+
+<ul class="ui-autocomplete ui-menu ui-widget ui-widget-content ui-corner-all" id="ui-id-1" tabindex="0" style="z-index: 1; display: none;"></ul><span style="height: 20px; width: 40px; position: absolute; opacity: 0.85; z-index: 8675309; display: none; cursor: pointer; border: none; background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAUCAYAAAD/Rn+7AAADU0lEQVR42s2WXUhTYRjHz0VEVPRFUGmtVEaFUZFhHxBhsotCU5JwBWEf1EWEEVHQx4UfFWYkFa2biPJiXbUta33OXFtuUXMzJ4bK3Nqay7m5NeZq6h/tPQ+xU20zugjOxR/+7/O8539+5znnwMtNTExwJtMb3L/fiLv3botCSmUjeCaejTOb39AiFothfHxcFIrHY8RksZjBsckJcOIRMfFsHD/SsbExUYpnI8DR0dGUGjSb0byhEJp5Uqg5CTSzc2CQleJbMEj9/ywBcGRkJEk9DQqouEVQT1sK444yWI9UonmTjGqauVLEIlHa9x8lAMbj8SSpp0rwKGMVvg8P46vbg0C7na8z8JsMcgHe7jlEa+edRhiLy8n/TUMfu6EvLElk+U0WtGwrTrdfAGQf5J8iiK4LVzDU28t8JtMSocf8E+l68myaNFXm/6rXslLK7ay5TOunuRvZWpJuvwAYjUaTpOIWoquuAZ219RTaxKYp9BbjycoN5FvL9qH9TBX5rvoGdJythvXYSTxdtRnWylO/ZdqrLsGwszzhWQ593z2KlAwCYCQSSZJ6ehZ0W7bD9VBLgN0NCqr3qR7R2rBrL3pu3Sb/7nDlz2uy6cG0OXk0GTbZXzNp8trsPAQdTj6frlWzN2DcXZGKQQAMh8NJ6rpyHe+PnkCr/CAFdZyvpfpjuvkifLF9wIt1Wwlo0OHie1RvWrKa93RjzfzliTzPKz3ltB0/Tevmwp14wGUgHAzSOoUEwFAolFaaBSuhnslPRkJexUJtZ6v5HtUeLswl33n1BgEY5fvhs9sJ3FAiT+QYyyvoAQJuD0KBAFRTJNAuz5/s3gJgMBhMJwrVFRThM5tY5zUF/A4X1f2fvQTRLCuBreoim0YmAbqNJryvPEXeeq46kaNdkQ/1HCncbJKPs9ZSv2VHGfWsZ2hfkhKAfr8/pdxWKx4wwD69PmVfNSOL+lr2w+gYqHpWDtXt1xQ8AMlWU0e1lqLd/APRHoP8AJqWrQG9gYxcPMsvSJUvAA4MDKTUJ7MZLaVy8v+qT21tcDx/OemePr0RTkNrur4A6PP5xCgBsL+/X4wiQDpuuVxOeL1eMYmYeDY6sOp0z+B0OuHxeEQhxkJMFosJiSO/UinOI/8Pc+l7KKArAT8AAAAASUVORK5CYII=); background-color: transparent;"></span></body></html>
