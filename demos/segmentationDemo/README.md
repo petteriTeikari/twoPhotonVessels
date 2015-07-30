@@ -25,9 +25,12 @@ https://github.com/ASETS/asetsMatlabLevelSets
 
 We can test the segmentation algorithm with various refined images (see Segment - Pre-Process in <code>demo_segmentationMethods.m</code>), and speed functions (e.g. output of an OOF or GVF) to drive the active contours
 
-![Test Images ASETS 2D](https://raw.githubusercontent.com/petteriTeikari/twoPhotonVessels/master/demos/segmentationDemo/testData/asets_2D_input.png)
+![Test Images ASETS 2D](https://raw.githubusercontent.com/petteriTeikari/twoPhotonVessels/master/demos/segmentationDemo/demoFiguresOut/asets_2D_input.png)
 
 Which can give us for example the following segmentation (see <code>asets_demoWrapper_2D.m</code> using the "fusion" image as the input, and the manually refined edgeFill as the speed function (both inputs kinda cheating as there has been manual labor):
 
-![Test Output ASETS 2D](https://raw.githubusercontent.com/petteriTeikari/twoPhotonVessels/master/demos/segmentationDemo/testData/asets_2D_exampleOutput.png)
+![Test Output ASETS 2D](https://raw.githubusercontent.com/petteriTeikari/twoPhotonVessels/master/demos/segmentationDemo/demoFiguresOut/asets_2D_exampleOutput.png)
 
+The evolution can be visualized with an animated gif (export_fig in Matlab, and ImageMagick in Ubuntu):
+
+![Test Output ASETS 2D](https://raw.githubusercontent.com/petteriTeikari/twoPhotonVessels/master/demos/segmentationDemo/demoFiguresOut/anim_asets2D_squareInitSmall.gif)
