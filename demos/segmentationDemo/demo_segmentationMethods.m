@@ -2,7 +2,6 @@ function demo_segmentationMethods()
 
     clear all; close all;
 
-
     %% INPUT DATA
     
         fileName = 'slices10_16_wVesselnessEdgesGVF.mat';
@@ -13,57 +12,72 @@ function demo_segmentationMethods()
         [img, vessel, edges, GVF] = input_segmentationTestData(fileMat, resizeOn, resizeFactor, plotOn);
 
         
-    %% SEGMENT
-    
-        sliceIndex = 1;
-        rows = 3; cols = 2;
-        
-        im = img(:,:,sliceIndex);
-            imOut = im / max(im(:));
-            imOut = uint8(imOut * 255);
-            subplot(rows,cols,1); imshow(imOut,[]); title('Input')
-            %imwrite(imOut, 'imAsImage.png')
-        
-        vesselAsImage = vessel(:,:,sliceIndex);
-            % vesselAsImage(vesselAsImage < mean(vesselAsImage(:))) = 0;
-            vesselAsImage = abs(vesselAsImage);
-            vesselAsImage = vesselAsImage / max(vesselAsImage(:));
-            vesselOut = uint8(vesselAsImage * 255);
-            subplot(rows,cols,2); imshow(vesselOut,[]); title('abs(OOF)')
-            %imwrite(vesselOut, 'vesselAsImage.png')
+    %% SEGMENTATION
 
-        GVFasImage = GVF(:,:,sliceIndex);
-            GVFasImage(GVFasImage < mean(GVFasImage(:))) = 0;
-            GVFout = GVFasImage / max(GVFasImage(:));
-            GVFout = uint8(GVFout * 255);
-            subplot(rows,cols,3); imshow(GVFout,[]); title('abs(GVF)')
-            %imwrite(GVFout, 'gvfAsImage.png')
+    
+        %% DENOISE (extreme) 
+        
+            im_denoised_2D = denoise_NLMeansPoissonWrapper(img(:,:,sliceIndex), 10, 3, 6);
+    
             
-            threshold = 10/255;
-            zeroIndices = vesselAsImage < threshold;            
-            subplot(rows,cols,4); imshow(zeroIndices, []); title('Zeroes from OOF')
-                % you could possibly refine your mask via "Guided Filter
-                % feathering" if needed / wanted
             
-        % thresholdedVessels = im2bw(vesselAsImage, 1/256);
-        imFusion = vesselAsImage .* im; % removes the noise
-            imFusion = imFusion / max(imFusion(:));
-            imFusion = imFusion * 50; % quick'n'dirty brightness 
-            imFusion(imFusion > 1) = 1; % clip
-            imFusion = imFusion / max(imFusion(:));
-            subplot(rows,cols,5); imshow(imFusion,[]); title('Fusion (im*OOF)')
-            
-            % use the GVF to index the background out
-            imFusion(zeroIndices) = 0;
-            subplot(rows,cols,6); imshow(imFusion,[]); title('Fusion (-OOF zeros)')
+        %% PRE-PROCESS
+    
+            sliceIndex = 1;
+            rows = 3; cols = 2;
+
+            im = img(:,:,sliceIndex);
+                imOut = im / max(im(:));
+                imOut = uint8(imOut * 255);
+                subplot(rows,cols,1); imshow(imOut,[]); title('Input')
+                %imwrite(imOut, 'imAsImage.png')
+
+            vesselAsImage = vessel(:,:,sliceIndex);
+                % vesselAsImage(vesselAsImage < mean(vesselAsImage(:))) = 0;
+                vesselAsImage = abs(vesselAsImage);
+                vesselAsImage = vesselAsImage / max(vesselAsImage(:));
+                vesselOut = uint8(vesselAsImage * 255);
+                subplot(rows,cols,2); imshow(vesselOut,[]); title('abs(OOF)')
+                %imwrite(vesselOut, 'vesselAsImage.png')
+
+            GVFasImage = GVF(:,:,sliceIndex);
+                GVFasImage(GVFasImage < mean(GVFasImage(:))) = 0;
+                GVFout = GVFasImage / max(GVFasImage(:));
+                GVFout = uint8(GVFout * 255);
+                subplot(rows,cols,3); imshow(GVFout,[]); title('abs(GVF)')
+                %imwrite(GVFout, 'gvfAsImage.png')
+
+                threshold = 10/255;
+                zeroIndices = vesselAsImage < threshold;            
+                subplot(rows,cols,4); imshow(zeroIndices, []); title('Zeroes from OOF')
+                    % you could possibly refine your mask via "Guided Filter
+                    % feathering" if needed / wanted
+
+            % thresholdedVessels = im2bw(vesselAsImage, 1/256);
+            imFusion = vesselAsImage .* im; % removes the noise
+                imFusion = imFusion / max(imFusion(:));
+                imFusion = imFusion * 50; % quick'n'dirty brightness 
+                imFusion(imFusion > 1) = 1; % clip
+                imFusion = imFusion / max(imFusion(:));
+                subplot(rows,cols,5); imshow(imFusion,[]); title('Fusion (im*OOF)')
+
+                % use the GVF to index the background out
+                imFusion(zeroIndices) = 0;
+                subplot(rows,cols,6); imshow(imFusion,[]); title('Fusion (-OOF zeros)')
             
         %% 2D Level set
         
-            region = asets_demoWrapper_2D(im, vessel(:,:,sliceIndex), edges(:,:,sliceIndex));
+            im2 = im_denoised_2D - min(im_denoised_2D(:));
+            im2 = im2 / max(im2(:));
+            level = graythresh(im2); % quick'n'dirty 
+            im2 = im2 * (1/level);
+            im2(im2 > 1) = 1; % clip
+            
+            region = asets_demoWrapper_2D(im2, vessel(:,:,sliceIndex), edges(:,:,sliceIndex));
         
         %% 3D Level set        
         
-            % asets_demoWrapper_3D(img, vessel, edges, sliceIndex)
+            asets_demoWrapper_3D(img, vessel, edges, sliceIndex)
 
         %% 3D Snake
         

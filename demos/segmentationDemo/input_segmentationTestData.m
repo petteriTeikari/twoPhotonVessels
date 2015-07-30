@@ -89,3 +89,24 @@ function [img, vessel, edgeCheat, GVF] = input_segmentationTestData(fileMat, res
         export_fig(fullfile('testData', 'inputPlot.png'), '-r300', '-a1')
             
     end
+    
+    %{
+    % DENOISE
+    for i = 1 : 1 size(img,3)
+        img2(:,:,i) = img(148:207, 401:460, i);
+        vessel2(:,:,i) = abs(vessel(148:207, 401:460, i));
+        GVF2(:,:,i) = abs(GVF(148:207, 401:460, i));
+    end
+
+    % denoise all inputs
+    [img_denoised, timeExecDenoising.im] = denoise_NLMeansPoissonWrapper(img2, 10, 3, 6);
+    [vessel_denoised, timeExecDenoising.vessel] = denoise_NLMeansPoissonWrapper(vessel2, 10, 3, 6);
+    [GVF_denoised, timeExecDenoising.GVF] = denoise_NLMeansPoissonWrapper(GVF2, 10, 3, 6);
+
+    row = 3; col = 2;
+    subplot(row,col,1); imshow(im2(:,:,1),[]); subplot(row,col,2); imshow(img_denoised(:,:,1),[]);
+    subplot(row,col,3); imshow(vessel2(:,:,1),[]); subplot(row,col,4); imshow(vessel_denoised(:,:,1),[]);
+    subplot(row,col,5); imshow(GVF2(:,:,1),[]); subplot(row,col,6); imshow(GVF_denoised(:,:,1),[]);
+
+    timeExecDenoising
+    %}

@@ -54,6 +54,7 @@ function region = asets_demoWrapper_2D(img, vessel, edges)
     subplot(rows,cols,i); imshow(img_n,[]);
     hold on; contour(region,'r'); hold off;
     title('Initial region');
+    drawnow
 
     % 4. Construct an s-t graph:
     [sx, sy] = size(img_n);
@@ -65,10 +66,11 @@ function region = asets_demoWrapper_2D(img, vessel, edges)
     alpha = zeros(sx,sy);
 
     % 5. Set up parameters and start level set iterations:
-    maxLevelSetIterations = 20; % number of maximum time steps
-    tau = 50; % speed parameter
-    w1 = 0.5; % weight parameter for intensity data term
-    w2 = 0.7; % weight parameter for the speed data term
+    maxLevelSetIterations = 6; % number of maximum time steps
+    tau = 500; % speed parameter
+    w1 = 0.95; % weight parameter for intensity data term
+    w2 = 0.05; % weight parameter for the speed data term
+    
     for t=1:maxLevelSetIterations
 
         i = 1;
@@ -107,7 +109,7 @@ function region = asets_demoWrapper_2D(img, vessel, edges)
         % Assign a regularization weight (equivalent to pairwise terms) for each
         % node x. Here we employ a constant regularization weight alpha. The higher
         % alpha is, the more smoothness penalty is assigned.
-        regWeight = 0.1;
+        regWeight = 0.01;
         alpha = regWeight .* ones(sx,sy);
 
         % 6. Set up the parameters for the max flow optimizer:
@@ -120,8 +122,8 @@ function region = asets_demoWrapper_2D(img, vessel, edges)
         % [6] step size for the gradient descent step when calulating the spatial
         %     flows p(x) (default 0.16)
         maxIter = 200;
-        errorBound = 1e-5;
-        pars = [sx; sy; maxIter; errorBound; 0.2; 0.16];
+        errorBound = 1e-6;
+        pars = [sx; sy; maxIter; errorBound; 0.2; 0.08];
 
         % 7. Call the binary max flow optimizer with Cs, Ct, alpha and pars to obtain
         % the continuous labelling function u, the convergence over iterations
@@ -150,7 +152,7 @@ function region = asets_demoWrapper_2D(img, vessel, edges)
         i = i+1; subplot(rows,cols,[i i+1 i+cols i+cols+1]); imshow(Cs-Ct,[]); title(['Cs-Ct (w1=', num2str(w1), ', w2=', num2str(w2), ')']);
         i = i+2; subplot(rows,cols,[i i+1 i+cols i+cols+1]); imshow(img,[]); title(['r(',num2str(t),'), \alpha = ', num2str(regWeight), ', \tau =', num2str(tau)]); hold on; contour(region,'r'); hold off;
         
-        % drawnow();
+        drawnow();
         
         if t < 10
             index = ['0', num2str(t)];
@@ -158,7 +160,7 @@ function region = asets_demoWrapper_2D(img, vessel, edges)
             index = num2str(t);
         end
         
-        export_fig(['iter_', num2str(index), '.png'], '-r200', '-a2')
+        % export_fig(['iter_', num2str(index), '.png'], '-r200', '-a2')
      
        
         
