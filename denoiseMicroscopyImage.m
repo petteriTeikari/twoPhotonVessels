@@ -33,58 +33,10 @@ function denoised = denoiseMicroscopyImage(imageIn, labelIn, options)
         if strcmp(options.denoisingAlgorithm, 'NLMeansPoisson')
             
             % This is very slow
+            hW = 10; hB = 3; hK = 6;
+            [denoised, timeExecDenoising] = denoise_NLMeansPoissonWrapper(imageIn, hW, hB, hK);
             
-            % http://www.math.u-bordeaux1.fr/~cdeledal/poisson_nlmeans.php
-            disp('Denoising the stack using NL-Means for Poisson-noise corrupted images (slow)')
-            disp('     from: http://www.math.u-bordeaux1.fr/~cdeledal/poisson_nlmeans.php')
-            
-            % TIME: roughly takes 5 hours (!) for 67 slices at Petteri's computer
-            
-            tic;  
-            denoised = zeros(size(imageIn));
-            
-            % slice-by-slice denoising
-            for slice = 1 : size(imageIn,3)
-                
-                disp(['Slice = ', num2str(slice), '/', num2str(size(imageIn,3))])
-                im = double(imageIn(:,:,slice));
-                
-                
-                % See: "poisson_nlmeans_example.m"
-                % without this the filter never really converges (PT)
-                Q = max(max(im)) / 20;   % reducing factor of underlying luminosity
-                ima_lambda = im / Q;
-                ima_lambda(ima_lambda == 0) = min(min(ima_lambda(ima_lambda > 0)));
-                
-                % Parameters
-                hW = 10; % search window of size (2hW+1)^2
-                                  % def. 10 in code, 21 in the paper
-                hB = 3; % patches of size (2hW+1)^2
-                                  % def. 3 in code, 7 in the paper
-                hK = 6; % pre-filtering with convolution by a disk
-                                  % of radius 2hK+1
-                                  % % def. 6 in code, 13 in the paper
-
-                tol = 0.01/mean2(Q); % stopping criteria |CSURE(i) - CSURE(i-1)| < tol
-                maxIter = 40;
-
-                % Pre-filtering with convolution by a disk of radius 2hK+1
-                ima_lambda_ma = diskconvolution(ima_lambda, hK);
-
-                % Sure-NL Poisson
-                im = poisson_nlmeans_PT(ima_lambda, ...
-                                             ima_lambda_ma, ...
-                                             hW, hB, ...
-                                             tol, maxIter);
-                                             % maxIter added by PT
-
-                % scale back to input
-                denoised(:,:,slice) = im * Q;
-                
-                dlmwrite(fullfile('temp', ['slice', num2str(slice), '_isDone.txt']), [1])
-                
-            end   
-            timeExecDenoising = toc;
+        
             
     
         %% PURE DENOISE
