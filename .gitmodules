@@ -4,3 +4,6 @@
 [submodule "3rdParty/3D-Gradient-Vector-Flow-for-Matlab"]
 	path = 3rdParty/3D-Gradient-Vector-Flow-for-Matlab
 	url = https://github.com/smistad/3D-Gradient-Vector-Flow-for-Matlab.git
+[submodule "3rdParty/gptoolbox"]
+	path = 3rdParty/gptoolbox
+	url = https://github.com/alecjacobson/gptoolbox.git
