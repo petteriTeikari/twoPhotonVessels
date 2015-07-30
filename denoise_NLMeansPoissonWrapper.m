@@ -15,7 +15,8 @@ function [denoised, timeExecDenoising] = denoise_NLMeansPoissonWrapper(imageIn, 
 
     tic;  
     denoised = zeros(size(imageIn));
-
+    size(imageIn,3)
+    
     % slice-by-slice denoising
     for slice = 1 : size(imageIn,3)
 
@@ -53,7 +54,9 @@ function [denoised, timeExecDenoising] = denoise_NLMeansPoissonWrapper(imageIn, 
 
         % scale back to input
         denoised(:,:,slice) = im * Q;                
-        dlmwrite(fullfile('temp', ['slice', num2str(slice), '_isDone.txt']), [1])
+        
+        
+        % dlmwrite(fullfile('temp', ['slice', num2str(slice), '_isDone.txt']), [1])
 
     end   
     timeExecDenoising = toc;
