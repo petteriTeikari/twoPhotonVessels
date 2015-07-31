@@ -1,5 +1,5 @@
 function segmentation = segmentVessels(imageStack, tubularityIn, options)
-    
+    close all
     if nargin == 0
         
         close all
@@ -29,7 +29,7 @@ function segmentation = segmentVessels(imageStack, tubularityIn, options)
         load(fullfile('/home/petteri/Desktop', 'testSegmentation.mat'))
         
     else
-        save(fullfile('/home/petteri/Desktop', 'testSegmentation.mat'));
+        save(fullfile('/home/petteri/Desktop', 'testSegmentation_slices10-16.mat'));
         % save('debugMATs/testSegmentation.mat')
     end
     %}
@@ -41,33 +41,51 @@ function segmentation = segmentVessels(imageStack, tubularityIn, options)
     
     %% MAX-FLOW Algorithn
     
-        % rather than segmenting the input bitmap, segment tubularity and overlay on the input
-        useTubularityAsImage = true; 
+        if strcmp(options.segmentationAlgorithm, 'maxFlow_JingYuan')
     
-        % http://www.mathworks.com/matlabcentral/fileexchange/34126-fast-continuous-max-flow-algorithm-to-2d-3d-image-segmentation
-        visualizeOn = false; saveOn = false;
-        [rows, cols, slices] = size(imageStack);
-        parameters = [rows; cols; slices; 200; 5e-4; 0.35; 0.11];
-            %                para 0,1,2 - rows, cols, heights of the given image
-            %                para 3 - the maximum number of iterations
-            %                para 4 - the error bound for convergence
-            %                para 5 - cc for the step-size of augmented Lagrangian method
-            %                para 6 - the step-size for the graident-projection of p
+            % rather than segmenting the input bitmap, segment tubularity and overlay on the input
+            useTubularityAsImage = true; 
+
+            % http://www.mathworks.com/matlabcentral/fileexchange/34126-fast-continuous-max-flow-algorithm-to-2d-3d-image-segmentation
+            visualizeOn = false; saveOn = false;
+            [rows, cols, slices] = size(imageStack);
+            parameters = [rows; cols; slices; 200; 5e-4; 0.35; 0.11];
+                %                para 0,1,2 - rows, cols, heights of the given image
+                %                para 3 - the maximum number of iterations
+                %                para 4 - the error bound for convergence
+                %                para 5 - cc for the step-size of augmented Lagrangian method
+                %                para 6 - the step-size for the graident-projection of p
+
+            ulab = [0.001 0.4]; % [source sink] empirically set, update for more adaptive later                
+            [uu, weighed, uu_binary] = segment_maxFlow_wrapper(imageStack, tubularity, parameters, ulab, visualizeOn, saveOn, useTubularityAsImage, options);
+            segmentation = weighed;
+
+            % Also see ASETS/asetsMatlabMaxFlow, pretty much the same-looking
+            % implementation with CUDA option as well, with time one could see
+            % if it is faster or not
+            % https://github.com/ASETS/asetsMatlabMaxFlow
+            % https://github.com/ASETS/asetsMatlabLevelSets
+
+            % play with
+            % "t02_binaryLevelSetSegmentation_2PM_batchParameterExploration.m"
+            % from asetsMatlabLevelSets
+    
+        end
+        
+    %% ASETS : Matlab Level Sets
+    
+        if strcmp(options.segmentationAlgorithm, 'asets_levelSets')
+            visualize3D = true; visualizeON = true;
+            imageStack_clipped = enhance_brightenVessels(imageStack);
+            fileOutBase = options.segmImageOutBase;
+            sliceIndex = 1;
+            regionMask = asets_demoWrapper_3D(imageStack_clipped, tubularity, [], sliceIndex, visualize3D, visualizeON, fileOutBase);                     
             
-        ulab = [0.001 0.4]; % [source sink] empirically set, update for more adaptive later                
-        [uu, weighed, uu_binary] = segment_maxFlow_wrapper(imageStack, tubularity, parameters, ulab, visualizeOn, saveOn, useTubularityAsImage, options);
-        segmentation = weighed;
+            % weigh the input with binary region mask
+            segmentation = regionMask .* imageStack;
+            
+        end
         
-        % Also see ASETS/asetsMatlabMaxFlow, pretty much the same-looking
-        % implementation with CUDA option as well, with time one could see
-        % if it is faster or not
-        % https://github.com/ASETS/asetsMatlabMaxFlow
-        % https://github.com/ASETS/asetsMatlabLevelSets
-        
-        % play with
-        % "t02_binaryLevelSetSegmentation_2PM_batchParameterExploration.m"
-        % from asetsMatlabLevelSets
-    
     
     %% MATLAB Toolbox(es) : Official 
         
