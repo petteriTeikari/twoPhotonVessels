@@ -7,21 +7,21 @@ function demo_segmentationMethods()
         fileName = 'slices10_16_wVesselnessEdgesGVF.mat';
         fileMat = fullfile('testData', fileName);
         resizeOn = true;
-        resizeFactor = 1/1;
+        resizeFactor = 1/16;
         plotOn = false;
         [img, vessel, edges, GVF] = input_segmentationTestData(fileMat, resizeOn, resizeFactor, plotOn);
 
+        sliceIndex = 1;
         
     %% SEGMENTATION
 
+        
     
         %% DENOISE (extreme) 
         
-            im_denoised_2D = denoise_NLMeansPoissonWrapper(img(:,:,sliceIndex), 10, 3, 6);
-    
+            % im_denoised_2D = denoise_NLMeansPoissonWrapper(img(:,:,sliceIndex), 10, 3, 6);
             
-            
-        %% PRE-PROCESS
+        %% PRE-PROCESS (2D)
     
             sliceIndex = 1;
             rows = 3; cols = 2;
@@ -77,7 +77,11 @@ function demo_segmentationMethods()
         
         %% 3D Level set        
         
-            asets_demoWrapper_3D(img, vessel, edges, sliceIndex)
+            close all
+            visualize3D = true; visualizeON = true;
+            img2 = enhance_brightenVessels(img);
+            fileOutBase = 'iter3D_';
+            asets_demoWrapper_3D(img2, vessel, edges, sliceIndex, visualize3D, visualizeON, fileOutBase)
 
         %% 3D Snake
         
