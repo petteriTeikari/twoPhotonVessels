@@ -26,7 +26,6 @@ function reconstruction = reconstructSegmentation(imageStack, segmentation, opti
             save(fullfile(path, 'testReconstruction.mat'));
         end
     end
-    whos
     
     % if you wanna write to disk
     % export_stack_toDisk(fullfile('figuresOut', 'fullResolution_67slices.tif'), segmentation)
@@ -38,8 +37,7 @@ function reconstruction = reconstructSegmentation(imageStack, segmentation, opti
     % ways of how to batch process so that the analysis part could be done
     % for example for batch-processed reconstructions   
 
-    disp('3D Reconstruction')
-    
+    disp('3D Reconstruction')    
     reconstruction = segmentation;    
     
     % if you just want to write the segmented version here to disk, and to
@@ -125,17 +123,27 @@ function reconstruction = reconstructSegmentation(imageStack, segmentation, opti
         % DT = delaunayTriangulation(tr.Points); 
 
         % save the reconstruction out as .mat file
-        save(fullfile('debugMATs', 'reconstructionOut.mat'), 'F', 'V');
+        save(fullfile(path, 'out', 'reconstructionOut.mat'), 'F', 'V');
 
     %% External formats
     
         % STLWrite
         % http://www.mathworks.com/matlabcentral/fileexchange/20922-stlwrite-filename--varargin-
-        stlwrite(fullfile('figuresOut', 'testReconstruction.stl'), F, V)
+        try
+            stlwrite(fullfile(path, 'out', [options.reconstructFileNameOut, '.stl']), F, V)
+        catch err
+            err
+            warning('?')
+        end
     
         % Write to OFF (or PLY, SMF, WRL, OBJ) using the Toolbox Graph by 
         % http://www.mathworks.com/matlabcentral/fileexchange/5355-toolbox-graph
-        write_mesh(fullfile('figuresOut', 'testReconstruction.off'), V, F)
+        try
+            write_mesh(fullfile(path, 'out', [options.reconstructFileNameOut, '.off']), V, F)
+        catch err
+            err
+            warning('?')
+        end
         
         % Paraview export (VTK)
         % http://www.mathworks.com/matlabcentral/fileexchange/47814-export-3d-data-to-paraview-in-vtk-legacy-file-format
@@ -145,5 +153,4 @@ function reconstruction = reconstructSegmentation(imageStack, segmentation, opti
      
         % as a Wavefront/Alias Obj file
         % http://www.aleph.se/Nada/Ray/matlabobj.html
-        
-        pause
+       

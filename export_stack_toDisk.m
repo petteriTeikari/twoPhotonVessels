@@ -17,14 +17,26 @@ function export_stack_toDisk(fileOut, im)
         disp([' .. Writing ', fileOut, ' to disk as multilayer 16-bit TIF'])
         
         % whos
-        % [min(im(:)) max(im(:))]
-        im = im / max(im(:));
-        im = uint16((im * 2^16) -1);
+        % [min(im(:)) max(im(:))]     
+        im = im - min(im(:));        
+        im = im / max(im(:));        
+        imOut = uint16(im * 65535);
         
-            imwrite(im(:,:,1), fileOut)
-                for k = 2:size(im,3)
-                    imwrite(im(:,:,k), fileOut, 'writemode', 'append');
-                end
+        %uniqueValues = length(unique(im))
+        %uniqueValuesOut = length(unique(imOut))
+        
+        %{
+        whos
+        figure
+        imshow(im(:,:,1)); drawnow()
+        figure
+        imshow(im(:,:,1)); drawnow()
+        %}
+        
+        imwrite(imOut(:,:,1), fileOut, 'tif', 'Compression', 'lzw')
+        for k = 2:size(imOut,3)
+            imwrite(imOut(:,:,k), fileOut, 'tif', 'writemode', 'append', 'Compression', 'lzw');
+        end
                 
         %{
         % http://stackoverflow.com/questions/874461/read-mat-files-in-python

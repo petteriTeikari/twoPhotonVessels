@@ -24,6 +24,12 @@ function process_SingleFile(path, tiffPath, fileName, options)
     % See the introduction to Bio-Formats with Matlab
     % https://www.openmi3croscopy.org/site/support/bio-formats5.1/developers/matlab-dev.html
     if nargin == 0
+
+        fileName = mfilename; fullPath = mfilename('fullpath');
+        pathCode = strrep(fullPath, fileName, ''); cd(pathCode)
+        
+        noOfCores = 2;
+        init_parallelComputing(noOfCores)
         
         % use local test files for development
         fileName = 'CP-20150323-TR70-mouse2-1-son.oib';
@@ -39,9 +45,10 @@ function process_SingleFile(path, tiffPath, fileName, options)
         
         % debug/development flag to speed up the development, for actual
         % processing of files, put all to false
-        options.useOnlyFirstTimePoint = true;
+        options.useOnlyFirstTimePoint = false;
         options.useOnlySubsetOfStack = false;
         options.resizeStacks2D = false;
+        options.resize2D_factor = 1 / 16;
         options.skipImportBioFormats = false;
         
     else
@@ -62,10 +69,10 @@ function process_SingleFile(path, tiffPath, fileName, options)
             % to make the development faster
             options.noOfChannels = length(imageStack);
             options.noOfTimePoints = length(imageStack{1});
-            save(fullfile('debugMATs', 'importTemp.mat'), 'imageStack', 'options') % devel/debug MAT
+            %save(fullfile('debugMATs', 'importTemp.mat'), 'imageStack', 'options') % devel/debug MAT
         else
             disp('Skipping OIB import, load directly from MAT (Faster)')
-            load(fullfile('debugMATs', 'importTemp.mat')) % devel/debug MAT
+            %load(fullfile('debugMATs', 'importTemp.mat')) % devel/debug MAT
         end
         
         
@@ -79,20 +86,30 @@ function process_SingleFile(path, tiffPath, fileName, options)
             options.denoisingCycleSpins = 4;
             options.denoisingMultiframe = 3;
             options.denoisingAlgorithm = 'PureDenoise';
-            % options.denoisingAlgorithm = 'NLMeansPoisson';
+            options.denoisingAlgorithm = 'NLMeansPoisson';
             % options.denoisingAlgorithm = 'GuidedFilter';
             
             ch = 1; % not the same processing for all the channels anyway
             for t = 1 : options.noOfTimePoints
-                denoisedImageStack{ch}{t} = denoiseMicroscopyImage(imageStack{ch}{t}(:,:,:), [], options); 
+                [denoisedImageStack{ch}{t}, timeExecDenoising(ch,t)] = denoiseMicroscopyImage(imageStack{ch}{t}(:,:,:), [], t, ch, options); 
+                
+                filename = fullfile('/home/petteri/Desktop/testPM/out', ...
+                ['denoised_', options.denoisingAlgorithm '_ch', num2str(ch), '_t', num2str(t), '.mat']);
+            
+                stackOutAsMat = denoisedImageStack{ch}{t};
+                save(filename, 'stackOutAsMat')
+                fileOut = strrep(filename, '.mat', '.tif');
+                export_stack_toDisk(fileOut, denoisedImageStack{ch}{t}) 
+                
             end            
+            
+            denoisingTook = sum(timeExecDenoising(ch,:))
             
             % TODO: Maybe decide later whether it is better to pass 3D
             %       matrices to all the functions here or pass the whole
             %       "5D cell" and parse it inside.
             
-            fileOut = fullfile('/home/petteri/Desktop', ['testOutput', options.denoisingAlgorithm, '_Denoised.tif']);
-            export_stack_toDisk(fileOut, imageStack{ch}{t}) 
+            
         end
         
         % Stop here if you only want the denoising to be done.
@@ -139,7 +156,11 @@ function process_SingleFile(path, tiffPath, fileName, options)
             
         % use a subset of the stack as well for speeding up the testing
         ch = 1; % not the same processing for all the channels anyway
+        options.segmentationAlgorithm = 'asets_levelSets'; % or 'asets_levelSets'
         for t = 1 : options.noOfTimePoints
+            
+            options.segmImageOutBase = ['segmentationProgress_', options.segmentationAlgorithm '_ch', num2str(ch), '_t', num2str(t)];
+            
             segmentation{ch}{t} = segmentVessels(denoisedImageStack{ch}{t}(:,:,:), tubularity{ch}{t}, options);
         end
         
@@ -150,11 +171,14 @@ function process_SingleFile(path, tiffPath, fileName, options)
             % only once and do not require user intervention every time the
             % script is run
 
+            save(fullfile('/home/petteri/Desktop/testPM/out',  ['segmentationOutAllTimes.mat']), 'segmentation')
+            
 
     %% RECONSTRUCT
     
         ch = 1; % not the same processing for all the channels anyway
         for t = 1 : options.noOfTimePoints
+            options.reconstructFileNameOut = ['reconstruct_', options.segmentationAlgorithm '_ch', num2str(ch), '_t', num2str(t)];
             reconstruction{ch}{t} = reconstructSegmentation(denoisedImageStack{ch}{t}(:,:,:), segmentation{ch}{t}(:,:,:), options);
         end
     

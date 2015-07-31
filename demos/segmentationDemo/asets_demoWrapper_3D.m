@@ -51,7 +51,7 @@ function region = asets_demoWrapper_3D(img, vessel, edges, sliceIndex, visualize
         if visualizeON
             if ~visualize3D
 
-                set(fig,  'Position', [0.01*scrsz(3) 0.05*scrsz(4) 0.95*scrsz(3) 0.90*scrsz(4)])
+                set(fig,  'Position', [0.01*scrsz(3) 0.05*scrsz(4) 0.7*scrsz(3) 0.90*scrsz(4)])
                 rows = 4; cols = 4;
                 i = 1;
                 subplot(rows,cols,i); imshow(img_n(:,:,sliceIndex),[]);
@@ -63,7 +63,7 @@ function region = asets_demoWrapper_3D(img, vessel, edges, sliceIndex, visualize
 
             else       
 
-                set(fig,  'Position', [0.05*scrsz(3) 0.025*scrsz(4) 0.7*scrsz(3) 0.95*scrsz(4)])
+                set(fig,  'Position', [0.01*scrsz(3) 0.025*scrsz(4) 0.95*scrsz(3) 0.95*scrsz(4)])
                 rows = 4; cols = 6;
 
                 % create a mesh from input
@@ -90,7 +90,7 @@ function region = asets_demoWrapper_3D(img, vessel, edges, sliceIndex, visualize
 
                     az = -20; el = 60;
                     view(az,el);
-                    daspect([1,1,0.05]); axis tight
+                    daspect([1,1,0.05*size(img,3)/10]); axis tight
                     % xlabel('X'); ylabel('Y'); zlabel('Z')
                     tit(i) = title('Input Stack');
                     camlight 
@@ -103,6 +103,10 @@ function region = asets_demoWrapper_3D(img, vessel, edges, sliceIndex, visualize
 
                     MaxIP_in = max(img_n, [], 3);     
                     maxIP_limits = [min(MaxIP_in(:)) max(MaxIP_in(:))];
+                     
+                    if maxIP_limits(1) == maxIP_limits(2)
+                       maxIP_limits = [0 1];
+                    end
                     imH(i) = imshow(MaxIP_in, 'DisplayRange', maxIP_limits); tit(i) = title('MaxIP Input');
 
 
@@ -153,8 +157,8 @@ function region = asets_demoWrapper_3D(img, vessel, edges, sliceIndex, visualize
                     ptchIn3 = patch('Faces',F2,'Vertices', V2, ...            
                                     'edgecolor', 'none', ...
                                     'facecolor', 'blue', 'FaceAlpha', 0.3);
-                    view(az,el);1
-                    daspect([1,1,0.05]); axis tight
+                    view(az,el);
+                    daspect([1,1,0.05*size(img,3)/10]); axis tight
                     %xlabel('X'); ylabel('Y'); zlabel('Z')
                     tit(i) = title('Contour Init');
                     camlight 
@@ -211,7 +215,7 @@ function region = asets_demoWrapper_3D(img, vessel, edges, sliceIndex, visualize
         else % binary 
             d_speed_inside = bwdist(region == 1,'Euclidean');
             d_speed_outside = bwdist(region == 0,'Euclidean');
-           1
+            
             % 7. Compute a intensity data term based on the L1 distance to the
             % mean7
             m_int_inside = mean(mean(mean(img_n(region == 1))));
@@ -375,7 +379,7 @@ function region = asets_demoWrapper_3D(img, vessel, edges, sliceIndex, visualize
                                     'edgecolor', 'none', ...
                                     'facecolor', 'k', 'FaceAlpha', 0.3);
                     view(az,el);
-                    daspect([1,1,0.05]); axis tight
+                    daspect([1,1,0.05*size(img,3)/10]); axis tight
                     %xlabel('X'); ylabel('Y'); zlabel('Z')
                     tit(i) = title('Cs-Ct');
                     camlight 
@@ -437,7 +441,7 @@ function region = asets_demoWrapper_3D(img, vessel, edges, sliceIndex, visualize
 
             timePlotUpdate2 = toc;
             disp(['  plot update took: ', num2str(timePlotUpdate2,3), ' seconds'])
-            export_fig([fileOutBase, '_', num2str(index), '.png'], '-r100', '-a2')
+            export_fig(fullfile('figuresOut', 'segmentation', [fileOutBase, '_', num2str(index), '.png']), '-r100', '-a2')
         
         end % end visualizeON
         

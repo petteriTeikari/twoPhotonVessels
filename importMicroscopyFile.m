@@ -72,10 +72,18 @@ function [data, imageStack, metadata, options] = importMicroscopyFile(fileName, 
             err
             % err.message
             if strcmp(err.identifier, 'MATLAB:UndefinedFunction')
-               error('bfopen not found, nothing imported! Have you added Bio-Formats "bfmatlab"-folder to path?')
+                error('bfopen not found, nothing imported! Have you added Bio-Formats "bfmatlab"-folder to path?')
+            elseif strcmp(err.identifier, 'MATLAB:undefinedVarOrClass')                
+                warning('BioFormats not installed properly?')
+                warning('Edit your "classpath.txt')
+                file = which('classpath.txt')
+                edit(file)
+                warning('https://www.openmicroscopy.org/site/support/bio-formats5.1/users/matlab/index.html')
+                warning('remember to restart Matlab as well')
+                error('loci not found, you have not added Bio-Formats to Java path?')
             else
-               err 
-               err.message
+                err 
+                err.message
             end
         end
         
@@ -142,16 +150,22 @@ function [data, imageStack, metadata, options] = importMicroscopyFile(fileName, 
 
         % 2D downsampling of each stack
         if options.resizeStacks2D
-            disp('  Stack is 2D-resized stack-by-stack to accelerate development')
+            disp('  Stack is 2D-resized stack-by-stack to accelerate development')            
+            disp(['    .. new size = ', num2str(options.resize2D_factor*metadata.main.stackSizeX), ...
+                  'x', num2str(options.resize2D_factor*metadata.main.stackSizeY), ' (xy)'])
+              
             for ch = 1 : length(imageStack)
                 for t = 1 : length(imageStack{1})
                     for z = 1 : size(imageStack{1}{1},3)
-                        imageStackTmp{ch}{t}(:,:,z) = imresize(imageStack{ch}{t}(:,:,z), 0.5);
+                        imageStackTmp{ch}{t}(:,:,z) = imresize(imageStack{ch}{t}(:,:,z), options.resize2D_factor);
                     end
                 end
             end
             imageStack = imageStackTmp;
         end 
+        
+        disp('IMPORT DONE')
+        disp(' ')
 
 
 

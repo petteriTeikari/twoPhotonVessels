@@ -1,8 +1,8 @@
 function tubularValue = vesselness_OOF_wrapper(imageStackIn, radius, opts)
 
     tic
-    opts.responsetype=0; % l1; (default)
-    opts.responsetype=1; % l1 + l2;
+    %opts.responsetype=0; % l1; (default)
+    %opts.responsetype=1; % l1 + l2;
     tubularValue = oof3response(imageStackIn, radius(1):radius(2), opts);
     timeTook = toc;
     disp(['   .. done in ', num2str(timeTook,4), ' seconds']);

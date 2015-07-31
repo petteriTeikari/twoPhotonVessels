@@ -1,4 +1,4 @@
-function visualize_denoising(imageIn, denoised, stackIndex, timeExecDenoising, fileOutName, path, options)
+function visualize_denoising(imageIn, denoised, stackIndex, timeExecDenoising, fileOutName, t, ch, path, options)
 
     % Define quality metrics (short inline fucntions)
     mse = @(a,b) (a(:)-b(:))'*(a(:)-b(:))/numel(a);

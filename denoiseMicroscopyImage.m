@@ -1,4 +1,4 @@
-function denoised = denoiseMicroscopyImage(imageIn, labelIn, options) 
+function [denoised,timeExecDenoising] = denoiseMicroscopyImage(imageIn, labelIn, t, ch, options) 
     
     %% INIT
 
@@ -25,17 +25,17 @@ function denoised = denoiseMicroscopyImage(imageIn, labelIn, options)
 
         % imageIn = imageIn(:, :, 9:11);
         
-        fileOutName = [options.denoisingAlgorithm, '_DenoisingWholeStack.png'];
+        fileOutName = [options.denoisingAlgorithm, '_DenoisingWholeStack_t', num2str(t), '_ch', num2str(ch), '.png'];
     
     %% DENOISING
     
         %% NL-MEANS (for POISSON NOISE)
         if strcmp(options.denoisingAlgorithm, 'NLMeansPoisson')
             
-            % This is very slow
+            % This is very slow, but the quality of the output is good
+            % (edges preserved, smooth surfaces)
             hW = 10; hB = 3; hK = 6;
             [denoised, timeExecDenoising] = denoise_NLMeansPoissonWrapper(imageIn, hW, hB, hK);
-            
         
             
     
@@ -96,6 +96,7 @@ function denoised = denoiseMicroscopyImage(imageIn, labelIn, options)
             error('What is your denoising method?')
         end
             
+        timeExecDenoising
         
     %% OTHER
     
@@ -110,5 +111,5 @@ function denoised = denoiseMicroscopyImage(imageIn, labelIn, options)
         % timeExecDenoising    
         if ~options.batchFlag
             stackIndex = 9;
-            visualize_denoising(imageIn, denoised, stackIndex, timeExecDenoising, fileOutName, path, options)            
+            visualize_denoising(imageIn, denoised, stackIndex, timeExecDenoising, fileOutName, t, ch, path, options)            
         end

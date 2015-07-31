@@ -44,12 +44,11 @@ function metadata = import_parseMetadata(data, options)
     metadata.main.stackSizeZ = metadata.omeMeta.getPixelsSizeZ(0).getValue(); % number of Z slices
     
     % Physical sizes
-    % metadata.main.voxelSizeX = metadata.omeMeta.getPixelsPhysicalSizeX(0).getValue(); % in µm
-    % metadata.main.voxelSizeY = metadata.omeMeta.getPixelsPhysicalSizeY(0).getValue(); % in µm
-    % metadata.main.voxelSizeZ = metadata.omeMeta.getPixelsPhysicalSizeZ(0).getValue(); % in µm
+    %metadata.main.voxelSizeX = metadata.omeMeta.getPixelsPhysicalSizeX(0).getValue() % in µm
+    %metadata.main.voxelSizeY = metadata.omeMeta.getPixelsPhysicalSizeY(0).getValue() % in µm
+    %metadata.main.voxelSizeZ = metadata.omeMeta.getPixelsPhysicalSizeZ(0).getValue() % in µm
     
-        % FIX: No appropriate method, property, or field getValue for class ome.units.quantity.Length.   
-    
+        % FIX: No appropriate method, property, or field getValue for class ome.units.quantity.Length.    
         % a = metadata.omeMeta.getPixelsTimeIncrement(0), NO
     
     % No of Channels (Red, Green, etc.)
