@@ -58,10 +58,9 @@ function [denoised, timeExecDenoising] = denoise_NLMeansPoissonWrapper(imageIn, 
 
     end   
     
+    % Put back to a matrix    
     denoised = zeros(size(imageIn));    
-    whos
-    for i = length(denoisedCell)
-        i
+    for i = 1 : length(denoisedCell)
         denoised(:,:,i) = denoisedCell{i};
     end
     
