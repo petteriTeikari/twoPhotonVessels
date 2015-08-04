@@ -27,7 +27,7 @@ function [ima_lambda_opt alpha beta i] = ...
     stop = 0;
     ima_lambda_hat = ima_lambda_init;
     iterCount = 0;
-    fprintf('   iter: ')
+    fprintf('     iter: ')
     while ~stop
         
         fprintf('%d ', i)
