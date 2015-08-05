@@ -31,7 +31,7 @@ function demo_testMeshRegistration()
                 % the rotations  
         
         % plot input
-        plotON = true;
+        plotON = false;
         if plotON
             % figure('Color', 'w')
             %subplot(1,2,1); displayMesh(vertex1, face1)
@@ -44,12 +44,18 @@ function demo_testMeshRegistration()
         % see for example
         % http://stackoverflow.com/questions/9065156/how-to-align-two-meshes
         
-        %% ICP
-        
+        options.registerAlgorithm = 'ICP';
+        options.registerAlgorithm = 'metch';
+                
+        % ICP
+        if strcmp(options.registerAlgorithm, 'ICP')
+
             % http://www.mathworks.com/matlabcentral/fileexchange/24301-finite-iterative-closest-point
             model = vertex1;
             data = vertex2;
             [TR,TT,dataOut]=icp(model,data); % Least squares criterion   
+                TR
+                TT
                 disp('Least Squares'); [TRdeg, rot] = displayMatrixInDegrees(TR,TT);
             [TR2,TT2,dataOut2]=icp(model,data,[],[],4); % Welsh criterion   
                 disp('Welsh'); [TRdeg2, rot2] = displayMatrixInDegrees(TR2,TT2);
@@ -57,12 +63,21 @@ function demo_testMeshRegistration()
             plotICP(model,data,TR,TT,dataOut, 'LeastSquares')            
             plotICP(model,data,TR2,TT2,dataOut2, 'Welsh')
 
-        
-       %% METCH     
+        % METCH     
+        elseif strcmp(options.registerAlgorithm, 'metch')
+              
+            options = [];
+            [A, b, points_after_proj] = register_metchWrapper(vertex1, vertex2, face1, face2, options);
+            disp('Metch'); [Adeg, rot] = displayMatrixInDegrees(A,b);
+            whos
             
-            
+        else
+            error([options.registerAlgorithm, '? No such registration algorithm!'])            
+        end
+       
       
     %% SUBFUNCTIONS
+    
     
         % subfunction to display input mesh    
         function displayMesh(V, F)
