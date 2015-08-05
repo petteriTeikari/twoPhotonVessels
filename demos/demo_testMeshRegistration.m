@@ -3,8 +3,8 @@ function demo_testMeshRegistration()
     %% import test data
     
         % define file names
-        mesh1 = fullfile('..', 'testData', 'testReconstruction_physicDimensions_6-25perc_decimated.ply');
-        mesh2 = fullfile('..', 'testData', 'testReconstruction_physicDimensions_6-25perc_decimated_allAxes45degRotated.ply');
+        mesh1 = fullfile('..', 'testData', 'testReconstruction_physicDimensions_6-25perc_decimated_v2segmentation.off');
+        mesh2 = fullfile('..', 'testData', 'testReconstruction_physicDimensions_6-25perc_decimated_v2segmentation_allAxes5degRotated.off');
         
             % mesh2 should have 3 rotations about x,y and z axes and no
             % translations. To test the robustness of the algorithm, you
@@ -19,8 +19,8 @@ function demo_testMeshRegistration()
             
         % read in, from Toolbox Graph: 
         % http://www.mathworks.com/matlabcentral/fileexchange/5355-toolbox-graph
-        [vertex1,face1] = read_ply(mesh1);
-        [vertex2,face2] = read_ply(mesh2);
+        [vertex1,face1] = read_off(mesh1);
+        [vertex2,face2] = read_off(mesh2);
         
         % plot input
         plotON = false;
@@ -34,6 +34,7 @@ function demo_testMeshRegistration()
     
         % see for example
         % http://stackoverflow.com/questions/9065156/how-to-align-two-meshes
+        whos
       
         
     % subfunction to display mesh    
