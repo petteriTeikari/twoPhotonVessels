@@ -1,0 +1,32 @@
+==========================================================
+
+     Metch - a mesh/volume registration toolbox
+
+----------------------------------------------------------
+
+Metch ChangeLog:
+
+2008/12/17 (v0.5.0, alpha release, codename: Marshmallow)
+	1. after extensive debugging, metchgui is now able to 
+           perform all critical functionalities of the toolbox; 
+           it supports return values and result export/import;
+           we also provided a stand-alone m-file of the GUI
+        2. added documentation and demonstration scripts
+        3. affinemap now calc. least-square solutions, therefore, it
+           accepts point pairs more than or less than 4.
+        4. tested in Octave with demos
+
+2008/12/05 (v0.2)
+        1. wrote a Guass-Newton based optimization script to optimize
+           affine transformation matrix (A/b) to get better 
+           point-to-surface fitting.
+        2. wrote a point-to-surface projection subroutine to get
+           make sure the resulting points locating exactly on the 
+           surface
+        3. profiled the subroutines and extensively optimized the 
+           computational efficiency
+
+2008/11/07 (v0.1)
+        1. extracted a set registration functions from a workflow
+           developed for an on-going research project for 
+           brain-functional imaging

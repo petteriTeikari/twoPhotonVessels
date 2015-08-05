@@ -1,0 +1,241 @@
+----------------------------------------------------------
+=      A registration toolbox for FEM surface meshes     =
+----------------------------------------------------------
+
+'''Author''': Qianqian Fang <fangq at nmr.mgh.harvard.edu>
+::      Photon Migration Lab
+::      Martinos Center for Biomedical Imaging
+::      Massachusetts General Hospital (Harvard Medical School)
+::      Bldg. 149, 13th St., Charlestown, MA 02148
+'''Version''': 0.5
+'''License''': GPL v2 or later (see COPYING) 
+'''URL''': http://iso2mesh.sf.net/cgi-bin/index.cgi?metch
+
+
+== Table of Content ==
+<toc>
+
+== # Introduction ==
+
+"Metch", coined from "mesh" and "match", is a Matlab/Octave-based 
+mesh/volume registration toolbox. It provides straightforward
+functions to register point clouds (or surfaces) to a 
+triangular/cubic surface mesh by calculating an optimal
+affine transformation (in terms of matrix A for scaling 
+and rotation, and b for translation). It also allows one to 
+project a point cloud onto the surface using surface norms
+and guarantee the conformity of the points to the surface.
+
+
+== # List of functions ==
+
+=== metchgui.m ===
+<tt>    alldata = metchgui(node,elem,points) or metchgui(volume,points)</tt>
+
+    A GUI to register a point cloud to a mesh or volumetric image
+  
+  
+   parameters: 
+        node: node coordinate of the surface mesh (nn x 3)
+        elem: element list of the surface mesh (3 columns for 
+              triangular mesh, 4 columns for cubic surface mesh)
+
+   the input can also be two parameters in form of metchgui(volume,points), 
+    where volume is a 3D image (array).
+
+   outputs:
+        alldata: a structrure containing all processing outputs
+        the fields include: 
+         .node: the input node 
+         .elem: the input surface mesh elements
+         .volume: if the input volumetric image
+         .A0: the affine rotation for selected point pairs (after Initialize)
+         .b0: the affine translation for selected point pairs (after Initialize)
+         .A: the affine rotation for the point cloud (after Optimize)
+         .b: the affine translation for the point cloud (after Optimize)
+         .points: the input point cloud
+         .pointsinit: the point cloud after initialization
+         .pointsopt: the point cloud after optimization
+         .pointsproj: the point cloud after projecting to the surface
+         .initplot: the handle to the point cloud plot after init
+         .optplot: the handle to the point cloud plot after optimization
+         .projplot: the handle to the point cloud plot after projection
+
+   If user supplys an output variable, the GUI will not return until the
+   user hits the "close" button or close the window; if user does not
+   supply any output, the call will return immediately; any data user
+   intends to save, he has to click on "Save Session" button and provides
+   a mat-file file name. A single structure named "metchsession" will be
+   stored in this file.
+   
+   This function is matlab-only.
+
+=== metchgui_one.m ===
+<tt>    alldata = metchgui_one(node,elem,points) or metchgui_one(volume,points)</tt>
+
+    this is the same as metchgui.m except it does not need metchgui.fig in order
+    to run. It can also be run on lower versions of matlab.
+
+=== regpt2surf.m ===
+<tt>  [A,b,newpos]=regpt2surf(node,elem,p,pmask,A0,b0,cmask,maxiter)</tt>
+  Perform point cloud registration to a triangular surface
+  (surface can be either triangular or cubic), Gauss-Newton method
+  is used for the calculation
+
+
+ parameters: 
+      node: node coordinate of the surface mesh (nn x 3)
+      elem: element list of the surface mesh (3 columns for 
+            triangular mesh, 4 columns for cubic surface mesh)
+      p: points to be registered, 3 columns for x,y and z respectively
+      pmask: a mask vector with the same length as p, determines the 
+         method to handle the point, if pmask(i)=-1, the point is a free
+         node and can be move by the optimization, if pmask(i)=0, the
+         point is fixed; if pmask(i)=n>0, the distance between p(i,:)
+         and node(n,:) will be part of the object function and be optimized
+      A0: a 3x3 matrix, as the initial guess for the affine A matrix (rotation&scaling)
+      b0: a 3x1 vector, as the initial guess for the affine b vector (translation)
+      cmask: a binary 12x1 vector, determines which element of [A(:);b] will be optimized
+      maxiter: a integer, specifying the optimization iterations
+
+ outputs:
+      newpos: the registered positions for p, newpos=A*p'+b
+
+=== proj2mesh.m ===
+<tt>  [newpt elemid weight]=proj2mesh(v,f,pt,nv,cn)</tt>
+
+  project a point cloud on to the surface mesh (surface can only be triangular)
+
+
+ parameters: 
+      v: node coordinate of the surface mesh (nn x 3)
+      f: element list of the surface mesh (3 columns for 
+            triangular mesh, 4 columns for cubic surface mesh)
+      pt: points to be projected, 3 columns for x,y and z respectively
+      nv: nodal norms (vector) calculated from nodesurfnorm.m
+          with dimensions of (size(v,1),3)
+      cn: a integer vector with the length of p, denoting the closest
+          surface nodes (indices of v) for each point in p. this 
+          value can be calculated from dist2surf.m
+
+      if nv and cn are not supplied, proj2mesh will project the point
+      cloud onto the surface by the direction pointing to the centroid
+      of the mesh
+
+ outputs:
+      newpt: the projected points from p
+      elemid: a vector of length of p, denotes which surface trangle (in elem)
+             contains the projected point
+      weight: the barycentric coordinate for each projected points, these are
+             the weights 
+
+
+=== affinemap.m ===
+<tt>  [A,b]=affinemap(pfrom,pto)</tt>
+
+  calculate an affine transform (A matrix and b vector) to map n
+  vertices from one space to the other using least square solutions
+
+
+ parameters: 
+      pfrom: nx3 matrix, each row is a 3d point in original space
+      pto: nx3 matrix, each row is a 3d point in the mapped space
+
+ outputs:
+      A: 3x3 matrix, the calculated affine A matrix
+      b: 3x1 vector, the calculated affine b vector
+
+ the solution will satisfy the following equation: A*pfrom'+b=pto
+
+
+=== dist2surf.m ===
+<tt>  [d2surf,cn]=dist2surf(node,nv,p)</tt>
+
+  calculate the distances from a point cloud to a surface, and return
+  the indices of the closest surface node
+
+
+ parameters: 
+      node: node coordinate of the surface mesh (nn x 3)
+      nv: nodal norms (vector) calculated from nodesurfnorm.m
+          with dimensions of (size(node,1),3), this can be 
+          calcuated from nodesurfnorm.m
+      pt: points to be calculated, 3 columns for x,y and z respectively
+
+ outputs:
+      d2surf: a vector of length of p, the distances from p(i) to the surface
+      cn: a integer vector with the length of p, the indices of the closest surface node
+
+
+=== getplanefrom3pt.m ===
+<tt>  [a,b,c,d]=getplanefrom3pt(plane)</tt>
+
+  calculate the plane equation coefficients for a plane 
+   (determined by 3 points), the plane equation is a*x+b*y+c*z+d=0
+
+
+ parameters: 
+      plane: a 3x3 matrix, each row is a 3d point in form of (x,y,z)
+             this is used to define a plane
+ outputs:
+      a,b,c,d: the coefficients of the plane equation
+
+
+=== linextriangle.m ===
+<tt>  [isinside,pt,coord]=linextriangle(p0,p1,plane)</tt>
+
+  calculate the intersection of a 3d line (passing two points)
+  with a plane (determined by 3 points)
+
+
+ parameters: 
+      p0: a 3d point in form of (x,y,z)
+      p1: another 3d point in form of (x,y,z), p0 and p1 determins the line
+      plane: a 3x3 matrix, each row is a 3d point in form of (x,y,z)
+             this is used to define a plane
+ outputs:
+      isinside: a boolean variable, 1 for the intersection is within the 
+               3d triangle determined by the 3 points in plane; 0 is outside
+      pt: the coordinates of the intersection pint
+      coord: 1x3 vector, if isinside=1, coord will record the barycentric 
+          coordinate for the intersection point within the triangle; 
+          otherwise it will be all zeros.
+
+  
+=== nodesurfnorm.m ===
+<tt>  nv=nodesurfnorm(node,elem)</tt>
+
+  calculate a nodal norm for each vertix on a surface mesh (surface 
+   can only be triangular or cubic)
+
+
+ parameters: 
+      node: node coordinate of the surface mesh (nn x 3)
+      elem: element list of the surface mesh (3 columns for 
+            triangular mesh, 4 columns for cubic surface mesh)
+      pt: points to be projected, 3 columns for x,y and z respectively
+
+ outputs:
+      nv: nodal norms (vector) calculated from nodesurfnorm.m
+          with dimensions of (size(v,1),3)
+
+
+=== trisurfnorm.m ===
+<tt>  ev=trisurfnorm(node,elem)</tt>
+  calculate the surface norms for each element
+  (surface can be either triangular or cubic)
+
+
+ parameters: 
+      node: node coordinate of the surface mesh (nn x 3)
+      elem: element list of the surface mesh (3 columns for 
+            triangular mesh, 4 columns for cubic surface mesh)
+ outputs:
+      ev: norm vector for each surface element
+
+
+== # Acknowledgement ==
+
+This toolbox was developed with the support from NIH grant titled 
+"Dynamic Inverse Solutions for Multimodal Imaging" (R01EB006385)
+
