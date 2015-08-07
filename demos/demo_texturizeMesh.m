@@ -15,10 +15,10 @@ function demo_texturizeMesh()
     %% FROM THE DEMO (File Exchange), uses an image actually
     
         % texturePatch
-        %{
+        
         
         % Load Data;
-        load testdata;
+        load testdata; % comes with texturePatch
         whos        
         %         FF                          572x3                 13728  double               
         %         I                           256x256x3            196608  uint8                
