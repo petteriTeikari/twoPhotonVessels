@@ -1,5 +1,5 @@
 function reconstruction = reconstructMeshFromSegmentation(binaryStack, path, ...
-                            segmentationAlgorithm, reconstructionAlgorithm, isovalue, options, t, ch)
+                            segmentationAlgorithm, reconstructionAlgorithm, isoValue, options, t, ch)
 
     % Direct import from .mat file if needed
     if nargin == 0
@@ -47,7 +47,7 @@ function reconstruction = reconstructMeshFromSegmentation(binaryStack, path, ...
             
             % Using Marching Cubes algorithm from Matlab FEX
             % http://www.mathworks.com/matlabcentral/fileexchange/32506-marching-cubes
-            isoValue = 0.1;
+            
             downSampleFactor = [1 1]; % [xy z] downsample to get less vertices/faces
             physicalScaling = [1 1 5]; % physical units of FOV
                                        % TODO, make automagic from metadata
