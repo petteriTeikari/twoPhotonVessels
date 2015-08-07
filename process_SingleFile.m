@@ -34,13 +34,12 @@ function process_SingleFile(path, tiffPath, fileName, options)
         
         % use local test files for development
         fileName = 'CP-20150323-TR70-mouse2-1-son.oib';
-        path = '/home/petteri/Desktop/testPM/out';
+        path = '/home/petteri/Desktop/testPM';
         
         % fileName = 'CP-20150616-TR70-mouse1-scan8-son2_subset_noLeakage.ome.tif';
-        % path = 'data';
-        
-        tiffPath = path; % use same now
-        options.pathBigFiles = path; % don't save all the big files to Dropbox
+        % path = 'data';        
+        tiffPath = path; % use same now        
+        options.pathBigFiles = fullfile(path,'out'); % don't save all the big files to Dropbox
         options.batchFlag = false;
         options.denoiseOnly = false; % just denoise, and save to disk, useful for overnight pre-batch processing
         
@@ -52,8 +51,9 @@ function process_SingleFile(path, tiffPath, fileName, options)
         options.resize2D_factor = 1 / 16;
         options.skipImportBioFormats = false;
         options.loadFromTIFF = false; % loading directly from the denoised OME-TIFF (if found)
-        
-        options.timePointLimits = [4 5]; % manual
+                
+        options.manualTimePoints = true;
+        options.tP = [4 5]; % manual time point definition
         
         ch = 1; % fixed now, if you had multiple vasculature labels, modify
                 % channel behavior
@@ -77,8 +77,8 @@ function process_SingleFile(path, tiffPath, fileName, options)
             
         options.denoisingAlgorithm = 'GuidedFilter'; % 'NLMeansPoisson'; % 'PureDenoise', 'GuidedFilter'
         
-        for t = options.timePointLimits(1) : options.timePointLimits(2)
-            [denoisedStack{ch}{t}, timing.denoising(ch,t)] = denoiseMicroscopyImage(imageStack{ch}{t}(:,:,:), options.denoisingAlgorithm, options, t, ch);            
+        for t = 1 : length(options.tP)
+            [denoisedStack{ch}{options.tP(t)}, timing.denoising(ch,t)] = denoiseMicroscopyImage(imageStack{ch}{options.tP(t)}(:,:,:), options.denoisingAlgorithm, options, t, ch);            
         end
         
         % if you only want denoising, and not the remaining algorithms
@@ -100,8 +100,8 @@ function process_SingleFile(path, tiffPath, fileName, options)
         options.vesselAlgorithm = 'OOF_OFA'; % e.g. 'OOF', 'OOF-OFA', 'MDOF', 'VED'
         options.scales = 1:3; % same for all the different filters
         
-        for t = options.timePointLimits(1) : options.timePointLimits(2)
-            vesselness{ch}{t}.(options.vesselAlgorithm) = vesselnessFilter(denoisedStack{ch}{t}(:,:,:), options.vesselAlgorithm, options.scales, options, t, ch);
+        for t = 1 : length(options.tP)
+            vesselness{ch}{options.tP(t)}.(options.vesselAlgorithm) = vesselnessFilter(denoisedStack{ch}{options.tP(t)}(:,:,:), options.vesselAlgorithm, options.scales, options, t, ch);
         end        
     
     %% VESSEL SEGMENTATION    
@@ -110,51 +110,66 @@ function process_SingleFile(path, tiffPath, fileName, options)
         options.segmentationAlgorithm = 'asets_levelSets'; % or 'maxFlow_JingYuan'
             % now there are bunch of parameters for the segmentation!
         
-        for t = options.timePointLimits(1) : options.timePointLimits(2)
-            [segmentedStack{ch}{t}, segmentationMask{ch}{t}] = segmentVessels(denoisedStack{ch}{t}(:,:,:), ...
-                                    vesselness{ch}{t}.(options.vesselAlgorithm).data(:,:,:), options.segmentationAlgorithm, options, t, ch);
+        for t = 1 : length(options.tP)
+            [segmentationStack{ch}{options.tP(t)}, segmentationMask{ch}{options.tP(t)}] = segmentVessels(denoisedStack{ch}{options.tP(t)}(:,:,:), ...
+                                    vesselness{ch}{options.tP(t)}.(options.vesselAlgorithm).data(:,:,:), options.segmentationAlgorithm, options, t, ch);
         end
+        close all
         
 
-    %% RECONSTRUCT
+    %% RECONSTRUCT MESH
     
         options.reconstructionAlgorithm = 'marchingCubes';
         options.reconstructionIsovalue = 0.01;
     
-        for t = options.timePointLimits(1) : options.timePointLimits(2)            
-            reconstruction{ch}{t} = reconstructMeshFromSegmentation(segmentationMask{ch}{t}, options.pathBigFiles, options.reconstructionAlgorithm, options.reconstructionIsovalue, options, t, ch);
+        for t = 1 : length(options.tP)           
+            reconstruction{ch}{options.tP(t)} = reconstructMeshFromSegmentation(segmentationMask{ch}{options.tP(t)}, options.pathBigFiles, ...
+                options.segmentationAlgorithm, options.reconstructionAlgorithm, options.reconstructionIsovalue, options, t, ch);
         end
     
+    %% FILTER THE MESH RECONSTRUCTION
+    
+        % probably needed? - simplification - downsampling - smoothing        
+        operations = {'simplification'; 'smoothing'}; % sequential, on top of previous
+        
+        for o = 1 : length(operations)
+            for t = 1 : length(options.tP)           
+                reconstruction{ch}{options.tP(t)} = filterReconstructedMesh(reconstruction{ch}{options.tP(t)}, operations{o}, options, t, ch);
+            end
+        end        
+        
     %% EXTRACT THE CENTERLINE ("SKELETONIZE")
     
         options.centerlineAlgorithm = 'parallelMedialAxisThinning'; % or 'fastMarchingKroon'
         
-        for t = options.timePointLimits(1) : options.timePointLimits(2)
-            options.centerlineFileNameOut = ['centerline_', options.segmentationAlgorithm '_ch', num2str(ch), '_t', num2str(t)];
-            centerline{ch}{t} = extractCenterline(reconstruction{ch}{t}, segmentation{ch}{t}(:,:,:), options);
+        for t = 1 : length(options.tP)           
+            centerline{ch}{options.tP(t)} = extractCenterline(reconstruction{ch}{options.tP(t)}, segmentationMask{ch}{options.tP(t)}(:,:,:), options.centerlineAlgorithm, options, t, ch);
         end
-        
+        close all
         
     %% REGISTER the RECONSTRUCTION
     
-        for t = options.timePointLimits(1) : options.timePointLimits(2)
-            % regReconstruction{ch}{t} = registerTheStack(reconstruction{ch}{t}(:,:,:), options);
+        % use the first time point as the model now     
+        options.registerModelIndex = 1; % the remaining ones are registered to this   
+        options.registrationAlgorithm = 'ICP';
+        modelMesh = reconstruction{ch}{options.tP(options.registerModelIndex)};
+        
+        for t = 1 : length(options.tP)
+            [regReconstruction{ch}{options.tP(t)}, transformMatrix{ch}{options.tP(t)}] = registerTheMeshes(modelMesh, reconstruction{ch}{options.tP(t)}, ...
+                        options.registrationAlgorithm, options.registerModelIndex, options.tP, options, t, ch);
         end
+        
+    %% FLUORESCENCE ANALAYSIS
+    
+        % e.g. fluorescence difference (intra vs. extravascular space)
         
         
     %% MORPHOLOGICAL ANALYSIS    
     
-        % i.e. quantify the BBB disruption, compute the permeability
-        % coefficient P(t), e.g. from Dreher et al. (2006)
-        % http://dx.doi.org/10.1093/jnci/djj070
-        
-        % Measure also vesser diameter, and quantify the leakage dynamics
-        % which were previously done manually using ImageJ (see 2.4 of
-        % Burgess et al. 2014, http://dx.doi.org/10.1148/radiol.14140245)
-        
-        for t = options.timePointLimits(1) : options.timePointLimits(2)
-            % analysis{ch}{t} = analyzeSegmentedImage(regReconstruction{ch}{t}, segmentation{ch}{t}, denoisedImageStack{ch}{t}, options);
-        end
+        % Vesser diameter, volume, stenonis, etc.
+        for t = 1 : length(options.tP)
+            analysis{ch}{options.tP(t)} = analyzeSegmentedImage(regReconstruction{ch}{options.tP(t)}, segmentation{ch}{options.tP(t)}, denoisedImageStack{ch}{options.tP(t)}, options);
+        end        
         
         
     %% EXPORT
