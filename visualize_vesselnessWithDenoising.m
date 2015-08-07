@@ -5,12 +5,13 @@ function visualize_vesselnessWithDenoising(imageStack, tubularity, denoisedImage
         path = '/home/petteri/Desktop/testPM/';
         load(fullfile(path, 'testVesselnessVisualization.mat'))
         close all
+        
     else
         stackReduced = double(imageStack(:, :, 1:end)); % you can reduce if you want
 
         % run vesselness filter for the input as well
         disp('Run VESSELNESS again for non-denoised stack')
-        options.vesselAlgorithm = 'OOF';
+        % options.vesselAlgorithm
         tubularityRaw.(options.vesselAlgorithm) = vesselnessFilter(stackReduced, options);
         path = '/home/petteri/Desktop/testPM/';
         try
@@ -65,9 +66,7 @@ function visualize_vesselnessWithDenoising(imageStack, tubularity, denoisedImage
                     i = fig1_loop(i, rows, cols, tubularity.(tubeFieldNames{indNames}), stackInd);
                 end
 
-            nameOut = [denoisingAlgorithm, '_Denoising_w', 'Vesselness', ...
-                       '_scales', num2str(options.scales(1)), '-', num2str(options.scales(2)), ...
-                       '.png'];
+            nameOut = [options.vesselImageOutBase, '.png'];
 
             % external file
             export_fig(fullfile('figuresOut', nameOut), '-r300', '-a1')
@@ -132,7 +131,8 @@ function visualize_vesselnessWithDenoising(imageStack, tubularity, denoisedImage
                                     ['Range: [', num2str(min(mip_OOF_Diff(:))) ':', num2str(max(mip_OOF_Diff(:))), ']']);
                         title(titStr)
 
-                    nameOut2 = strrep(nameOut, 'Vesselness', tubularity.(tubeFieldNames{indNames}).method);
+                    nameOut2 = [options.vesselImageOutBase, '_difference.png'];
+
 
                     % external file
                     export_fig(fullfile('figuresOut', nameOut2), '-r300', '-a1')
