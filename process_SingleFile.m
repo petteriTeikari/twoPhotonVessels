@@ -130,7 +130,7 @@ function process_SingleFile(path, tiffPath, fileName, options)
     %% FILTER THE MESH RECONSTRUCTION
     
         % probably needed? - simplification - downsampling - smoothing        
-        operations = {'simplification'; 'smoothing'}; % sequential, on top of previous
+        operations = {'repair'; 'simplification'; 'smoothing'}; % sequential, on top of previous
         
         for o = 1 : length(operations)
             for t = 1 : length(options.tP)           
@@ -159,16 +159,22 @@ function process_SingleFile(path, tiffPath, fileName, options)
                         options.registrationAlgorithm, options.registerModelIndex, options.tP, options, t, ch);
         end
         
+        % now you could use the transformationMatrix to register other
+        % channels such as calcium, voltage, whatever... or the volumetric
+        % image (for visualizing the leakge for example)
+        
     %% FLUORESCENCE ANALAYSIS
     
-        % e.g. fluorescence difference (intra vs. extravascular space)
-        
-        
+        % e.g. fluorescence difference (intra vs. extravascular space)        
+        permCoeff{ch} = analyze_permeabilityCoefficient(imageStack{ch}, segmentationMask{ch}, options);
+        permCoeff_denoised{ch} = analyze_permeabilityCoefficient(denoisedStack{ch}, segmentationMask{ch}, options);
+                
     %% MORPHOLOGICAL ANALYSIS    
     
-        % Vesser diameter, volume, stenonis, etc.
+        % Vesser diameter, volume, stenosis, etc.
         for t = 1 : length(options.tP)
-            analysis{ch}{options.tP(t)} = analyzeSegmentedImage(regReconstruction{ch}{options.tP(t)}, segmentation{ch}{options.tP(t)}, denoisedImageStack{ch}{options.tP(t)}, options);
+            % analysisReg{ch}{options.tP(t)} = analyzeMeshMorphology(regReconstruction{ch}{options.tP(t)}, options);
+            analysis{ch}{options.tP(t)} = analyzeMeshMorphology(reconstruction{ch}{options.tP(t)}, options);
         end        
         
         

@@ -2,6 +2,14 @@ function exportTheResults(metadata, analysis, regReconstruction, options)
 
     disp('Export the results (dummy)')
 
+    %% For Imaris
+
+        
+
+    %% For ImageJ / Fiji
+
+        
+
     %% Export as STL
     
         % or something a like so it could 
@@ -27,5 +35,4 @@ function exportTheResults(metadata, analysis, regReconstruction, options)
     
     %% OTHERS
     
-        % need for Bitplane Imaris? what format the best?
-        % etc.
+        % ?
