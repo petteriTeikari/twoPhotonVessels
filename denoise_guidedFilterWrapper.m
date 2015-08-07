@@ -1,4 +1,4 @@
-function [denoised, fileOutName] = denoising_guidedFilterWrapper(imageIn, guide, ...
+function [denoised, fileOutName] = denoise_guidedFilterWrapper(imageIn, guide, ...
             epsilon, win_size, NoOfIter, guidedType, subsampleFactor, options)
 
     % Guided Image Filtering
@@ -11,8 +11,8 @@ function [denoised, fileOutName] = denoising_guidedFilterWrapper(imageIn, guide,
     if strcmp(guidedType, 'original')
         
         disp('Denoising the stack using Guided Filter')
-        disp('     from: http://research.microsoft.com/en-us/um/people/kahe/eccv10/')
-        disp(['  iter = ', num2str(NoOfIter), ', w = ', num2str(win_size), ', \epsilon = ', num2str(epsilon)])
+        disp(' from: http://research.microsoft.com/en-us/um/people/kahe/eccv10/')
+        disp(['  - iter = ', num2str(NoOfIter), ', w = ', num2str(win_size), ', \epsilon = ', num2str(epsilon)])
         
         % The Original code published back in 2010
         % Guided Image Filtering, by Kaiming He, Jian Sun, and Xiaoou Tang, in ECCV 2010
@@ -40,8 +40,8 @@ function [denoised, fileOutName] = denoising_guidedFilterWrapper(imageIn, guide,
         %        FLOOR to convert to integer values. "
         % Figure out later why the subsample does not give proper sizes
         disp('Denoising the stack using Fast Guided Filter')
-        disp('     from: http://research.microsoft.com/en-us/um/people/kahe/eccv10/')
-                disp(['  iter = ', num2str(NoOfIter), ', w = ', num2str(win_size), ', \epsilon = ', num2str(epsilon), ', s = ', num2str(subsampleFactor)])
+        disp(' from: http://research.microsoft.com/en-us/um/people/kahe/eccv10/')
+        disp(['  - iter = ', num2str(NoOfIter), ', w = ', num2str(win_size), ', \epsilon = ', num2str(epsilon), ', s = ', num2str(subsampleFactor)])
 
         
         % Fast Guided Filter, by Kaiming He and Jian Sun, in arXiv 2015.
@@ -57,10 +57,7 @@ function [denoised, fileOutName] = denoising_guidedFilterWrapper(imageIn, guide,
         
         fileOutName = [options.denoisingAlgorithm, '_iter', num2str(NoOfIter), ...
             '_w', num2str(win_size), '_eps', num2str(epsilon), '_s', num2str(subsampleFactor), ...            
-            '_DenoisingWholeStack.png'];
-        
-    else
-       
-        error(['Only "original" and "fast" implemented now. You tried with: ', guidedType])
-        
+            '_DenoisingWholeStack.png'];        
+    else       
+        error(['Only "original" and "fast" implemented now. You tried with: ', guidedType])        
     end

@@ -25,15 +25,16 @@ function process_SingleFile(path, tiffPath, fileName, options)
     % https://www.openmi3croscopy.org/site/support/bio-formats5.1/developers/matlab-dev.html
     if nargin == 0
 
+        % Debug variables when running locally (without input arguments)        
         fileName = mfilename; fullPath = mfilename('fullpath');
         pathCode = strrep(fullPath, fileName, ''); cd(pathCode)
         
-        noOfCores = 2;
-        init_parallelComputing(noOfCores)
+        options.noOfCores = 2;
+        init_parallelComputing(options.noOfCores)
         
         % use local test files for development
         fileName = 'CP-20150323-TR70-mouse2-1-son.oib';
-        path = '/home/petteri/Desktop/testPM/';
+        path = '/home/petteri/Desktop/testPM/out';
         
         % fileName = 'CP-20150616-TR70-mouse1-scan8-son2_subset_noLeakage.ome.tif';
         % path = 'data';
@@ -47,10 +48,20 @@ function process_SingleFile(path, tiffPath, fileName, options)
         % processing of files, put all to false
         options.useOnlyFirstTimePoint = false;
         options.useOnlySubsetOfStack = false;
-        options.resizeStacks2D = false;
+        options.resizeStacks2D = true;
         options.resize2D_factor = 1 / 16;
         options.skipImportBioFormats = false;
+        options.loadFromTIFF = false; % loading directly from the denoised OME-TIFF (if found)
         
+        options.timePointLimits = [4 5]; % manual
+        
+        ch = 1; % fixed now, if you had multiple vasculature labels, modify
+                % channel behavior
+                
+        % TODO: Add this later to a .m script and make sure that all the
+        %       variables are defined if calling this .m-file from outside for
+        %       example
+
     else
         % function called from outside, like with a dialog to open the
         % files, or batch processing multiple OIB or something
@@ -58,140 +69,80 @@ function process_SingleFile(path, tiffPath, fileName, options)
     
     
     %% IMPORT THE FILE    
-               
-        if ~options.skipImportBioFormats
-            % Import from the Olympus Fluoview file (OIB) using the Bio-Formats
-            options.loadFromTIFF = false; % loading directly from the denoised OME-TIFF (if found)
-            [data, imageStack, metadata, options] = importMicroscopyFile(fileName, path, tiffPath, options); 
-            
-            % note that now not necessarily the same as in the input image
-            % imported as we have might tossed away a lot of data in order
-            % to make the development faster
-            options.noOfChannels = length(imageStack);
-            options.noOfTimePoints = length(imageStack{1});
-            %save(fullfile('debugMATs', 'importTemp.mat'), 'imageStack', 'options') % devel/debug MAT
-        else
-            disp('Skipping OIB import, load directly from MAT (Faster)')
-            %load(fullfile('debugMATs', 'importTemp.mat')) % devel/debug MAT
-        end
-        
-        
+       
+        % Import from the Olympus Fluoview file (OIB) using the Bio-Formats
+        [data, imageStack, metadata, options] = importMicroscopyFile(fileName, path, tiffPath, options);        
             
     %% IMAGE DENOISING
-    
-        % i.e. denoising / anisotropic diffusion for reducing noise            
-        if options.loadFromTIFF
-            disp('Denoising already done for the OME-TIFF, skipping denoising');
-        else            
-            options.denoisingCycleSpins = 4;
-            options.denoisingMultiframe = 3;
-            options.denoisingAlgorithm = 'PureDenoise';
-            options.denoisingAlgorithm = 'NLMeansPoisson';
-            % options.denoisingAlgorithm = 'GuidedFilter';
             
-            ch = 1; % not the same processing for all the channels anyway
-            for t = 1 : options.noOfTimePoints
-                [denoisedImageStack{ch}{t}, timeExecDenoising(ch,t)] = denoiseMicroscopyImage(imageStack{ch}{t}(:,:,:), [], t, ch, options); 
-                
-                filename = fullfile('/home/petteri/Desktop/testPM/out', ...
-                ['denoised_', options.denoisingAlgorithm '_ch', num2str(ch), '_t', num2str(t), '.mat']);
-            
-                stackOutAsMat = denoisedImageStack{ch}{t};
-                save(filename, 'stackOutAsMat')
-                fileOut = strrep(filename, '.mat', '.tif');
-                export_stack_toDisk(fileOut, denoisedImageStack{ch}{t}) 
-                
-            end            
-            
-            denoisingTook = sum(timeExecDenoising(ch,:))
-            
-            % TODO: Maybe decide later whether it is better to pass 3D
-            %       matrices to all the functions here or pass the whole
-            %       "5D cell" and parse it inside.
-            
-            
+        options.denoisingAlgorithm = 'GuidedFilter'; % 'NLMeansPoisson'; % 'PureDenoise', 'GuidedFilter'
+        
+        for t = options.timePointLimits(1) : options.timePointLimits(2)
+            [denoisedStack{ch}{t}, timing.denoising(ch,t)] = denoiseMicroscopyImage(imageStack{ch}{t}(:,:,:), options.denoisingAlgorithm, options, t, ch);            
         end
         
-        % Stop here if you only want the denoising to be done.
-        % The basic idea of this flag was to batch denoise a lot of images
-        % if the denoising is very time-consuming. Whether this is needed
-        % really in the end depends on the denoising method chosen (if any,
-        % for example with Vesselness Enhancing Diffusion, VED)
-        if options.denoiseOnly
-            return
-        end
+        % if you only want denoising, and not the remaining algorithms
+        if options.denoiseOnly; return; end        
+        
+    %% INTRA-IMAGE MOTION COMPENSATION
+    
+        % Needed?
+        % Vinegoni C, Lee S, Feruglio PF, Weissleder R. 2014. Advanced Motion Compensation Methods for Intravital Optical Microscopy. IEEE Journal of Selected Topics in Quantum Electronics 20:83–91. http://dx.doi.org/10.1109/JSTQE.2013.2279314.
+        % Soulet D, Paré A, Coste J, Lacroix S. 2013. Automated Filtering of Intrinsic Movement Artifacts during Two-Photon Intravital Microscopy. PLoS ONE 8:e53942. http://dx.doi.org/10.1371/journal.pone.0053942.
+        % Greenberg DS, Kerr JND. 2009. Automated correction of fast motion artifacts for two-photon imaging of awake animals. Journal of Neuroscience Methods 176:1–15. http://dx.doi.org/10.1016/j.jneumeth.2008.08.020.
         
     %% IMAGE DECONVOLUTION?
     
-        % Needed?
+        % Needed?        
         
-        
-    %% IMAGE ENHANCEMENT    
-    
-        % i.e. vesselness filter such as Frangi vesselness filter or
-        % Optimally Oriented Flux (OOF) filter, or OOF-OFA filter        
-        options.vesselAlgorithm = 'OOF'; % e.g. 'OOF', 'OOF-OFA', 'MDOF', 'VED'
-        options.scales = [1 6]; % same for OOF now
-        options.scaleStep = 0.5;      
-        
-        ch = 1; % not the same processing for all the channels anyway
-        for t = 1 : options.noOfTimePoints
-            tubularity{ch}{t}.(options.vesselAlgorithm) = vesselnessFilter(denoisedImageStack{ch}{t}(:,:,:), options);
-        end
+    %% VESSELNESS FILTER
             
-        % DISPLAY
-        if ~options.batchFlag
-            disp(['Visualize Vesselness with and without denoising ({',num2str(ch),'}{',num2str(t),'} fixed)'])
-            visualize_vesselnessWithDenoising(imageStack{ch}{t}, tubularity{ch}{t}, denoisedImageStack{ch}{t}, options.denoisingAlgorithm, options.vesselAlgorithm, options)
-        end       
+        options.vesselAlgorithm = 'OOF_OFA'; % e.g. 'OOF', 'OOF-OFA', 'MDOF', 'VED'
+        options.scales = 1:3; % same for all the different filters
         
-        
+        for t = options.timePointLimits(1) : options.timePointLimits(2)
+            vesselness{ch}{t}.(options.vesselAlgorithm) = vesselnessFilter(denoisedStack{ch}{t}(:,:,:), options.vesselAlgorithm, options.scales, options, t, ch);
+        end        
     
     %% VESSEL SEGMENTATION    
     
-        % i.e. to separate the image stack to two compartments:
-        % 1) intravascular compartment
-        % 2) extravascular compartment ("fluorescent signal due to BBB
-        %                                disruption)
-            
-        % use a subset of the stack as well for speeding up the testing
-        ch = 1; % not the same processing for all the channels anyway
-        options.segmentationAlgorithm = 'asets_levelSets'; % or 'asets_levelSets'
-        for t = 1 : options.noOfTimePoints
-            
-            options.segmImageOutBase = ['segmentationProgress_', options.segmentationAlgorithm '_ch', num2str(ch), '_t', num2str(t)];
-            
-            segmentation{ch}{t} = segmentVessels(denoisedImageStack{ch}{t}(:,:,:), tubularity{ch}{t}, options);
+        % Binary segmentation (intravascular and extravascular space)        
+        options.segmentationAlgorithm = 'asets_levelSets'; % or 'maxFlow_JingYuan'
+            % now there are bunch of parameters for the segmentation!
+        
+        for t = options.timePointLimits(1) : options.timePointLimits(2)
+            [segmentedStack{ch}{t}, segmentationMask{ch}{t}] = segmentVessels(denoisedStack{ch}{t}(:,:,:), ...
+                                    vesselness{ch}{t}.(options.vesselAlgorithm).data(:,:,:), options.segmentationAlgorithm, options, t, ch);
         end
         
-            % Depending on the vessel segmentation to be done, one could
-            % add here a possibility to add manually defined masks for
-            % "ground truth" backgrounds and foregrounds, or simple aid
-            % points for tricky segmentations so that the masks are added
-            % only once and do not require user intervention every time the
-            % script is run
-
-            save(fullfile('/home/petteri/Desktop/testPM/out',  ['segmentationOutAllTimes.mat']), 'segmentation')
-            
 
     %% RECONSTRUCT
     
-        ch = 1; % not the same processing for all the channels anyway
-        for t = 1 : options.noOfTimePoints
-            options.reconstructFileNameOut = ['reconstruct_', options.segmentationAlgorithm '_ch', num2str(ch), '_t', num2str(t)];
-            reconstruction{ch}{t} = reconstructSegmentation(denoisedImageStack{ch}{t}(:,:,:), segmentation{ch}{t}(:,:,:), options);
+        options.reconstructionAlgorithm = 'marchingCubes';
+        options.reconstructionIsovalue = 0.01;
+    
+        for t = options.timePointLimits(1) : options.timePointLimits(2)            
+            reconstruction{ch}{t} = reconstructMeshFromSegmentation(segmentationMask{ch}{t}, options.pathBigFiles, options.reconstructionAlgorithm, options.reconstructionIsovalue, options, t, ch);
         end
     
+    %% EXTRACT THE CENTERLINE ("SKELETONIZE")
     
+        options.centerlineAlgorithm = 'parallelMedialAxisThinning'; % or 'fastMarchingKroon'
+        
+        for t = options.timePointLimits(1) : options.timePointLimits(2)
+            options.centerlineFileNameOut = ['centerline_', options.segmentationAlgorithm '_ch', num2str(ch), '_t', num2str(t)];
+            centerline{ch}{t} = extractCenterline(reconstruction{ch}{t}, segmentation{ch}{t}(:,:,:), options);
+        end
+        
+        
     %% REGISTER the RECONSTRUCTION
     
-        ch = 1; % not the same processing for all the channels anyway
-        for t = 1 : options.noOfTimePoints
-            regReconstruction{ch}{t} = registerTheStack(reconstruction{ch}{t}(:,:,:), options);
+        for t = options.timePointLimits(1) : options.timePointLimits(2)
+            % regReconstruction{ch}{t} = registerTheStack(reconstruction{ch}{t}(:,:,:), options);
         end
         
         
-    %% ANALYSIS    
+    %% MORPHOLOGICAL ANALYSIS    
     
         % i.e. quantify the BBB disruption, compute the permeability
         % coefficient P(t), e.g. from Dreher et al. (2006)
@@ -201,9 +152,8 @@ function process_SingleFile(path, tiffPath, fileName, options)
         % which were previously done manually using ImageJ (see 2.4 of
         % Burgess et al. 2014, http://dx.doi.org/10.1148/radiol.14140245)
         
-        ch = 1; % not the same processing for all the channels anyway
-        for t = 1 : options.noOfTimePoints
-            analysis{ch}{t} = analyzeSegmentedImage(regReconstruction{ch}{t}, segmentation{ch}{t}, denoisedImageStack{ch}{t}, options);
+        for t = options.timePointLimits(1) : options.timePointLimits(2)
+            % analysis{ch}{t} = analyzeSegmentedImage(regReconstruction{ch}{t}, segmentation{ch}{t}, denoisedImageStack{ch}{t}, options);
         end
         
         

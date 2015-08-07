@@ -25,50 +25,23 @@ function reconstruction = reconstructSegmentation(imageStack, segmentation, opti
             path = fullfile('/home', 'petteri', 'Desktop', 'testPM');
             save(fullfile(path, 'testReconstruction.mat'));
         end
+        
+        % if you wanna write to disk
+        % export_stack_toDisk(fullfile('figuresOut', 'fullResolution_67slices.tif'), segmentation)
+        
     end
-    
-    % if you wanna write to disk
-    % export_stack_toDisk(fullfile('figuresOut', 'fullResolution_67slices.tif'), segmentation)
-    
-    % See PDF for details
-    
-    % this at the moment requires the most work, or literature review. This
-    % step can also be very time-consuming so we might want to think of
-    % ways of how to batch process so that the analysis part could be done
-    % for example for batch-processed reconstructions   
 
-    disp('3D Reconstruction')    
-    reconstruction = segmentation;    
+    disp('Mesh Reconstruction from Volumetric Image')    
     
-    % if you just want to write the segmented version here to disk, and to
-    % imported by a 3rd party software, you can use the export_stack_toDisk
-    % which saves the stack as non-OME multilayer TIFF file (.tif),
-    % converts to 16-bit and scales the maximum intensity value to 65,535
-    % disp('Writing the segmented stack to disk as a TIFF file')
-    % export_stack_toDisk(fullfile('figuresOut', 'segmentedStack.tif'), segmentation)
+    %% INPUT CHECKING
     
-    % whos   
-    %       Name                  Size                 Bytes  Class     Attributes
-    % 
-    %   imageStack          256x256x4            2097152  double              
-    %   options               1x1                   3931  struct              
-    %   reconstruction      256x256x4            1048576  single              
-    %   segmentation        256x256x4            1048576  single              
+        debugPlot = false;
     
-    % quick'n'dirty plot of the input
-    %{
-    fig = figure('Color','w');
+    %% MESH RECONSTRUCTION
     
-        % Maximum Intensity projections of the test stack
-        subplot(1,2,1)
-            imshow(max(imageStack,[],3),[])
-            title('Denoised stack (non-segmented')
-        subplot(1,2,2)    
-            imshow(max(segmentation,[],3),[])
-            title('Segmented stack')
-    %}
-
-    debugPlot = false;
+    
+    
+    
     
     %% EXTRACT THE CONTOURS
        
@@ -112,6 +85,9 @@ function reconstruction = reconstructSegmentation(imageStack, segmentation, opti
         physicalScaling = [1 1 5]; % physical units of FOV
         [F,V] = reconstruct_marchingCubes_wrapper(segmentation, isoValue, downSampleFactor, physicalScaling, debugPlot);
         
+        % output the faces and vertices
+        reconstruction.faces = F;
+        reconstruction.vertices = V;
     
     %% Condition data
 
@@ -123,7 +99,7 @@ function reconstruction = reconstructSegmentation(imageStack, segmentation, opti
         % DT = delaunayTriangulation(tr.Points); 
 
         % save the reconstruction out as .mat file
-        save(fullfile(path, 'out', 'reconstructionOut.mat'), 'F', 'V');
+        save(fullfile(path, 'out', 'reconstructionOut.mat'), 'F', 'V', 'mask');
 
     %% External formats
     
@@ -144,6 +120,8 @@ function reconstruction = reconstructSegmentation(imageStack, segmentation, opti
             err
             warning('?')
         end
+        
+        
         
         % Paraview export (VTK)
         % http://www.mathworks.com/matlabcentral/fileexchange/47814-export-3d-data-to-paraview-in-vtk-legacy-file-format

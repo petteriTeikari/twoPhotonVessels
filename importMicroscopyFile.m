@@ -1,22 +1,17 @@
 function [data, imageStack, metadata, options] = importMicroscopyFile(fileName, path, tiffPath, options)
-      
-    if nargin == 0
-        fileName = 'CP-20150323-TR70-mouse2-1-son.oib';
-        path = '/home/petteri/Desktop/testPM/';
-        tiffPath = path; % use same now
-        options.pathBigFiles = path; % don't save all the big files to Dropbox
-        options.batchFlag = false;
-        options.denoiseOnly = false; % just denoise, and save to disk, useful for overnight pre-batch processing
-        
-        % debug/development flag to speed up the development, for actual
-        % processing of files, put all to false
-        options.useOnlyFirstTimePoint = true;
-        options.useOnlySubsetOfStack = true;
-        options.resizeStacks2D = true;
-        options.skipImportBioFormats = false;
-        options.loadFromTIFF = false; % loading directly from the denoised OME-TIFF (if found)
-    end
 
+    %% DEVELOPMENT ACCELERATION
+
+        if options.skipImportBioFormats
+            try
+                load(fullfile('debugMATs', 'importTemp.mat')) % devel/debug MAT
+                return
+            catch err
+                err
+                warning('no debug .mat found')
+            end
+        end
+        
     %% INPUT CHECKING
 
         % PT, Jun 30, Not sure really if needed this part
@@ -164,6 +159,20 @@ function [data, imageStack, metadata, options] = importMicroscopyFile(fileName, 
             imageStack = imageStackTmp;
         end 
         
+    %% FINAL CHECKs
+    
+        % note that now not necessarily the same as in the input image
+        % imported as we have might tossed away a lot of data in order
+        % to make the development faster
+        options.noOfChannels = length(imageStack);
+        options.noOfTimePoints = length(imageStack{1});
+        
+        if options.noOfTimePoints < options.timePointLimits(2)
+            options.timePointLimits(2) = options.noOfTimePoints;
+            warning(['Only ', num2str(options.noOfTimePoints), ' input time points, need to reduce the limit to that'])
+        end
+        
+        disp(' ')
         disp('IMPORT DONE')
         disp(' ')
 

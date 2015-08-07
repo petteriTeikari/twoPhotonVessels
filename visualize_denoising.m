@@ -35,31 +35,37 @@ function visualize_denoising(imageIn, denoised, stackIndex, timeExecDenoising, f
         sp(i) = subplot(rows,cols,i);
             imshow(uint16(im), 'DisplayRange', [0 4095])
             title(['INPUT, slice = ', num2str(stackIndex)])
+            colorbar
 
         i = i+1;
             sp(i) = subplot(rows,cols,i);
             imshow(uint16(max(imageIn,[],3)), 'DisplayRange', [0 4095])
             title('INPUT (MIP)')
+            colorbar
             
         i = i+1;
         sp(i) = subplot(rows,cols,i);
             imshow(uint16(abs(im_de-im)), 'DisplayRange', [0 4095])
             title(['Denoised Noise Comp., t_e_x_e_c=', num2str(timeExecDenoising,3), ' s'])
+            colorbar
             
         i = i+1;
         sp(i) = subplot(rows,cols,i);
             imshow(uint16(im_de), 'DisplayRange', [0 4095])
             title(['Denoised, mse = ' num2str(mse(im,im_de),2), ', snr = ', num2str(snr(im,im_de),4)])
-
-         i = i+1;
-        sp(i) = subplot(rows,cols,i);
-            imshow(uint16(max(denoised,[],3)), 'DisplayRange', [0 4095])
-            title('Denoised (MIP)')
+            colorbar
 
         i = i+1;
         sp(i) = subplot(rows,cols,i);
-            imshow(imadjust(uint16(abs(im_de-im))))
-            title(['imadjust(', options.denoisingAlgorithm, ' Noise Component)'])
+            imshow(uint16(max(denoised,[],3)), 'DisplayRange', [0 4095])
+            title('Denoised (MIP)')
+            colorbar
+
+        i = i+1;
+        sp(i) = subplot(rows,cols,i);
+            imshow(uint16(abs(im_de-im)), [])
+            title(['Noise Component (auto-scale)'])
+            colorbar
             
         try 
             export_fig(fullfile('figuresOut', fileOutName), '-r300', '-a1')

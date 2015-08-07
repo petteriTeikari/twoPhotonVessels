@@ -8,18 +8,23 @@ function [denoised, timeExecDenoising] = denoise_NLMeansPoissonWrapper(imageIn, 
     end
 
     % http://www.math.u-bordeaux1.fr/~cdeledal/poisson_nlmeans.php
+    disp(' ')
     disp('Denoising the stack using NL-Means for Poisson-noise corrupted images (slow)')
     disp('     from: http://www.math.u-bordeaux1.fr/~cdeledal/poisson_nlmeans.php')
 
-    % TIME: roughly takes 5 hours (!) for 67 slices at Petteri's computer
+    % TIME: roughly takes 5-6 hours (!) for 67 slices at Petteri's computer
+    % (single thread, with no parfor)
 
-    tic;  
-    denoised = zeros(size(imageIn));
+    tic;      
         
-    % slice-by-slice denoising
+    % test of reshape
+    % imageIn = reshape(imageIn, size(imageIn,1), size(imageIn,2)*size(imageIn,3));
+        % not really any faster?
+
+    % slice-by-slice denoising    
     parfor slice = 1 : size(imageIn,3)
 
-        disp(['Slice = ', num2str(slice), '/', num2str(size(imageIn,3))])
+        disp(['  Slice = ', num2str(slice), '/', num2str(size(imageIn,3))])
         im = double(imageIn(:,:,slice));
 
 
