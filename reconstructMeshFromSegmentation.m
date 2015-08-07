@@ -100,7 +100,8 @@ function reconstruction = reconstructMeshFromSegmentation(binaryStack, path, rec
         % Write to OFF (or PLY, SMF, WRL, OBJ) using the Toolbox Graph by 
         % http://www.mathworks.com/matlabcentral/fileexchange/5355-toolbox-graph
         try
-            write_mesh(fullfile(path, [options.reconstructFileNameOut, '.off']), V, F)
+            reconstruction.meshOnDisk = fullfile(path, [options.reconstructFileNameOut, '.off']);
+            write_mesh(reconstruction.meshOnDisk, V, F)
         catch err
             err
             warning('?')
