@@ -1,6 +1,29 @@
-function out = analyze_3D_Morphology(mesh, options, visualizeOn)
+function analysis = analyzeMeshMorphology(reconstruction, options, visualizeOn)
 
+    %% INPUT CHECKING
+
+        if nargin == 0
+            load('./debugMATs/testMorphology.mat')        
+        else
+            save('./debugMATs/testMorphology.mat')    
+        end
+        
+        analysis = [];
+        %  reconstruction = 
+        % 
+        %          faces: [57400x3 double]
+        %       vertices: [29408x3 double]
+        %     meshOnDisk: [1x89 char]
+        
+        disp(' - Analyze the 3D Morphology, e.g. vessel diameters (dummy)')
     
+    %% ANALYSIS
+    
+    
+        %% SHAPE DIAMETER FUNCTION (SDF)
+        
+        
+        
 
     %% BACKGROUND
     
@@ -159,20 +182,5 @@ function out = analyze_3D_Morphology(mesh, options, visualizeOn)
 
 
     
-    %% CODE
-
-        if nargin == 0
-            load('./debugMATs/testMorphology.mat')        
-        else
-            save('./debugMATs/testMorphology.mat')    
-        end
-        out = [];
-        imSize = [512 512 67] % manual definition
-        mesh
-        whos
-        disp(' - Analyze the 3D Morphology, e.g. vessel diameters (dummy)')
     
-    % DISPLAY THE INPUT    
-        % vol3d('CDATA', uint8(volume))    
-        % view(3)
     
