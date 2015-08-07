@@ -49,6 +49,8 @@ function region = asets_demoWrapper_3D(img, vessel, edges, sliceIndex, visualize
         
         scrsz = get(0,'ScreenSize'); % get screen size for plotting
         if visualizeON
+            % [ptchIn, ptchIn2, sp, imH, tit, asets_initPlot3D(fig, scrsz, region, sliceIndex, img_n)
+            
             if ~visualize3D
 
                 set(fig,  'Position', [0.01*scrsz(3) 0.05*scrsz(4) 0.7*scrsz(3) 0.90*scrsz(4)])
@@ -173,7 +175,7 @@ function region = asets_demoWrapper_3D(img, vessel, edges, sliceIndex, visualize
             indStatic = ind;
         else
             iStatic = 1;
-            indStatic = 1;1
+            indStatic = 1;
         end
 
     % 4. Construct an s-t graph:
@@ -201,7 +203,7 @@ function region = asets_demoWrapper_3D(img, vessel, edges, sliceIndex, visualize
             
             %d_speed_inside = 1 - region;
             %d_speed_outside = region;
-            d_speed_inside = 1 - region;                
+            d_speed_inside = 1 - region;      
                 
             d_speed_outside = region;
                 %d_speed_outside(d_speed_outside > 1) = 0;
@@ -237,9 +239,9 @@ function region = asets_demoWrapper_3D(img, vessel, edges, sliceIndex, visualize
         % Assign a regularization weight (equivalent to pairwise terms) for each
         % node x. Here we employ a constant regularization weight alpha. The higher
         % alpha is, the more smoothness penalty is assigned.
-        regWeight = 1;
-        alpha = absNormVessels.^2 .* regWeight .* ones(sx,sy,sz);
-        % alpha = regWeight .* ones(sx,sy,sz);
+        regWeight = 0.05;
+        % alpha = absNormVessels.^2 .* regWeight .* ones(sx,sy,sz);
+        alpha = regWeight .* ones(sx,sy,sz);
 
         % 6. Set up the parameters for the max flow optimizer:
         % [1] graph dimension 1
@@ -341,7 +343,7 @@ function region = asets_demoWrapper_3D(img, vessel, edges, sliceIndex, visualize
                       
                 % Update Speed d_speed_inside(d_speed_inside < 0) = 0;Inside
                     MIP_speedIn = max(d_speed_inside, [], 3);
-                    [min(MIP_speedIn(:)) max(MIP_speedIn(:)) min(MIP_intOut(:)) max(MIP_intOut(:))]
+                    % speedLimits = [min(MIP_speedIn(:)) max(MIP_speedIn(:)) min(MIP_intOut(:)) max(MIP_intOut(:))]
 
                     axes(sp(i-2))
                         imshow(MIP_speedIn, []) % 'DisplayRange', [-1 1]/tau)                
@@ -446,3 +448,7 @@ function region = asets_demoWrapper_3D(img, vessel, edges, sliceIndex, visualize
         end % end visualizeON
         
     end
+    
+    
+function asets_initPlot3D(region, sliceIndex, img_n)
+
