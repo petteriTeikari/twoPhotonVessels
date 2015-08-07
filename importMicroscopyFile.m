@@ -14,7 +14,6 @@ function [data, imageStack, metadata, options] = importMicroscopyFile(fileName, 
         
     %% INPUT CHECKING
 
-        % PT, Jun 30, Not sure really if needed this part
     
         % construct the full path for the OME-TIFF file
         if ~isempty(strfind(fileName, 'ome.tif')) % if the input is already the TIFF file
@@ -36,6 +35,16 @@ function [data, imageStack, metadata, options] = importMicroscopyFile(fileName, 
             disp(['No corresponding denoised OME-TIFF was found to match the input (yet?): ', filenameFull])
         end
        
+        % check if the file exists, and you have specified the path
+        % correctly
+        if exist(filenameFull, 'file') == 2
+           % file found
+        else           
+           error([filenameFull, 'The Input file is not found!'])           
+        end
+
+        
+        
             
     %% Import from file using Bio-Formats
     
@@ -76,9 +85,15 @@ function [data, imageStack, metadata, options] = importMicroscopyFile(fileName, 
                 warning('https://www.openmicroscopy.org/site/support/bio-formats5.1/users/matlab/index.html')
                 warning('remember to restart Matlab as well')
                 error('loci not found, you have not added Bio-Formats to Java path?')
+            elseif strcmp(err.identifier, 'MATLAB:minrhs') && strcmp(err.message, 'Not enough input arguments.')
+                err
+                error(['Not enough input arguments on line = ', num2str(line)])
             else
                 err 
                 err.message
+                err.stack
+                err.cause
+                warning('some yet uncountered error?')
             end
         end
         
@@ -167,8 +182,16 @@ function [data, imageStack, metadata, options] = importMicroscopyFile(fileName, 
         options.noOfChannels = length(imageStack);
         options.noOfTimePoints = length(imageStack{1});
         
-        if options.noOfTimePoints < options.timePointLimits(2)
-            options.timePointLimits(2) = options.noOfTimePoints;
+        if ~options.manualTimePoints
+            options.tP = 1 : 1 : options.noOfChannels;
+            disp('    ... options.manualTimePoints = false | Manual time points not used, using all timepoints')
+        else
+            disp('    ... options.manualTimePoints = true | Manual time points used')
+
+        end
+        
+        if options.noOfTimePoints < options.tP(2)
+            options.tP(2) = options.noOfTimePoints;
             warning(['Only ', num2str(options.noOfTimePoints), ' input time points, need to reduce the limit to that'])
         end
         
