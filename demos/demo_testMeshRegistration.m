@@ -62,6 +62,11 @@ function demo_testMeshRegistration()
 
             plotICP(model,data,TR,TT,dataOut, 'LeastSquares')            
             plotICP(model,data,TR2,TT2,dataOut2, 'Welsh')
+            
+            % There are couple of other ICP variants on FileExchange also:
+            % FastICP: http://www.mathworks.com/matlabcentral/fileexchange/47152-icp-registration-using-efficient-variants-and-multi-resolution-scheme
+            % http://www.mathworks.com/matlabcentral/fileexchange/?term=tag%3A%22iterative+closest+point%22
+            
 
         % METCH     
         elseif strcmp(options.registerAlgorithm, 'metch')
@@ -101,59 +106,4 @@ function demo_testMeshRegistration()
             title('Input Vertices')
             drawnow
             
-        % Plot ICP algorithm
-        function plotICP(model, data, TR, TT, dataOut, titleStrBase)
-
-            fig = figure('Color', 'w', 'Name', titleStrBase);
-            plot3(model(1,:),model(2,:),model(3,:),'r.',dataOut(1,:),dataOut(2,:),dataOut(3,:),'g.')
-            hold on, axis equal
-            plot3([1 1 0],[0 1 1],[0 0 0],'r-',[1 1],[1 1],[0 1],'r-','LineWidth',2)
-            title([titleStrBase, ': Transformed data points (green) and model points (red)'])
-            drawnow
         
-        function [TRdeg,rot] = displayMatrixInDegrees(TR, TT)
-            
-            % Display transformation matrix
-            
-                % see e.g. https://en.wikipedia.org/wiki/Kinematics#Matrix_representation
-                %          https://en.wikipedia.org/wiki/Rotation_matrix#Basic_rotations
-                %          http://www.mathworks.com/help/phased/ref/rotx.html
-
-                % TR % A0: a 3x3 matrix, affine A matrix (rotation&scaling), "rotation matrix"
-
-                % Radians
-                TRrad = [acos(TR(1,1)) -asin(TR(1,2)) asin(TR(1,3)); ...
-                         asin(TR(2,1)) acos(TR(2,2)) -asin(TR(2,3)); ...
-                         -asin(TR(3,1)) asin(TR(3,2)) acos(TR(3,3))];
-
-                % from radians to degrees
-                TRdeg = (TRrad / pi) * 180; 
-
-                % get the scale
-                scale.x = sqrt(sum(TR(1,:).^2));
-                scale.y = sqrt(sum(TR(2,:).^2));
-                scale.z = sqrt(sum(TR(3,:).^2));
-
-                % get rotation per axis
-                rotRad.x = atan2(TR(3,2)/scale.z, TR(3,3)/scale.z);
-                rotRad.y = -asin(TR(3,1)/scale.z);
-                rotRad.z = atan2(TR(2,1)/scale.y, TR(1,1)/scale.x);
-                
-                rot.x = rotRad.x / pi * 180;
-                rot.y = rotRad.y / pi * 180;
-                rot.z = rotRad.z / pi * 180;
-                
-            % Display translation vector
-            
-                % see e.g. http://demonstrations.wolfram.com/Understanding3DTranslation/
-                %          TT - translation in pixels
-                % TT % b0: a 3x1 vector, affine b vector (translation), "translation"
-                trans.x = TT(1);
-                trans.y = TT(2);
-                trans.z = TT(3);
-            
-            disp('  TRANSFORMATION of the DATA to register it to the MODEL:')
-                disp(['    Rotation: ', num2str(rot.x,4), 'deg (x), ', num2str(rot.y,4), 'deg (y), ', num2str(rot.z,4), 'deg (z)'])
-                disp(['    Translation: ', num2str(trans.x,4), 'px (x), ', num2str(trans.y,4), 'px (y), ', num2str(trans.z,4), 'px (z)'])
-                disp(['    Scale: ', num2str(100*scale.x), '% (x), ', num2str(100*scale.y), '% (y), ', num2str(100*scale.z), '% (z)'])
-                disp(' ')
