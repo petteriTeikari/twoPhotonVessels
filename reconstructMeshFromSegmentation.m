@@ -1,4 +1,5 @@
-function reconstruction = reconstructMeshFromSegmentation(binaryStack, path, reconstructionAlgorithm, isovalue, options, t, ch)
+function reconstruction = reconstructMeshFromSegmentation(binaryStack, path, ...
+                            segmentationAlgorithm, reconstructionAlgorithm, isovalue, options, t, ch)
 
     % Direct import from .mat file if needed
     if nargin == 0
@@ -31,11 +32,11 @@ function reconstruction = reconstructMeshFromSegmentation(binaryStack, path, rec
         
     end
 
-    disp('Mesh Reconstruction from Volumetric Image')    
+    disp('MESH RECONSTRUCTION from Volumetric Image'); disp('--');
     
     %% INPUT CHECKING
     
-        reconstructFileNameOut = ['meshReconstruct_', segmentationAlgorithm '_ch', num2str(ch), '_t', num2str(t)];
+        reconstructFileNameOut = ['meshReconstruct_', segmentationAlgorithm, '_', reconstructionAlgorithm, '_ch', num2str(ch), '_t', num2str(t)];
         debugPlot = false;
     
     %% MESH RECONSTRUCTION
@@ -75,7 +76,7 @@ function reconstruction = reconstructMeshFromSegmentation(binaryStack, path, rec
         % DT = delaunayTriangulation(tr.Points); 
 
         % save the reconstruction out as .mat file
-        save(fullfile(path, 'out', 'reconstructionOut.mat'), 'F', 'V', 'mask');
+        save(fullfile(path, 'reconstructionOut.mat'), 'F', 'V', 'binaryStack');
 
     %% Point Cloud Library (PCL)
         
@@ -91,7 +92,7 @@ function reconstruction = reconstructMeshFromSegmentation(binaryStack, path, rec
         % STLWrite
         % http://www.mathworks.com/matlabcentral/fileexchange/20922-stlwrite-filename--varargin-
         try
-            stlwrite(fullfile(path, [options.reconstructFileNameOut, '.stl']), F, V)
+            stlwrite(fullfile(path, [reconstructFileNameOut, '.stl']), F, V)
         catch err
             err
             warning('?')
@@ -100,7 +101,7 @@ function reconstruction = reconstructMeshFromSegmentation(binaryStack, path, rec
         % Write to OFF (or PLY, SMF, WRL, OBJ) using the Toolbox Graph by 
         % http://www.mathworks.com/matlabcentral/fileexchange/5355-toolbox-graph
         try
-            reconstruction.meshOnDisk = fullfile(path, [options.reconstructFileNameOut, '.off']);
+            reconstruction.meshOnDisk = fullfile(path, [reconstructFileNameOut, '.off']);
             write_mesh(reconstruction.meshOnDisk, V, F)
         catch err
             err
@@ -109,7 +110,7 @@ function reconstruction = reconstructMeshFromSegmentation(binaryStack, path, rec
         
         % Paraview export (VTK)
         % http://www.mathworks.com/matlabcentral/fileexchange/47814-export-3d-data-to-paraview-in-vtk-legacy-file-format
-        x = 1:1:size(imageStack,1); y = 1:1:size(imageStack,2); z = 1:1:size(imageStack,3);
+        x = 1:1:size(binaryStack,1); y = 1:1:size(binaryStack,2); z = 1:1:size(binaryStack,3);
         % size(DT.ConnectivityList)
         % vtkwrite(fullfile('debugMATs', 'reconstructionOut.vtk'), 'polydata','tetrahedron',x,y,z,DT.ConnectivityList);
      
