@@ -1,4 +1,4 @@
-function vesselness = vesselnessFilter(imageStack, algorithm, scales, options, t, ch)
+function vesselness = vesselnessFilter(imageStack, vesselAlgorithm, scales, options, t, ch)
 
     % We apply here a "vesselness filter" that should enhance the vessels
     % in relation to the background making their segmentation easier later
@@ -10,6 +10,9 @@ function vesselness = vesselnessFilter(imageStack, algorithm, scales, options, t
     %        compute various vesselness measures at once
     
     %% INPUT CHECKS
+    
+        options.vesselnessOutBase = ['vesselness_', vesselAlgorithm, ...
+                                     '_ch', num2str(ch), '_t', num2str(t)];
     
         if nargin == 3
             disp('   no "options" provided for vesselnessFilter, using defaults then')
@@ -35,7 +38,7 @@ function vesselness = vesselnessFilter(imageStack, algorithm, scales, options, t
         % http://dx.doi.org/10.1109/ICCV.2013.196.    
         
         %% OPTIMALLY ORIENTED FLUX (OOF)
-        if strcmp(options.vesselAlgorithm, 'OOF')
+        if strcmp(vesselAlgorithm, 'OOF')
 
             % OOF Matlab: http://www.mathworks.com/matlabcentral/fileexchange/41612-optimally-oriented-flux--oof--for-3d-curvilinear-structure-detection
             
@@ -57,7 +60,7 @@ function vesselness = vesselnessFilter(imageStack, algorithm, scales, options, t
             
     
         %% OPTIMALLY ORIENTED FLUX (OOF) with OFA (Oriented Flux Asymmetry)
-        elseif strcmp(options.vesselAlgorithm, 'OOF_OFA')
+        elseif strcmp(vesselAlgorithm, 'OOF_OFA')
     
             % Implementation: 2D from Dr. Max Law (pers.comm.)
             
@@ -75,7 +78,7 @@ function vesselness = vesselnessFilter(imageStack, algorithm, scales, options, t
     
 
         %% MDOF : Multi-Directional Oriented Flux         
-        elseif strcmp(options.vesselAlgorithm, 'MDOF')
+        elseif strcmp(vesselAlgorithm, 'MDOF')
     
             % Türetken E, Becker C, Glowacki P, Benmansour F, Fua P. 2013. 
             % "Detecting Irregular Curvilinear Structures in Gray Scale and Color Imagery Using Multi-directional Oriented Flux." 
@@ -87,13 +90,13 @@ function vesselness = vesselnessFilter(imageStack, algorithm, scales, options, t
  
        
         %% VESSEL ENHANCEMENT DIFFUSION (VED) 
-        elseif strcmp(options.vesselAlgorithm, 'VED')
+        elseif strcmp(vesselAlgorithm, 'VED')
     
             % Implementation: ?
             disp('  VED not implemented yet')
                 % http://www.mathworks.com/matlabcentral/fileexchange/24409-hessian-based-frangi-vesselness-filter
         
-        elseif strcmp(options.vesselAlgorithm, 'someCoolOne')
+        elseif strcmp(vesselAlgorithm, 'someCoolOne')
             
             %
                 

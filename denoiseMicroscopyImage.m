@@ -1,9 +1,11 @@
 function [denoised,timeExecDenoising] = denoiseMicroscopyImage(imageStack, denoisingAlgorithm, options, t, ch) 
     
+
+
     %% INPUT CHECKS
     
         % If denoising already done for this file
-        if options.loadFromTIFF
+        if options.loadFromTIFF % TIFF
             disp('Denoising already done for the OME-TIFF, skipping denoising');
             warning('Not really implemented yet, but this might be time-consuming so you do not want to re-run if not needed')
             return
@@ -12,6 +14,37 @@ function [denoised,timeExecDenoising] = denoiseMicroscopyImage(imageStack, denoi
         % construct filename for the output files
         filename = fullfile(options.pathBigFiles, ...
                             ['denoised_', denoisingAlgorithm '_ch', num2str(ch), '_t', num2str(t), '.mat']);
+                   
+        % read from .mat file if already noised, saves a lot of hours
+        % especially with NLMeansPoisson
+        if options.denoiseLoadFromDisk
+                       
+            tic;
+            disp(' option to load denoising from disk is TRUE')
+            if exist(filename, 'file') == 2
+                fileInfo = dir(filename); % file info
+                fileSize = fileInfo.bytes / (1024 * 1024); % in MBs
+                thresholdWarningMB = 5;
+                if fileSize < thresholdWarningMB
+                    warning(['Denoised .mat file only ', num2str(fileSize), ' MB, is it just a debugging .mat that replaced the actual denoising?'])
+                end
+                disp(['  .. file found (', num2str(fileSize,4), ' MB), ', filename])
+                
+                load(filename)              
+                whos
+                if ~exist('denoised','var')
+                    try
+                        denoised = stackOutAsMat;
+                    catch err
+                        err
+                    end
+                end  
+                timeExecDenoising = toc;
+                return
+            else
+                disp(['  .. ', filename, ' | File not found'])     
+            end
+        end
                         
         % TODO: Now all the filters run with default parameters, make it possible
         %       to provide input arguments to this
@@ -109,9 +142,13 @@ function [denoised,timeExecDenoising] = denoiseMicroscopyImage(imageStack, denoi
         end        
         
         % Save to disk
-        save(filename, 'denoised')
-        fileOutTIFF = strrep(filename, '.mat', '.tif');
-        export_stack_toDisk(fileOutTIFF, denoised) 
+        if ~options.resizeStacks2D
+            % save only when the stack has not been resized
+            save(filename, 'denoised')
+            fileOutTIFF = strrep(filename, '.mat', '.tif');
+            export_stack_toDisk(fileOutTIFF, denoised) 
+        end
+        
                 
         % display timing
         denoisingTook = timeExecDenoising;

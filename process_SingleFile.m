@@ -42,6 +42,11 @@ function process_SingleFile(path, tiffPath, fileName, options)
         options.pathBigFiles = fullfile(path,'out'); % don't save all the big files to Dropbox
         options.batchFlag = false;
         options.denoiseOnly = false; % just denoise, and save to disk, useful for overnight pre-batch processing
+        options.denoiseLoadFromDisk = true; % if this file/timepoint/channel already denoised
+            % this collides with the resizeStacks2D, as we can now resize
+            % the stack while the loaded stack could be full-size
+        % options.vesselnessLoadFromDisk = true;  
+        options.segmentationLoadFromDisk = true;  
         
         % debug/development flag to speed up the development, for actual
         % processing of files, put all to false
@@ -53,7 +58,7 @@ function process_SingleFile(path, tiffPath, fileName, options)
         options.loadFromTIFF = false; % loading directly from the denoised OME-TIFF (if found)
                 
         options.manualTimePoints = true;
-        options.tP = [4 5]; % manual time point definition
+        options.tP = [2 3]; % manual time point definition
         
         ch = 1; % fixed now, if you had multiple vasculature labels, modify
                 % channel behavior
@@ -75,12 +80,13 @@ function process_SingleFile(path, tiffPath, fileName, options)
             
     %% IMAGE DENOISING
             
-        options.denoisingAlgorithm = 'GuidedFilter'; % 'NLMeansPoisson'; % 'PureDenoise', 'GuidedFilter'
+        options.denoisingAlgorithm = 'NLMeansPoisson'; % 'NLMeansPoisson'; % 'PureDenoise', 'GuidedFilter'
         
         for t = 1 : length(options.tP)
-            [denoisedStack{ch}{options.tP(t)}, timing.denoising(ch,t)] = denoiseMicroscopyImage(imageStack{ch}{options.tP(t)}(:,:,:), options.denoisingAlgorithm, options, t, ch);            
+            [denoisedStack{ch}{options.tP(t)}, timing.denoising(ch,t)] = denoiseMicroscopyImage(imageStack{ch}{options.tP(t)}(:,:,:), options.denoisingAlgorithm, options, options.tP(t), ch);            
         end
         
+        disp(' '); disp('DENOISING DONE'); disp(' ');
         % if you only want denoising, and not the remaining algorithms
         if options.denoiseOnly; return; end        
         
@@ -101,8 +107,9 @@ function process_SingleFile(path, tiffPath, fileName, options)
         options.scales = 1:3; % same for all the different filters
         
         for t = 1 : length(options.tP)
-            vesselness{ch}{options.tP(t)}.(options.vesselAlgorithm) = vesselnessFilter(denoisedStack{ch}{options.tP(t)}(:,:,:), options.vesselAlgorithm, options.scales, options, t, ch);
-        end        
+            vesselness{ch}{options.tP(t)}.(options.vesselAlgorithm) = vesselnessFilter(denoisedStack{ch}{options.tP(t)}(:,:,:), options.vesselAlgorithm, options.scales, options, options.tP(t), ch);
+        end     
+        disp(' '); disp('VESSELNESS FILTER DONE'); disp(' ');
     
     %% VESSEL SEGMENTATION    
     
@@ -112,7 +119,7 @@ function process_SingleFile(path, tiffPath, fileName, options)
         
         for t = 1 : length(options.tP)
             [segmentationStack{ch}{options.tP(t)}, segmentationMask{ch}{options.tP(t)}] = segmentVessels(denoisedStack{ch}{options.tP(t)}(:,:,:), ...
-                                    vesselness{ch}{options.tP(t)}.(options.vesselAlgorithm).data(:,:,:), options.segmentationAlgorithm, options, t, ch);
+                                    vesselness{ch}{options.tP(t)}.(options.vesselAlgorithm).data(:,:,:), options.segmentationAlgorithm, options, options.tP(t), ch);
         end
         close all
         
@@ -124,7 +131,7 @@ function process_SingleFile(path, tiffPath, fileName, options)
     
         for t = 1 : length(options.tP)           
             reconstruction{ch}{options.tP(t)} = reconstructMeshFromSegmentation(segmentationMask{ch}{options.tP(t)}, options.pathBigFiles, ...
-                options.segmentationAlgorithm, options.reconstructionAlgorithm, options.reconstructionIsovalue, options, t, ch);
+                options.segmentationAlgorithm, options.reconstructionAlgorithm, options.reconstructionIsovalue, options, options.tP(t), ch);
         end
     
     %% FILTER THE MESH RECONSTRUCTION
@@ -134,7 +141,7 @@ function process_SingleFile(path, tiffPath, fileName, options)
         
         for o = 1 : length(operations)
             for t = 1 : length(options.tP)           
-                reconstruction{ch}{options.tP(t)} = filterReconstructedMesh(reconstruction{ch}{options.tP(t)}, operations{o}, options, t, ch);
+                reconstruction{ch}{options.tP(t)} = filterReconstructedMesh(reconstruction{ch}{options.tP(t)}, operations{o}, options, options.tP(t), ch);
             end
         end        
         
@@ -143,7 +150,7 @@ function process_SingleFile(path, tiffPath, fileName, options)
         options.centerlineAlgorithm = 'parallelMedialAxisThinning'; % or 'fastMarchingKroon'
         
         for t = 1 : length(options.tP)           
-            centerline{ch}{options.tP(t)} = extractCenterline(reconstruction{ch}{options.tP(t)}, segmentationMask{ch}{options.tP(t)}(:,:,:), options.centerlineAlgorithm, options, t, ch);
+            centerline{ch}{options.tP(t)} = extractCenterline(reconstruction{ch}{options.tP(t)}, segmentationMask{ch}{options.tP(t)}(:,:,:), options.centerlineAlgorithm, options, options.tP(t), ch);
         end
         close all
         
@@ -156,7 +163,7 @@ function process_SingleFile(path, tiffPath, fileName, options)
         
         for t = 1 : length(options.tP)
             [regReconstruction{ch}{options.tP(t)}, transformMatrix{ch}{options.tP(t)}] = registerTheMeshes(modelMesh, reconstruction{ch}{options.tP(t)}, ...
-                        options.registrationAlgorithm, options.registerModelIndex, options.tP, options, t, ch);
+                        options.registrationAlgorithm, options.registerModelIndex, options.tP, options, options.tP(t), ch);
         end
         
         % now you could use the transformationMatrix to register other

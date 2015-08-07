@@ -2,8 +2,39 @@ function [segmentationStack, mask] = segmentVessels(imageStack, vesselnessStack,
     
     %% INPUT CHECKS
     
-        options.segmImageOutBase = ['segmentationProgress_', segmentationAlgorithm, ...
+        options.segmImageOutBase = ['segmentation_', segmentationAlgorithm, ...
                                     '_ch', num2str(ch), '_t', num2str(t)];
+                                
+        filenameMat = fullfile(options.pathBigFiles, [options.segmImageOutBase, '_regionMaskOnly.mat']);
+                                
+        if options.denoiseLoadFromDisk
+                       
+            tic;
+            disp(' option to load segmentation from disk is TRUE')
+            if exist(filenameMat, 'file') == 2
+                fileInfo = dir(filenameMat); % file info
+                fileSize = fileInfo.bytes / (1024 * 1024); % in MBs
+                thresholdWarningMB = 5;
+                if fileSize < thresholdWarningMB
+                    warning(['Denoised .mat file only ', num2str(fileSize), ' MB, is it just a debugging .mat that replaced the actual denoising?'])
+                end
+                disp(['  .. file found (', num2str(fileSize,4), ' MB), ', filenameMat])
+                
+                load(filenameMat)              
+                whos
+                if ~exist('denoised','var')
+                    try
+                        denoised = stackOutAsMat;
+                    catch err
+                        err
+                    end
+                end  
+                timeExecDenoising = toc;
+                return
+            else
+                disp(['  .. File not found: ', filenameMat])     
+            end
+        end
 
     %% SEGMENTATION
         
@@ -33,7 +64,7 @@ function [segmentationStack, mask] = segmentVessels(imageStack, vesselnessStack,
 
             % https://github.com/ASETS/asetsMatlabLevelSets
             % by Martin Rajchl (@mrajchl), Imperial College London (UK)
-            disp('Segmentation with ASETS: Level Sets'); disp(' ')
+            disp(' Segmentation with ASETS: Level Sets'); disp(' ')
             
             % Pre-process images  
             [imageStack, fusionImageStack, fusionImageStackBright, vesselnessStack, edges, edgesSigmoid] = segment_asetsPreProcessImages(imageStack, vesselnessStack);
@@ -93,7 +124,7 @@ function [segmentationStack, mask] = segmentVessels(imageStack, vesselnessStack,
           
     %% OUTPUT
     
-        save(fullfile(options.pathBigFiles, [options.segmImageOutBase, '_regionMaskOnly.mat']), 'mask')
+        save(filenameMat, 'mask')
     
         disp(' ')
         disp(['SEGMENTATION DONE (timePoint = ', num2str(t), ')'])
