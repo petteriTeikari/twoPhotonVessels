@@ -1,4 +1,4 @@
-function reconstruction = reconstructSegmentation(imageStack, segmentation, options)
+function reconstruction = reconstructMeshFromSegmentation(binaryStack, path, reconstructionAlgorithm, isovalue, options, t, ch)
 
     % Direct import from .mat file if needed
     if nargin == 0
@@ -7,7 +7,7 @@ function reconstruction = reconstructSegmentation(imageStack, segmentation, opti
         [~, name] = system('hostname');
         name = strtrim(name); % remove white space
         if strcmp(name, 'C7Pajek') % Petteri   
-            path = fullfile('/home', 'petteri', 'Desktop', 'testPM');
+            path = fullfile('/home', 'petteri', 'Desktop', 'testPM', 'out');
             load(fullfile(path, 'testReconstruction_fullResolution.mat'))        
             load(fullfile(path, 'testReconstruction_halfRes_4slicesOnly.mat'))        
         elseif strcmp(name, '??????') % Sharan
@@ -19,7 +19,7 @@ function reconstruction = reconstructSegmentation(imageStack, segmentation, opti
         [~, name] = system('hostname');
         name = strtrim(name); % remove white space
         if strcmp(name, 'C7Pajek') % Petteri    
-            path = fullfile('/home', 'petteri', 'Desktop', 'testPM');
+            path = fullfile('/home', 'petteri', 'Desktop', 'testPM', 'out');
             save(fullfile(path, 'testReconstruction.mat'));     
         elseif strcmp(name, '??????') % Sharan
             path = fullfile('/home', 'petteri', 'Desktop', 'testPM');
@@ -27,7 +27,7 @@ function reconstruction = reconstructSegmentation(imageStack, segmentation, opti
         end
         
         % if you wanna write to disk
-        % export_stack_toDisk(fullfile('figuresOut', 'fullResolution_67slices.tif'), segmentation)
+        % export_stack_toDisk(fullfile('figuresOut', 'fullResolution_67slices.tif'), binaryStack)
         
     end
 
@@ -35,59 +35,35 @@ function reconstruction = reconstructSegmentation(imageStack, segmentation, opti
     
     %% INPUT CHECKING
     
+        reconstructFileNameOut = ['meshReconstruct_', segmentationAlgorithm '_ch', num2str(ch), '_t', num2str(t)];
         debugPlot = false;
     
     %% MESH RECONSTRUCTION
     
     
-    
-    
-    
-    %% EXTRACT THE CONTOURS
-       
-        % we don't really need these for anymore, but might be good for
-        % visualization
-    
-        if debugPlot
-            fig = figure('Color', 'w');
-                scrsz = get(0,'ScreenSize'); % get screen size for plotting 
-                set(fig,  'Position', [0.3*scrsz(3) 0.545*scrsz(4) 0.7*scrsz(3) 0.40*scrsz(4)])
-                
-            sliceVector = 1:size(segmentation,3);
-            numberOfContourLevelsPerSlice = 16;
-            subplot(1,2,1)
+        %% MARCHING CUBES (Matlab)
+        if strcmp(reconstructionAlgorithm, 'marchingCubes')
             
-            % this does not actually return anything, it just visualizes the
-            % volumetric data
-            % http://www.mathworks.com/help/matlab/ref/contourslice.html
-            contourslice(segmentation, [], [], sliceVector, numberOfContourLevelsPerSlice);
-            view(34,-38);
-            daspect([1,1,0.01]); axis tight
-            xlabel('X'); ylabel('Y'); zlabel('Z')
-            title(['Contours (n=', num2str(numberOfContourLevelsPerSlice), ') of each slice'])            
-        end
-    
-        
-    %% EXTRACT POINT CLOUD
-        
-        % if you want to interface with Point Cloud Library (PCL), see:
-        % MATLAB to Point Cloud Library by Peter Corke 
-        % http://au.mathworks.com/matlabcentral/fileexchange/40382-matlab-to-point-cloud-library
-    
-   
+            % Using Marching Cubes algorithm from Matlab FEX
+            % http://www.mathworks.com/matlabcentral/fileexchange/32506-marching-cubes
+            isoValue = 0.1;
+            downSampleFactor = [1 1]; % [xy z] downsample to get less vertices/faces
+            physicalScaling = [1 1 5]; % physical units of FOV
+                                       % TODO, make automagic from metadata
+            [F,V] = reconstruct_marchingCubes_wrapper(binaryStack, isoValue, downSampleFactor, physicalScaling, debugPlot);
 
-    %% EXTRACT THE MESH
+            % output the faces and vertices
+            reconstruction.faces = F;
+            reconstruction.vertices = V;
     
-        % Using Marching Cubes algorithm from Matlab FEX
-        % http://www.mathworks.com/matlabcentral/fileexchange/32506-marching-cubes
-        isoValue = 0.1;
-        downSampleFactor = [1 1]; % [xy z] downsample to get less vertices/faces
-        physicalScaling = [1 1 5]; % physical units of FOV
-        [F,V] = reconstruct_marchingCubes_wrapper(segmentation, isoValue, downSampleFactor, physicalScaling, debugPlot);
-        
-        % output the faces and vertices
-        reconstruction.faces = F;
-        reconstruction.vertices = V;
+        %% MARCHING CUBES (ITK)
+        elseif strcmp(reconstructionAlgorithm, 'marchingCubesITK')
+            
+            % Sharan
+            
+        else            
+            error([reconstructionAlgorithm, '? - What mesh reconstruction algorithm?'])            
+        end
     
     %% Condition data
 
@@ -95,18 +71,27 @@ function reconstruction = reconstructSegmentation(imageStack, segmentation, opti
         % http://www.mathworks.com/matlabcentral/answers/25865-how-to-export-3d-image-from-matlab-and-import-it-into-maya
         % tr = triangulation(F, V);
 
-        % Delauney
+        % Delauney, needed for VTK export (?)
         % DT = delaunayTriangulation(tr.Points); 
 
         % save the reconstruction out as .mat file
         save(fullfile(path, 'out', 'reconstructionOut.mat'), 'F', 'V', 'mask');
 
+    %% Point Cloud Library (PCL)
+        
+        % reconstruction.vertices - point cloud
+
+        % if you want to interface with Point Cloud Library (PCL), see:
+        % MATLAB to Point Cloud Library by Peter Corke 
+        % http://au.mathworks.com/matlabcentral/fileexchange/40382-matlab-to-point-cloud-library
+
+        
     %% External formats
     
         % STLWrite
         % http://www.mathworks.com/matlabcentral/fileexchange/20922-stlwrite-filename--varargin-
         try
-            stlwrite(fullfile(path, 'out', [options.reconstructFileNameOut, '.stl']), F, V)
+            stlwrite(fullfile(path, [options.reconstructFileNameOut, '.stl']), F, V)
         catch err
             err
             warning('?')
@@ -115,13 +100,11 @@ function reconstruction = reconstructSegmentation(imageStack, segmentation, opti
         % Write to OFF (or PLY, SMF, WRL, OBJ) using the Toolbox Graph by 
         % http://www.mathworks.com/matlabcentral/fileexchange/5355-toolbox-graph
         try
-            write_mesh(fullfile(path, 'out', [options.reconstructFileNameOut, '.off']), V, F)
+            write_mesh(fullfile(path, [options.reconstructFileNameOut, '.off']), V, F)
         catch err
             err
             warning('?')
         end
-        
-        
         
         % Paraview export (VTK)
         % http://www.mathworks.com/matlabcentral/fileexchange/47814-export-3d-data-to-paraview-in-vtk-legacy-file-format
