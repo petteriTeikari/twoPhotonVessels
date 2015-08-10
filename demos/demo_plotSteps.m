@@ -2,7 +2,11 @@ function demo_plotSteps()
 
     path = '/home/petteri/Desktop/testPM/out/CP-20150323-TR70-mouse2-1-son';
     load(fullfile(path, 'matrices_timepoint1.mat'))
-    im = double(im);
+    
+    % normalize inputs
+    im = double(im) / max(double(im(:)));
+    vessel = vessel / max(vessel(:));
+    denoised = denoised / max(denoised(:));
     whos
     
     %% Maximum Intensity Projections
@@ -86,7 +90,7 @@ function demo_plotSteps()
             warning('?')
         end
     
-    %% ANIMATE NOISE REMOVAL
+    %% VISUALIZE NOISE REMOVAL
     
         % layout
         rows = 2;
@@ -135,4 +139,53 @@ function demo_plotSteps()
             export_fig(fullfile('.', ['denoisingAnim_', num2str(i), '.png']), '-r150', '-a2')
             pause(0.2)
                 
+        end
+        
+    %% VISUALIZE VESSEL ENHANCEMENT
+    
+        % layout
+        rows = 1;
+        cols = 3;
+        fig5 = figure('Color','w');
+            scrsz = get(0,'ScreenSize');    
+            set(fig5,  'Position', [0.15*scrsz(3) 0.2*scrsz(4) 0.6*scrsz(3) 0.5*scrsz(4)])
+        
+        transitionSteps = 20;
+        
+        for i = 1 : size(im,3)            
+            for j = 1 : transitionSteps
+                
+                vFraction = j / transitionSteps;
+                
+                k = 1;
+                if j == 1
+                    sp5(k) = subplot(rows,cols,k);
+                        p5(k) = imshow(im(:,:,i), []); title(['Input, slice = ', num2str(i)])
+                end
+                
+                k = k + 1;
+                sp5(k) = subplot(rows,cols,k);                    
+                    vesselness = (1-vFraction)*im(:,:,i) + vFraction*abs(vessel(:,:,i));
+                    p5(k) = imshow(vesselness, []); title(['Vesselness, slice = ', num2str(i)])               
+                
+                
+                if i > 1
+                    MIPprev = max(abs(vessel(:,:,1:i-1)), [], 3);
+                else
+                    MIPprev = zeros(size(vessel,1), size(vessel,2));
+                end
+                k = k + 1;
+                sp5(k) = subplot(rows,cols,k);
+                    MIPthis = max(abs(vessel(:,:,1:i)), [], 3);
+                    vesselness_MIP = (1-vFraction)*MIPprev + vFraction*MIPthis;
+                    p5(k) = imshow(vesselness_MIP); title(['Vesselness, MIP slices = [', num2str(1), ':', num2str(i), ']'])          
+                    
+                    
+                drawnow
+                % pause(0.05)
+                
+                export_fig(fullfile('.', ['vesselnessAnim_', num2str(i), '_', num2str(j), '.png']), '-r150', '-a2')
+
+                
+            end            
         end
