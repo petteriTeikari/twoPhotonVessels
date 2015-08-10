@@ -2,6 +2,7 @@ function demo_plotSteps()
 
     path = '/home/petteri/Desktop/testPM/out/CP-20150323-TR70-mouse2-1-son';
     load(fullfile(path, 'matrices_timepoint1.mat'))
+    im = double(im);
     whos
     
     %% Maximum Intensity Projections
@@ -85,4 +86,53 @@ function demo_plotSteps()
             warning('?')
         end
     
+    %% ANIMATE NOISE REMOVAL
+    
+        % layout
+        rows = 2;
+        cols = 3;
+        fig4 = figure('Color','w');
+            scrsz = get(0,'ScreenSize');    
+            set(fig4,  'Position', [0.25*scrsz(3) 0.3*scrsz(4) 0.6*scrsz(3) 0.5*scrsz(4)])
         
+        for i = 1 : size(im,3)
+            
+            % SLICES
+            j = 1;
+            sp3(j) = subplot(rows,cols,j);
+                p3(j) = imshow(im(:,:,i),[]); tit3(j) = title(['Input, slice = ', num2str(i)]);
+            
+            j = j +1;
+            sp3(j) = subplot(rows,cols,j);
+                p3(j) = imshow(denoised(:,:,i),[]); tit3(j) = title(['Denoised, slice = ', num2str(i)]);
+                
+            j = j +1;
+            sp3(j) = subplot(rows,cols,j);
+                p3(j) = imshow(abs(im(:,:,i)-denoised(:,:,i)),[]); tit3(j) = title(['Noise, slice = ', num2str(i)]);
+                
+            % MIP
+                
+                % compute MIPs
+                mip_im = max(im(:,:,1:i), [], 3);
+                mip_denoised = max(denoised(:,:,1:i), [], 3);
+                mip_diff = abs(mip_im - mip_denoised);
+           
+                j = j + 1;
+                sp3(j) = subplot(rows,cols,j);
+                    p3(j) = imshow(mip_im,[]); tit3(j) = title('Input, MIP');
+
+                j = j +1;
+                sp3(j) = subplot(rows,cols,j);
+                    p3(j) = imshow(mip_denoised,[]); tit3(j) = title('Denoised, MIP');
+
+                j = j +1;
+                sp3(j) = subplot(rows,cols,j);
+                    p3(j) = imshow(mip_diff,[]); tit3(j) = title('Noise, MIP');
+
+            set(tit3, 'FontSize', 10, 'FontWeight', 'bold')
+ 
+            drawnow               
+            export_fig(fullfile('.', ['denoisingAnim_', num2str(i), '.png']), '-r150', '-a2')
+            pause(0.2)
+                
+        end
