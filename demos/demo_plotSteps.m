@@ -60,12 +60,12 @@ function demo_plotSteps()
         % Using Marching Cubes algorithm from Matlab FEX
         % http://www.mathworks.com/matlabcentral/fileexchange/32506-marching-cubes
 
-        isoValue = 0.01;
+        isoValue = 0.1;
         downSampleFactor = [1 1]; % [xy z] downsample to get less vertices/faces
         physicalScaling = [1 1 5]; % physical units of FOV
                                    % TODO, make automagic from metadata
         debugPlot = true;
-        [F,V] = reconstruct_marchingCubes_wrapper(mask, isoValue, downSampleFactor, physicalScaling, debugPlot);
+        [F,V] = reconstruct_marchingCubes_wrapper(double(im), isoValue, downSampleFactor, physicalScaling, debugPlot);
         %[F2,V2] = reconstruct_marchingCubes_wrapper(vessel, isoValue, downSampleFactor, physicalScaling, debugPlot);
         %[F3,V3] = reconstruct_marchingCubes_wrapper(denoised, isoValue, downSampleFactor, physicalScaling, debugPlot);
         %[F4,V4] = reconstruct_marchingCubes_wrapper(mask, isoValue, downSampleFactor, physicalScaling, debugPlot);
@@ -76,7 +76,7 @@ function demo_plotSteps()
         
         % Write to OFF (or PLY, SMF, WRL, OBJ) using the Toolbox Graph by 
         % http://www.mathworks.com/matlabcentral/fileexchange/5355-toolbox-graph
-        reconstructFileNameOut = 'meshOut'
+        reconstructFileNameOut = 'meshOut';
         try
             reconstruction.meshOnDisk = fullfile('.', [reconstructFileNameOut, '.off']);
             write_mesh(reconstruction.meshOnDisk, V, F)
