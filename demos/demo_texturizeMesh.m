@@ -5,6 +5,7 @@ function demo_texturizeMesh()
         delimiterIn = ' '; % tab-delimited
         headerlinesIn = 1; % number of header rows
         tmpImport = importdata(fullfile('..', 'testData', 'testVector.txt'), delimiterIn, headerlinesIn)
+        %tmpImport = importdata(fullfile('/home/highschoolintern/Desktop/SDFPropertyMap/build/SDFVals.txt'), delimiterIn, headerlinesIn)
             col1 = tmpImport.data(:,1);
             col2 = tmpImport.data(:,2);
             % only 10 values
