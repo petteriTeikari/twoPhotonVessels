@@ -3,9 +3,9 @@ function analysis = analyzeMeshMorphology(reconstruction, options, visualizeOn)
     %% INPUT CHECKING
 
         if nargin == 0
-            load('./debugMATs/testMorphology.mat')        
+            % load('./debugMATs/testMorphology.mat')        
         else
-            save('./debugMATs/testMorphology.mat')    
+            % save('./debugMATs/testMorphology.mat')    
         end
         
         analysis = [];
@@ -19,16 +19,31 @@ function analysis = analyzeMeshMorphology(reconstruction, options, visualizeOn)
     
     %% ANALYSIS
     
+        % see e.g. Fig. 3. of Lindvere et al. (2013), http://dx.doi.org/10.1016/j.neuroimage.2013.01.011
+        % or Figs 4.2-4 from http://adm.irbbarcelona.org/image-j-fiji
+
     
         %% SHAPE DIAMETER FUNCTION (SDF)
         
+        % the full path to the .off file is save in "reconstructMeshFromSegmentation.m"
+        reconstruction.meshOnDisk
+        fileSavelocation = strrep(reconstruction.meshOnDisk, '.off', '_SDF,txt')
+        
+        % Getting SDF Vals 
+        Command= ('./PropertyVals' (path, 'out', [options.reconstructFileNameOut, '.off']) fileSavelocation)
+        [status,cmdout]= system(command);
+        txtFilepath= [filesavelocation '/SDFVals.txt'];
+        fileID = fopen(txtFilepath,'r');
+        formatSpec = '%f'
+        diameterVals = fscanf(fileID,formatSpec);
+        fclose(fileID);
+
         
         
 
     %% BACKGROUND
     
-        % "quantitative morphology"
-        
+        % "quantitative morphology"        
     
         % 2D Vessel diameter estimation
         % ---
