@@ -52,7 +52,7 @@ function reconstruction = reconstructMeshFromSegmentation(binaryStack, path, ...
             physicalScaling = [1 1 5]; % physical units of FOV
                                        % TODO, make automagic from metadata
             [F,V] = reconstruct_marchingCubes_wrapper(binaryStack, isoValue, downSampleFactor, physicalScaling, debugPlot);
-
+               whos
             % output the faces and vertices
             reconstruction.faces = F;
             reconstruction.vertices = V;
