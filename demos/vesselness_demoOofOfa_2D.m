@@ -3,7 +3,8 @@ function vesselness_demoOofOfa_2D()
     %% INPUT
     
         close all
-        load(fullfile('..', 'debugMATs', 'importTemp.mat'))
+        % load(fullfile('..', 'debugMATs', 'importTemp.mat'))
+        load(fullfile('segmentationDemo', 'testData', 'slices10_16_timepoint3_denoised_NLMeansPoisson.mat')); imageStack{1}{1} = im(:,:,1:3);
         slice = 2;
 
         testImage_2D = double(imageStack{1}{1}(:,:,slice));
@@ -11,7 +12,7 @@ function vesselness_demoOofOfa_2D()
 
     %% COMPUTATIONS
         
-        range = {1:2; 1:3; 1:5; 1:10; 1:20};
+        range = {1:2; 1:3; 1:5};
         opts.responsetype=0; % l1; (default, for OOF)
 
         disp('Computing OOF and OOF-OFA')
