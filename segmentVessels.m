@@ -1,13 +1,24 @@
 function [segmentationStack, mask] = segmentVessels(imageStack, vesselnessStack, segmentationAlgorithm, options, t, ch)
     
     %% INPUT CHECKS
+
+        if nargin == 0
+            options.pathBigFiles = '/home/petteri/Desktop/testPM/out';
+            load(fullfile(options.pathBigFiles, 'segmentDebug.mat'))
+            fileName = mfilename; fullPath = mfilename('fullpath');
+            pathCode = strrep(fullPath, fileName, ''); cd(pathCode)
+            
+        else
+            save(fullfile(options.pathBigFiles, 'segmentDebug.mat'))
+        end
     
         options.segmImageOutBase = ['segmentation_', segmentationAlgorithm, ...
-                                    '_ch', num2str(ch), '_t', num2str(t)];
+                                    '_ch', num2str(ch), '_t', num2str(t)]
                                 
         filenameMat = fullfile(options.pathBigFiles, [options.segmImageOutBase, '_regionMaskOnly.mat']);
-                                
-        if options.denoiseLoadFromDisk
+    
+        
+        if options.denoiseLoadFromDisk == 23
                        
             tic;
             disp(' option to load segmentation from disk is TRUE')
@@ -79,11 +90,11 @@ function [segmentationStack, mask] = segmentVessels(imageStack, vesselnessStack,
             sliceIndex = 1;
 
             % Parameters
-            maxLevelSetIterations = 2; % number of maximum time steps
+            maxLevelSetIterations = 12; % number of maximum time steps
             tau = 500; % speed parameter
-            w1 = 0.35; % weight parameter for intensity data term
-            w2 = 0.25; % weight parameter for the speed data term
-            w3 = 0.4; % weight parameter for the vesselnessStackness
+            w1 = 0.8; % weight parameter for intensity data term
+            w2 = 0.1; % weight parameter for the speed data term
+            w3 = 0.1; % weight parameter for the vesselnessStackness
 
             % Set up the parameters for the max flow optimizer:
             % [1] graph dimension 1
@@ -95,7 +106,7 @@ function [segmentationStack, mask] = segmentVessels(imageStack, vesselnessStack,
             % [6] step 7size for the gradient descent step when calulating the spatial
             %     flows p(x) (default 0.16)        
             [sx, sy, sz] = size(imageStack);
-            maxIter = 500;
+            maxIter = 200;
             errorBound = 1e-6;
             cMultiplier = 0.2;
             stepSize = 0.16;
@@ -129,3 +140,7 @@ function [segmentationStack, mask] = segmentVessels(imageStack, vesselnessStack,
         disp(' ')
         disp(['SEGMENTATION DONE (timePoint = ', num2str(t), ')'])
         disp(' ')
+        
+        if nargin == 0
+            pause
+        end
