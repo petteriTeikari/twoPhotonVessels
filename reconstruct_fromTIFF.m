@@ -15,7 +15,7 @@ function reconstruct_fromTIFF(fileName)
         [yRes,xRes] = size(tmpRead);
         dimXY = min([yRes xRes]);
         
-        imageStack(:,:,k) = tmpRead(1:dimXY, 1:dimXY);
+        imageStack(:,:,k) = double(tmpRead(1:dimXY, 1:dimXY));
         
     end
 
@@ -24,6 +24,12 @@ function reconstruct_fromTIFF(fileName)
     
     % placeholder
     options = [];
-
-    reconstruction = reconstructSegmentation(imageStack, segmentation, options);
+    t = 1; ch = 1;
+    
+    segmentationAlgorithm = 'fromTIFF';
+    reconstructionAlgorithm = 'marchingCubes';
+    isoValue = 0.1;
+    
+    reconstruction = reconstructMeshFromSegmentation(imageStack, path, ...
+                            segmentationAlgorithm, reconstructionAlgorithm, isoValue, options, t, ch)
     whos
