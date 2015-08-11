@@ -1,0 +1,1 @@
+/home/highschoolintern/Desktop/SurfaceExtraction2/Build/CMakeFiles/SurfaceExtraction2.dir
