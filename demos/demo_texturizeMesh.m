@@ -1,9 +1,14 @@
-function demo_texturizeMesh()
+function demo_texturizeMesh()= demo_texturizeMesh(fileLoc, F, V) 
 
     % import test vector (SDF), from text file
-    
-        delimiterIn = ' '; % tab-delimited
-        headerlinesIn = 1; % number of header rows
+    if nargin== 0
+       fileLoc= '/home/highschoolintern/Desktop/twoPhotonVessels/SDFRetrival/build/SDFVals.txt';
+    end
+    fileID= fopen(fileLoc, 'r');
+    diameterVals= fscanf(fileIdD, '%f');
+       
+    delimiterIn = ' '; % tab-delimited
+    headerlinesIn = 1; % number of header rows
         %tmpImport = importdata(fullfile('..', 'testData', 'testVector.txt'), delimiterIn, headerlinesIn)
         tmpImport = importdata(fullfile('/home/highschoolintern/Desktop/SDFPropertyMap/build/SDFVals.txt'), delimiterIn, headerlinesIn)
             col1 = tmpImport.data(:,1);
@@ -51,9 +56,10 @@ function demo_texturizeMesh()
         
         figure('Color','w')
         
-        % creatu dummy values, import the SDF instead
-        minValue = 0;
-        maxValue = 255;
+        % gathers values stored in SDFVals.txt file
+       
+        minValue = min(diameterVals);
+        maxValue = max(diameterVals);
         noOfValues = length(FF);
         colorMap = (linspace(minValue,maxValue,noOfValues))';
         
