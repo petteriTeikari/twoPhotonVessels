@@ -56,7 +56,7 @@ function demo_texturizeMesh()= demo_texturizeMesh(fileLoc, F, V)
         
         figure('Color','w')
         
-        % gathers values stored in SDFVals.txt file
+        % creatu dummy values, import the SDF instead
        
         minValue = min(diameterVals);
         maxValue = max(diameterVals);
