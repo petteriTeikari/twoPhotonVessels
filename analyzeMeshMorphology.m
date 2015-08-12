@@ -37,7 +37,7 @@ function analysis = analyzeMeshMorphology(reconstruction, options, visualizeOn)
         formatSpec = '%f'
         diameterVals = fscanf(fileID,formatSpec);
         fclose(fileID);
-
+visualize_meshWithSDFValues(reconstruction.faces, reconstruction.vertices, diameterVals); 
         
         
 
