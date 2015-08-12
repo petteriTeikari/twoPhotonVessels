@@ -12,7 +12,7 @@ function reconstruction = reconstructMeshFromSegmentation(binaryStack, path, ...
             load(fullfile(path, 'testReconstruction_fullResolution.mat'))        
             load(fullfile(path, 'testReconstruction_halfRes_4slicesOnly.mat'))        
         elseif strcmp(name, '??????') % Sharan
-            path = fullfile('/home', 'petteri', 'Desktop', 'testPM');
+            path = fullfile('/home/highschoolintern/Desktop/twoPhotonVessels');
             load(fullfile(path, 'testReconstruction_fullResolution.mat'))        
             %load(fullfile(path, 'testReconstruction_halfRes_4slicesOnly.mat'))        
         end
@@ -23,7 +23,7 @@ function reconstruction = reconstructMeshFromSegmentation(binaryStack, path, ...
             path = fullfile('/home', 'petteri', 'Desktop', 'testPM', 'out');
             save(fullfile(path, 'testReconstruction.mat'));     
         elseif strcmp(name, '??????') % Sharan
-            path = fullfile('/home', 'petteri', 'Desktop', 'testPM');
+            path = fullfile('/home/highschoolintern/Desktop/twoPhotonVessels');
             save(fullfile(path, 'testReconstruction.mat'));
         end
         
