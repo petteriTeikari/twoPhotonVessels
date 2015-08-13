@@ -1,4 +1,4 @@
-function demo_texturizeMesh()= demo_texturizeMesh(fileLoc, F, V) 
+function demo_texturizeMesh() 
 
     % import test vector (SDF), from text file
     if nargin== 0
