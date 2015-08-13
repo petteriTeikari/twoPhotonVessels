@@ -30,7 +30,8 @@ function analysis = analyzeMeshMorphology(reconstruction, options, visualizeOn)
         fileSavelocation = strrep(reconstruction.meshOnDisk, '.off', '_SDF,txt')
         
         % Getting SDF Vals 
-        Command= ('./PropertyVals' (path, 'out', [options.reconstructFileNameOut, '.off']) fileSavelocation)
+        Command= ['./PropertyVals ' [path, 'out', [options.reconstructFileNameOut '.off']] ' ' fileSavelocation]
+        
         [status,cmdout]= system(command);
         txtFilepath= [filesavelocation '/SDFVals.txt'];
         fileID = fopen(txtFilepath,'r');
