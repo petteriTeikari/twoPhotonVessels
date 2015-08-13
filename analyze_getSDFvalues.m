@@ -8,7 +8,7 @@ function diameterVals = analyze_getSDFvalues(fileNameForMesh)
 
     % Getting SDF Vals 
     try 
-        Command= ('./PropertyVals' (path, 'out', [options.reconstructFileNameOut, '.off']) fileSavelocation)
+        Command= ['./PropertyVals ' [path, 'out', [options.reconstructFileNameOut, '.off']] ' ' fileSavelocation]
     catch err
         err
         err.message
