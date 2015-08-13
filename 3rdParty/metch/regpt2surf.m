@@ -58,7 +58,7 @@ for iter=1:maxiter
             fixdist=node(pmask(pfix),:)-newpos(pfix,:);
             dist0(pfix)=sqrt(sum(fixdist.*fixdist,2));
     end
-    fprintf('iter=%d error=%f\n',iter,sum(abs(dist0)));
+    fprintf('      iter=%d/%d error=%f\n',iter,maxiter,sum(abs(dist0)));
     
     % build the Jacobian (sensitivity) matrix
     J=zeros(length(dist0),length(C));

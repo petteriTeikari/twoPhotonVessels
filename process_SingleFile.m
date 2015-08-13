@@ -28,6 +28,7 @@ function process_SingleFile(path, tiffPath, fileName, options)
         % Debug variables when running locally (without input arguments)        
         fileName = mfilename; fullPath = mfilename('fullpath');
         pathCode = strrep(fullPath, fileName, ''); cd(pathCode)
+        options.pathCode = pathCode;
         
         options.noOfCores = 2;
         init_parallelComputing(options.noOfCores)
@@ -46,19 +47,19 @@ function process_SingleFile(path, tiffPath, fileName, options)
             % this collides with the resizeStacks2D, as we can now resize
             % the stack while the loaded stack could be full-size
         % options.vesselnessLoadFromDisk = true;  
-        options.segmentationLoadFromDisk = true;  
+        options.segmentationLoadFromDisk = false;  
         
         % debug/development flag to speed up the development, for actual
         % processing of files, put all to false
         options.useOnlyFirstTimePoint = false;
         options.useOnlySubsetOfStack = false;
-        options.resizeStacks2D = true;
+        options.resizeStacks2D = false;
         options.resize2D_factor = 1 / 16;
         options.skipImportBioFormats = false;
         options.loadFromTIFF = false; % loading directly from the denoised OME-TIFF (if found)
                 
         options.manualTimePoints = true;
-        options.tP = [2 3]; % manual time point definition
+        options.tP = [1 2 3 4 5 6]; % manual time point definition
         
         ch = 1; % fixed now, if you had multiple vasculature labels, modify
                 % channel behavior
@@ -170,7 +171,7 @@ function process_SingleFile(path, tiffPath, fileName, options)
         % channels such as calcium, voltage, whatever... or the volumetric
         % image (for visualizing the leakge for example)
         
-    %% FLUORESCENCE ANALAYSIS
+    %% FLUORESCENCE ANALYSIS
     
         % e.g. fluorescence difference (intra vs. extravascular space)        
         permCoeff{ch} = analyze_permeabilityCoefficient(imageStack{ch}, segmentationMask{ch}, options);

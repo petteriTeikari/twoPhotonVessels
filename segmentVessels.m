@@ -78,7 +78,7 @@ function [segmentationStack, mask] = segmentVessels(imageStack, vesselnessStack,
             disp(' Segmentation with ASETS: Level Sets'); disp(' ')
             
             % Pre-process images  
-            [imageStack, fusionImageStack, fusionImageStackBright, vesselnessStack, edges, edgesSigmoid] = segment_asetsPreProcessImages(imageStack, vesselnessStack);
+            [imageStack, fusionImageStack, fusionImageStackBright, vesselnessStack, edges, edgesSigmoid, im_bias_corrected] = segment_asetsPreProcessImages(imageStack, vesselnessStack);
             
             % init region
             regionInit = segment_createRegionFromVessel(vesselnessStack);
@@ -121,7 +121,7 @@ function [segmentationStack, mask] = segmentVessels(imageStack, vesselnessStack,
             mask = asets_demoWrapper_3D_v3(imgForSegmentation, vesselnessStack, edges, regionInit, ...
                                              maxLevelSetIterations, tau, w1, w2, w3, pars, ...
                                              regWeight1, regWeight2, regWeight3, ...
-                                             secondPass, sliceIndex, visualize3D, visualizeON, fileOutBase);
+                                             secondPass, sliceIndex, visualize3D, visualizeON, fileOutBase, options);
 
             % weigh the input with binary region mask
             segmentationStack = mask .* imageStack;

@@ -30,8 +30,7 @@ function [denoised,timeExecDenoising] = denoiseMicroscopyImage(imageStack, denoi
                 end
                 disp(['  .. file found (', num2str(fileSize,4), ' MB), ', filename])
                 
-                load(filename)              
-                whos
+                load(filename) 
                 if ~exist('denoised','var')
                     try
                         denoised = stackOutAsMat;

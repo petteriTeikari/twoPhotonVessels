@@ -190,7 +190,7 @@ function [data, imageStack, metadata, options] = importMicroscopyFile(fileName, 
 
         end
         
-        if options.noOfTimePoints < options.tP(2)
+        if options.noOfTimePoints < options.tP(end)
             options.tP(2) = options.noOfTimePoints;
             warning(['Only ', num2str(options.noOfTimePoints), ' input time points, need to reduce the limit to that'])
         end

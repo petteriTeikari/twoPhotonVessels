@@ -31,5 +31,5 @@ function reconstruct_fromTIFF(fileName)
     isoValue = 0.1;
     
     reconstruction = reconstructMeshFromSegmentation(imageStack, path, ...
-                            segmentationAlgorithm, reconstructionAlgorithm, isoValue, options, t, ch)
+                            segmentationAlgorithm, reconstructionAlgorithm, isoValue, options, t, ch);
     whos

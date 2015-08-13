@@ -66,7 +66,7 @@ function demo_plotSteps()
         % http://www.mathworks.com/matlabcentral/fileexchange/32506-marching-cubes
 
         isoValue = 0.1;
-        downSampleFactor = [1 1]; % [xy z] downsample to get less vertices/faces
+        downSampleFactor = [32 1]; % [xy z] downsample to get less vertices/faces
         physicalScaling = [1 1 5]; % physical units of FOV
                                    % TODO, make automagic from metadata
         debugPlot = true;

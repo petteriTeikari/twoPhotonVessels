@@ -2,7 +2,7 @@
 % The dimension is a vector to specify the size of the returned coordinate
 % matrices. The number of output argument is equals to the dimensionality
 % of the vector "dimension". All the dimension is starting from "1"
-function varargout=coormatrix(dimension);
+function varargout=coormatrix(dimension)
 dim=length(dimension);
 if dim==2
     varargout{1}=[1:dimension(1)]' * ones(1 , dimension(2), 'single');
