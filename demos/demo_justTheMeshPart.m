@@ -4,7 +4,7 @@ function demo_justTheMeshPart()
     % running these parts
     fileName = mfilename;
     fullPath = mfilename('fullpath');
-    pathCode = strrep(fullPath, fileName, '')
+    pathCode = strrep(fullPath, fileName, '');
     try
         cd(pathCode)
         options.pathCode = pathCode;
