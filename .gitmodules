@@ -7,3 +7,6 @@
 [submodule "3rdParty/gptoolbox"]
 	path = 3rdParty/gptoolbox
 	url = https://github.com/alecjacobson/gptoolbox.git
+[submodule "3rdParty/shrinkage-fields"]
+	path = 3rdParty/shrinkage-fields
+	url = https://github.com/uschmidt83/shrinkage-fields.git
