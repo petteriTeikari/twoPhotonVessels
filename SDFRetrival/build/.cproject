@@ -271,7 +271,7 @@
 <pathentry kind="mac" name="_GNU_SOURCE" path="" value="1"/>
 <pathentry include="/usr/local/include" kind="inc" path="" system="true"/>
 <pathentry include="/usr/include/x86_64-linux-gnu" kind="inc" path="" system="true"/>
-<pathentry include="/home/highschoolintern/Desktop/SDFPropertyMap/build" kind="inc" path="" system="true"/>
+<pathentry include="/home/highschoolintern/Desktop/twoPhotonVessels/SDFRetrival/build" kind="inc" path="" system="true"/>
 <pathentry include="/usr/lib/gcc/x86_64-linux-gnu/4.8/include" kind="inc" path="" system="true"/>
 <pathentry include="/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed" kind="inc" path="" system="true"/>
 <pathentry include="/usr/include" kind="inc" path="" system="true"/>
@@ -297,14 +297,14 @@
 </target>
 <target name="Build" path="[Targets]/[exe] PropertyVals" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
 <buildCommand>/usr/bin/make</buildCommand>
-<buildArguments>-C "/home/highschoolintern/Desktop/SDFPropertyMap/build" -j4</buildArguments>
+<buildArguments>-C "/home/highschoolintern/Desktop/twoPhotonVessels/SDFRetrival/build" -j4</buildArguments>
 <buildTarget>PropertyVals</buildTarget>
 <stopOnError>true</stopOnError>
 <useDefaultCommand>false</useDefaultCommand>
 </target>
 <target name="Clean" path="[Targets]/[exe] PropertyVals" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
 <buildCommand>/usr/bin/cmake</buildCommand>
-<buildArguments>-E chdir "/home/highschoolintern/Desktop/SDFPropertyMap/build" "/usr/bin/cmake" -P "CMakeFiles/PropertyVals.dir/cmake_clean.cmake"</buildArguments>
+<buildArguments>-E chdir "/home/highschoolintern/Desktop/twoPhotonVessels/SDFRetrival/build" "/usr/bin/cmake" -P "CMakeFiles/PropertyVals.dir/cmake_clean.cmake"</buildArguments>
 <buildTarget></buildTarget>
 <stopOnError>true</stopOnError>
 <useDefaultCommand>false</useDefaultCommand>

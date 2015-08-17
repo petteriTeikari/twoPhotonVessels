@@ -47,7 +47,7 @@
 				</dictionary>
 				<dictionary>
 					<key>org.eclipse.cdt.make.core.buildLocation</key>
-					<value>/home/highschoolintern/Desktop/SDFPropertyMap/build</value>
+					<value>/home/highschoolintern/Desktop/twoPhotonVessels/SDFRetrival/build</value>
 				</dictionary>
 				<dictionary>
 					<key>org.eclipse.cdt.make.core.useDefaultBuildCmd</key>
@@ -83,7 +83,7 @@
 				</dictionary>
 				<dictionary>
 					<key>org.eclipse.cdt.make.core.build.location</key>
-					<value>/home/highschoolintern/Desktop/SDFPropertyMap/build</value>
+					<value>/home/highschoolintern/Desktop/twoPhotonVessels/SDFRetrival/build</value>
 				</dictionary>
 				<dictionary>
 					<key>org.eclipse.cdt.make.core.autoBuildTarget</key>
@@ -111,7 +111,7 @@
 		<link>
 			<name>[Source directory]</name>
 			<type>2</type>
-			<location>/home/highschoolintern/Desktop/SDFPropertyMap/src</location>
+			<location>/home/highschoolintern/Desktop/twoPhotonVessels/SDFRetrival/src</location>
 		</link>
 		<link>
 			<name>[Subprojects]</name>
@@ -121,7 +121,7 @@
 		<link>
 			<name>[Subprojects]/src</name>
 			<type>2</type>
-			<location>/home/highschoolintern/Desktop/SDFPropertyMap/src</location>
+			<location>/home/highschoolintern/Desktop/twoPhotonVessels/SDFRetrival/src</location>
 		</link>
 		<link>
 			<name>[Targets]</name>
@@ -146,7 +146,7 @@
 		<link>
 			<name>[Targets]/[exe] PropertyVals/Source Files/PropertyVals.cpp</name>
 			<type>1</type>
-			<location>/home/highschoolintern/Desktop/SDFPropertyMap/src/PropertyVals.cpp</location>
+			<location>/home/highschoolintern/Desktop/twoPhotonVessels/SDFRetrival/src/PropertyVals.cpp</location>
 		</link>
 		<link>
 			<name>[Targets]/[exe] PropertyVals/Header Files</name>

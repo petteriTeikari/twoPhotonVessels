@@ -21,7 +21,8 @@ function demo_justTheMeshPart()
     
         options.reconstructionAlgorithm = 'marchingCubes';
         options.reconstructionIsovalue = 0.01;
-        
+        pwd
+
         reconstruction = reconstructMeshFromSegmentation(mask, options.pathBigFiles, ...
                 options.segmentationAlgorithm, options.reconstructionAlgorithm, options.reconstructionIsovalue, options, options.tP(t), ch);
         
