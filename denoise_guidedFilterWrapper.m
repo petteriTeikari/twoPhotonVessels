@@ -49,13 +49,13 @@ function [denoised, fileOutName] = denoise_guidedFilterWrapper(imageIn, guide, .
             im = imageIn(:,:,slice);
             g = guide(:,:,slice);
             for i = 1 : NoOfIter
-                im = fastguidedfilter(im, g, epsilon, win_size, subsampleFactor);
+                im = fastguidedfilter(im, g, win_size, epsilon, subsampleFactor);
                 g = im;
             end        
             denoised(:,:,slice) = im;
         end
         
-        fileOutName = [options.denoisingAlgorithm, '_iter', num2str(NoOfIter), ...
+        fileOutName = ['fastGuidedFilter', '_iter', num2str(NoOfIter), ...
             '_w', num2str(win_size), '_eps', num2str(epsilon), '_s', num2str(subsampleFactor), ...            
             '_DenoisingWholeStack.png'];        
     else       

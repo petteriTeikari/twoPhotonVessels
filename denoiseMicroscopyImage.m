@@ -1,6 +1,5 @@
-function [denoised,timeExecDenoising] = denoiseMicroscopyImage(imageStack, denoisingAlgorithm, options, t, ch) 
+function [denoised, dictionary, timeExecDenoising] = denoiseMicroscopyImage(imageStack, denoisingAlgorithm, options, t, ch) 
     
-
 
     %% INPUT CHECKS
     
@@ -51,13 +50,30 @@ function [denoised,timeExecDenoising] = denoiseMicroscopyImage(imageStack, denoi
     
     %% DENOISING    
     
+        % This allows us to consider the Poisson-corrupted 2-PM as
+        % Gaussian-noise corrupted image
+        scaleRange = 0.7;  %% ... then set data range in [0.15,0.85], to avoid clipping of extreme values
+        disp('Anscombe Transform to "convert" Poisson noise to Gaussian noise'); disp(' ');
+        [im_VST, y_sigma, transformLimits] = denoise_anscombeTransform(im, 'forward', scaleRange, []);
+        options = [];
+    
+    
+        if strcmp(denoisingAlgorithm, 'BM4D')
+
+            tic
+            [denoised_VST, sigmaEst, PSNR, SSIM] = denoise_BM4Dwrapper(im_VST);
+            timeExecDenoising = toc;
+            sigmaPercentage = 100*(sigmaEst / max(denoised_VST(:)));
+            [denoised, ~, ~] = denoise_anscombeTransform(denoised_VST, 'inverse', scaleRange, transformLimits);
+    
         % NL-MEANS (for POISSON NOISE)
-        if strcmp(denoisingAlgorithm, 'NLMeansPoisson')
+        elseif strcmp(denoisingAlgorithm, 'NLMeansPoisson')
             
             % This is very slow, but the quality of the output is good
             % (edges preserved, smooth surfaces)
             hW = 10; hB = 3; hK = 6;
             [denoised, timeExecDenoising] = denoise_NLMeansPoissonWrapper(imageStack, hW, hB, hK);
+            dictionary = []; % not a dictionary-based method
             
     
         % PURE DENOISE
@@ -84,6 +100,7 @@ function [denoised,timeExecDenoising] = denoiseMicroscopyImage(imageStack, denoi
 
             % ImageJ filtering via MIJ
             [denoised, timeExecDenoising] = MIJ_wrapper(imageStack(:,:,:), command, arguments, options);
+            dictionary = []; % not a dictionary-based method
             
             
         % GUIDED FILTER
@@ -103,7 +120,36 @@ function [denoised,timeExecDenoising] = denoiseMicroscopyImage(imageStack, denoi
             [denoised, fileOutName] = denoise_guidedFilterWrapper(imageStack, guide, ...
                             epsilon, win_size, NoOfIter, options.guidedType, options.guideFast_subsampleFactor, options);
             timeExecDenoising = toc;
+            dictionary = []; % not a dictionary-based method
          
+        % K-SVD
+        elseif strcmp(denoisingAlgorithm, 'K-SVD')
+            
+            % add check later so that you can pass out these variables
+            % outside this function and if not, use these defaults
+            params.blocksize = 8;
+            params.dictsize = 256;
+            params.maxval = max(imageStack(:));
+            params.trainnum = 400;
+            params.iternum = 1;
+            params.memusage = 'high';
+            plotON = true;
+            
+            tic;            
+            [denoised, dictionary] = denoise_kSVD_Wrapper(imageStack, params, plotON, options);
+            timeExecDenoising = toc;
+
+        % DLENE
+        elseif strcmp(denoisingAlgorithm, 'DLENE')
+            
+        % CSR Denoise
+        elseif strcmp(denoisingAlgorithm, 'CSR')
+            
+            
+        elseif strcmp(denoisingAlgorithm, 'CSF')
+            
+            % dx.doi.org/10.1109/TSP.2014.2324994
+            
         % OTHER
         elseif strcmp(denoisingAlgorithm, 'someVeryCoolMethod')
             
@@ -124,6 +170,22 @@ function [denoised,timeExecDenoising] = denoiseMicroscopyImage(imageStack, denoi
             % Cheng W, Hirakawa K. 2015. "Minimum Risk Wavelet Shrinkage Operator for Poisson Image Denoising." 
             % IEEE Transactions on Image Processing 24:1660–1671. 
             % http://dx.doi.org/10.1109/TIP.2015.2409566.
+            
+            % See
+            % https://www.researchgate.net/post/Is_the_block-matching_and_3-D_filtering_BM3D_algorithm_the_most_powerful_and_effective_image_denoising_procedure_nowadays
+            
+            % LSSC, Non-local sparse models for image restoration, ICCV 2009
+
+            % GMM-EPLL, From learning models of natural image
+            % patches to whole image restoration, ICCV 2011
+
+            % opt-MRF, Insights into analysis operator learning:
+            % From patch-based sparse models to higher order MRFs, IEEE TIP 2014
+
+            % WNNM, Weighted nuclear norm
+            % minimization with application to image denoising, CVPR 2014
+
+            % CSF, Shrinkage fields for effective image restoration, CVPR 2014 
             
         else
             warning('What is your denoising method? No denoising done now (input returned as denoised)')

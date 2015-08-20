@@ -13,7 +13,7 @@ function denoise_demoMethods()
         im = testSlices(:,:,sliceIndex);
         
         % parameters
-        computeSlowOnes = true;
+        computeSlowOnes = false
             % trilateral filter
             % NL-means for Poisson
         
