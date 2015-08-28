@@ -11,18 +11,33 @@
 #include <itkVTKImageIO.h>
 #include "itkImageFileWriter.h"
 
-int main( int, char* [] )
+int main(int argc,char* argv[])
 {
-    const unsigned char Dimension = 3;
+
+	// We define then the pixel type and dimension of the image from which we are
+	// going to extract the surface.
+	const unsigned char Dimension = 3;
   typedef unsigned int  PixelType;
   typedef itk::Image< PixelType, Dimension > ImageType;
   
+  //Image type definition
 typedef itk::ImageFileReader< ImageType >    ReaderType;
   ReaderType::Pointer reader = ReaderType::New();
  reader->SetImageIO(itk::TIFFImageIO::New());  
 
-const char* filename= "/home/highschoolintern/Desktop/CP-20150323-TR70-mouse2-1-son_denoised_onlyOneTimePoint_slices4to16.ome.tif";
-reader->SetFileName(filename);
+
+ //reading the file type
+ const char* filename;
+ if (argc==1){
+
+	std::cerr << "Please Insert .tif file" << std::endl;
+	return EXIT_FAILURE; 
+    }else {
+    	 filename= argv[0];
+    }
+
+ reader->SetFileName(filename);
+
 
 try
     {
@@ -36,7 +51,9 @@ try
     return EXIT_FAILURE;
     }
 
-  typedef itk::BinaryThresholdImageFilter< ImageType, ImageType > BinaryThresholdFilterType;
+
+  //Binary Thresholding does not seem to work. Not too sure what the issue is.
+  /*typedef itk::BinaryThresholdImageFilter< ImageType, ImageType > BinaryThresholdFilterType;
     BinaryThresholdFilterType::Pointer threshold = BinaryThresholdFilterType::New();
 
 
@@ -44,15 +61,17 @@ try
     threshold->SetLowerThreshold(2000);
     threshold->SetUpperThreshold( 4095 );
     threshold->SetOutsideValue( 2 );
-    threshold->SetInsideValue(1000);
+    threshold->SetInsideValue(1000); */
 
 
 
-//std::cout<< "It worked!" << std::endl;
+//mesh extraction
+// Uses algorithm similar to Marching Cubes to extract surface
 typedef itk::Mesh<int> MeshType;
 typedef itk::BinaryMask3DMeshSource< ImageType, MeshType > MeshSourceType;
 MeshSourceType::Pointer meshSource = MeshSourceType::New();
-const PixelType objectValue = 250;
+//very similar to IsoValue
+const PixelType objectValue= 3000;
 meshSource->SetObjectValue( objectValue );
 meshSource->SetInput( reader->GetOutput() );
 
@@ -91,5 +110,5 @@ std::cout << "Cells = " << meshSource->GetNumberOfCells() << std::endl;
     }
 
 
-return 0;
+  return EXIT_SUCCESS;
 }

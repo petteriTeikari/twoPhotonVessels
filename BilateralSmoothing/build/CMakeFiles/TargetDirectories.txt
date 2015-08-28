@@ -1,0 +1,1 @@
+/home/highschoolintern/Desktop/BilateralSmoothing/build/CMakeFiles/BSmoothing.dir
