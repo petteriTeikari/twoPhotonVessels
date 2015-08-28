@@ -16,6 +16,7 @@ int main(int argc,char* argv[])
 
 	// We define then the pixel type and dimension of the image from which we are
 	// going to extract the surface.
+//PixelType objectValue can be changed to gather more/less points 
 	const unsigned char Dimension = 3;
   typedef unsigned int  PixelType;
   typedef itk::Image< PixelType, Dimension > ImageType;
@@ -52,18 +53,7 @@ try
     }
 
 
-  //Binary Thresholding does not seem to work. Not too sure what the issue is.
-  /*typedef itk::BinaryThresholdImageFilter< ImageType, ImageType > BinaryThresholdFilterType;
-    BinaryThresholdFilterType::Pointer threshold = BinaryThresholdFilterType::New();
-
-
-    threshold->SetInput( reader->GetOutput() );
-    threshold->SetLowerThreshold(2000);
-    threshold->SetUpperThreshold( 4095 );
-    threshold->SetOutsideValue( 2 );
-    threshold->SetInsideValue(1000); */
-
-
+ 
 
 //mesh extraction
 // Uses algorithm similar to Marching Cubes to extract surface

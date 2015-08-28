@@ -58,8 +58,7 @@ std::string filePath;
     std::ifstream input(location.c_str());
     if ( !input || !(input >> mesh) || mesh.empty() ) {
       std::cerr << "Not a valid off file." << std::endl;
-      std::cout << location.c_str() << " is the location of the file" << "\n";
-      std::cout << filePath.c_str() << "\n";
+      
       return EXIT_FAILURE;
     }
 
@@ -129,13 +128,7 @@ SDF.open("SDFVals.txt");
     std::cout << std::endl;
 
     SDFfile.close();
-    /*Command= ('./PropertyVals' (path, 'out', [options.reconstructFileNameOut, '.off']) fileSavelocation)
-   [status,cmdout]= system(command);
-   txtFilepath= [filesavelocation '/SDFVals.txt'];
-   fileID = fopen(txtFilepath,'r');
-   formatSpec = '%f'
-   diameterVals = fscanf(fileID,formatSpec);
-   fclose(fileID);*/
+
 }
 
 
