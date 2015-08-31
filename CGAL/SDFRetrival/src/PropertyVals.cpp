@@ -39,9 +39,9 @@ int main(int argc,char* argv[])
 	typedef Polyhedron::Facet_iterator                   Facet_iterator;
     typedef Polyhedron::Halfedge_around_facet_circulator Halfedge_facet_circulator;
 
-
-std::string location;
-std::string filePath;
+    std::string location;
+    std::string filePath;
+    
     // create and read Polyhedron
     if (argc==1){
 		// TODO: Petteri, maybe change the paths when providing no arguments to something else
