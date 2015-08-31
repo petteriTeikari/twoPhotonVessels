@@ -19,17 +19,38 @@ function diameterVals = analyze_getSDFvalues(fileNameForMesh, options)
 
     % Getting SDF Vals
     command = [fullfile('.', 'CGAL', 'SDFRetrival', 'build', 'PropertyVals'), ' ', fileNameForMesh,  ' ', fileSavelocation];
-    
+        
     % the call on terminal to compute the SDFs
-    [status, cmdout] = system(command);    
-    check_CGALSystemOutput(cmdout, status, 'SDF')   
+    tic;
+    disp('Computing SDF Values (using CGAL via system command)')
+    [status, cmdout] = system(command);
+    check_CGALSystemOutput(cmdout, status, 'SDF')  
+    timing_SDF = toc; disp([' ... took ', num2str(timing_SDF), ' seconds'])
     
     % read the values then from disk back to Matlab
     fileOut = 'SDFVals.txt'; % add input argument so this would not be static?
                              % would need to be given in CGAL as well, you
                              % could also just rename on the disk
+        
+    % try to open the file
     txtFilepath= fullfile(fileSavelocation, fileOut);
     fileID = fopen(txtFilepath,'r');
+    
+    if fileID == -1
+        disp(['The file could not be found from: ', txtFilepath])
+        disp('  .. trying to open from current directory')
+        % get the current path (where this .m file is)
+        fileName = mfilename; fullPath = mfilename('fullpath');
+        pathCode = strrep(fullPath, fileName, '');
+        if ~isempty(pathCode); cd(pathCode); end
+        txtFilepath= fullfile(pathCode, fileOut);
+        fileID = fopen(txtFilepath,'r');
+        if fileID == -1
+            error('Still not working with the current working directory, fix the paths?')            
+        else
+            disp(['   -> which was successful, file found from: ', txtFilepath])
+        end
+    end
     formatSpec = '%f';
     diameterVals = fscanf(fileID,formatSpec);
     fclose(fileID);
@@ -37,6 +58,10 @@ function diameterVals = analyze_getSDFvalues(fileNameForMesh, options)
 end
 
 function check_CGALSystemOutput(cmdout, status, filterName)
+
+    if status == 139
+        error('Segmentation fault? Why?')
+    end
 
     % Check that everything went ok
     if strfind(cmdout, 'error while loading shared libraries')
