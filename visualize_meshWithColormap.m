@@ -5,7 +5,8 @@ function visualize_meshWithColormap(faces, vertices, colormap, plotType, options
         % we can later add some specific things here depending on what
         % values we are using as the colormap of the mesh
         if strcmp(plotType, 'SDF')
-
+            titleStr = 'Shape Diameter Function (SDF)';
+            
         elseif strcmp(plotType, 'change')
 
         else
@@ -15,7 +16,25 @@ function visualize_meshWithColormap(faces, vertices, colormap, plotType, options
     %% VISUALIZE
     
         % code here
-    
+        fig = figure('Color','w');
+
+            p = patch('Faces',     F, ...
+                      'Vertices',  V, ...
+                      'FaceColor', 'flat', ...
+                      'CData',     colorMap, ...
+                      'FaceAlpha', 0.3);
+
+            view(3)
+            camlight 
+            lighting gouraud
+
+            colorbar
+            colormap('summer')
+            title(titleStr)
+
+            % remove edges
+            set(p, 'EdgeColor', 'none')
+            title('Removed edges')
     
         
         

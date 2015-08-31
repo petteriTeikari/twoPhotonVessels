@@ -1,4 +1,4 @@
- % Uses command-line CGAL implementation
+ % Uses command-line CGAL implementation of SHAPE DIAMETER FUNCTION (SDF)
 function diameterVals = analyze_getSDFvalues(fileNameForMesh, options)
 
     if nargin == 2
@@ -6,13 +6,12 @@ function diameterVals = analyze_getSDFvalues(fileNameForMesh, options)
     elseif nargin == 1
         options = [];
     end
-
-    % SHAPE DIAMETER FUNCTION (SDF)
+    
     % the full path to the .off file is save in "reconstructMeshFromSegmentation.m"    
     % or you can use whatever .off file that you wish
     if isunix || ismac
         fileSavePathCell = strsplit(fileNameForMesh, '/');
-    else
+    else % Windows
         fileSavePathCell = strsplit(fileNameForMesh, '\');
     end    
     fileSavePath = fileSavePathCell{end};

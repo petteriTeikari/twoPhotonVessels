@@ -8,14 +8,12 @@ function analysis = analyzeMeshMorphology(reconstruction, options, visualizeOn)
             % save('./debugMATs/testMorphology.mat')    
         end
         
-        analysis = [];
+        
         %  reconstruction = 
         % 
         %          faces: [57400x3 double]
         %       vertices: [29408x3 double]
         %     meshOnDisk: [1x89 char]
-        
-        disp(' - Analyze the 3D Morphology, e.g. vessel diameters (dummy)')
     
     %% ANALYSIS
     
@@ -23,8 +21,9 @@ function analysis = analyzeMeshMorphology(reconstruction, options, visualizeOn)
         % or Figs 4.2-4 from http://adm.irbbarcelona.org/image-j-fiji
 
         % GET SDF Values
-        diameterVals = analyze_getSDFvalues(reconstruction.meshOnDisk, options);
+        analysis.SDF_diameterVals = analyze_getSDFvalues(reconstruction.meshOnDisk, plotOn, options);
     
         % Visualize the mesh with the SDF values
-        visualize_meshWithColormap(reconstruction.faces, reconstruction.vertices, diameterVals, options)
+        plotType = 'SDF';
+        visualize_meshWithColormap(reconstruction.faces, reconstruction.vertices, analysis.SDF_diameterVals, plotType, options)
    
