@@ -3,18 +3,41 @@
 #include "itkBinaryMask3DMeshSource.h"
 #include "itkImage.h"
 #include <itkTIFFImageIO.h>
-int main( int, char* [] )
+
+#include "itkBinaryThresholdImageFilter.h"
+#include "itkBinaryMask3DMeshSource.h"
+#include "itkMeshFileWriter.h"
+#include "itkMesh.h"
+#include <itkVTKImageIO.h>
+#include "itkImageFileWriter.h"
+
+int main(int argc,char* argv[])
 {
-    const unsigned char Dimension = 3;
+
+	// We define then the pixel type and dimension of the image from which we are
+	// going to extract the surface.
+	const unsigned char Dimension = 3;
   typedef unsigned int  PixelType;
   typedef itk::Image< PixelType, Dimension > ImageType;
   
+  //Image type definition
 typedef itk::ImageFileReader< ImageType >    ReaderType;
   ReaderType::Pointer reader = ReaderType::New();
  reader->SetImageIO(itk::TIFFImageIO::New());  
 
-const char* filename= "/home/highschoolintern/Desktop/SurfaceExtraction2/mri.tif";
-reader->SetFileName(filename);
+
+ //reading the file type
+ const char* filename;
+ if (argc==1){
+
+	std::cerr << "Please Insert .tif file" << std::endl;
+	return EXIT_FAILURE; 
+    }else {
+    	 filename= argv[0];
+    }
+
+ reader->SetFileName(filename);
+
 
 try
     {
@@ -28,12 +51,22 @@ try
     return EXIT_FAILURE;
     }
 
-std::cout<< "It worked!" << std::endl; 
-typedef itk::Mesh<double> MeshType;
+
+ 
+
+//mesh extraction
+// Uses algorithm similar to Marching Cubes to extract surface
+typedef itk::Mesh<int> MeshType;
 typedef itk::BinaryMask3DMeshSource< ImageType, MeshType > MeshSourceType;
 MeshSourceType::Pointer meshSource = MeshSourceType::New();
-/*const PixelType objectValue = static_cast<PixelType>( atof( filename) );
+//very similar to IsoValue
+const PixelType objectValue= 3000;
+meshSource->SetObjectValue( objectValue );
 meshSource->SetInput( reader->GetOutput() );
+
+
+std::cout << objectValue << std::endl;
+
 
 try
   {
@@ -47,7 +80,24 @@ catch( itk::ExceptionObject & exp )
   }
 
 std::cout << "Nodes = " << meshSource->GetNumberOfNodes() << std::endl;
-std::cout << "Cells = " << meshSource->GetNumberOfCells() << std::endl; */
+std::cout << "Cells = " << meshSource->GetNumberOfCells() << std::endl;
 
-return 0;
+
+   typedef itk::MeshFileWriter< MeshType > WriterType;
+  WriterType::Pointer writer = WriterType::New();
+  writer->SetFileName( "outputtedImage.vtk" );
+  writer->SetInput( meshSource->GetOutput() );
+  try
+    {
+    writer->Update();
+
+    }
+  catch( itk::ExceptionObject & error )
+    {
+    std::cerr << "Error: " << error << std::endl;
+    return EXIT_FAILURE;
+    }
+
+
+  return EXIT_SUCCESS;
 }

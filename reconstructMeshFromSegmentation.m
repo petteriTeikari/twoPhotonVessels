@@ -11,11 +11,14 @@ function reconstruction = reconstructMeshFromSegmentation(binaryStack, path, ...
             path = fullfile('/home', 'petteri', 'Desktop', 'testPM', 'out');
             load(fullfile(path, 'testReconstruction_fullResolution.mat'))        
             load(fullfile(path, 'testReconstruction_halfRes_4slicesOnly.mat'))        
-        elseif strcmp(name, '??????') % Sharan
+        elseif strcmp(name, 'highschoolintern-MS-7636') % Sharan
+            
             path = fullfile('/home/highschoolintern/Desktop/twoPhotonVessels');
-            load(fullfile(path, 'testReconstruction_fullResolution.mat'))        
+            load(fullfile(path, 'testReconstruction.mat'))        
             %load(fullfile(path, 'testReconstruction_halfRes_4slicesOnly.mat'))        
         end
+       
+
     else
         [~, name] = system('hostname');
         name = strtrim(name); % remove white space
@@ -23,7 +26,7 @@ function reconstruction = reconstructMeshFromSegmentation(binaryStack, path, ...
             path = fullfile('/home', 'petteri', 'Desktop', 'testPM', 'out');
             save(fullfile(path, 'testReconstruction.mat'));     
         elseif strcmp(name, '??????') % Sharan
-            path = fullfile('/home/highschoolintern/Desktop/twoPhotonVessels');
+            path = fullfile('testReconstruction.mat');
             save(fullfile(path, 'testReconstruction.mat'));
         end
         
@@ -31,11 +34,17 @@ function reconstruction = reconstructMeshFromSegmentation(binaryStack, path, ...
         % export_stack_toDisk(fullfile('figuresOut', 'fullResolution_67slices.tif'), binaryStack)
         
     end
-
+ 
+        segmentationAlgorithm = 'asets_levelSets';
+        reconstructionAlgorithm = 'marchingCubes';
+        isoValue = 0.1;
+        ch = 1;
+        t = 1;
     disp('MESH RECONSTRUCTION from Volumetric Image'); disp('--');
     
     %% INPUT CHECKING
     
+        whos
         reconstructFileNameOut = ['meshReconstruct_', segmentationAlgorithm, '_', reconstructionAlgorithm, '_ch', num2str(ch), '_t', num2str(t)];
         debugPlot = false;
     
@@ -52,10 +61,14 @@ function reconstruction = reconstructMeshFromSegmentation(binaryStack, path, ...
             physicalScaling = [1 1 5]; % physical units of FOV
                                        % TODO, make automagic from metadata
             [F,V] = reconstruct_marchingCubes_wrapper(binaryStack, isoValue, downSampleFactor, physicalScaling, debugPlot);
-               whos
             % output the faces and vertices
             reconstruction.faces = F;
             reconstruction.vertices = V;
+            
+           
+            
+            whos
+            dlmwrite('Vertices.mat', V); 
     
         %% MARCHING CUBES (ITK)
         elseif strcmp(reconstructionAlgorithm, 'marchingCubesITK')
