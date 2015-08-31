@@ -107,10 +107,7 @@ SDF.open("SDFVals.txt");
    SDF << sdf_property_map[facet_it] << std::endl;
     }
     SDF.close();
-    std::cout << std::endl;
-
-
-
+    std::cout << std::endl; // Printing the SDF values
 
 
     std::ofstream SDFfile;
@@ -126,7 +123,9 @@ SDF.open("SDFVals.txt");
       facet_it != mesh.facets_end(); ++facet_it) {
         std::cout << segment_property_map[facet_it] << " ";
     }
-    std::cout << std::endl;
+    std::cout << std::endl; // Printing the SDF Segment IDs
+    
+        // These IDs could be saved to disk maybe as well, and used in piecewise denoising or something?
 
     SDFfile.close();
 
