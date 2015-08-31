@@ -60,7 +60,7 @@ end
 function check_CGALSystemOutput(cmdout, status, filterName)
 
     if status == 139
-        error('Segmentation fault? Why?')
+        error('Segmentation fault? Why? The file could not be processed')
     end
 
     % Check that everything went ok
