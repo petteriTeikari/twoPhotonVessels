@@ -44,6 +44,7 @@ std::string location;
 std::string filePath;
     // create and read Polyhedron
     if (argc==1){
+		// TODO: Petteri, maybe change the paths when providing no arguments to something else
     	location= "/home/highschoolintern/Desktop/TestReconstruction2/testReconstruction_4slicesPhysical_reconstruction_isolatedRemoved_decimated.off";
     	filePath= "/home/highschoolintern/Desktop/SDFPropertyMap/build";
 
