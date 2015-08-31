@@ -15,7 +15,7 @@ function diameterVals = analyze_getSDFvalues(fileNameForMesh, options)
         fileSavePathCell = strsplit(fileNameForMesh, '\');
     end    
     fileSavePath = fileSavePathCell{end};
-    fileSavelocation = strrep(fileNameForMesh, fileSavePath, '');     
+    fileSavelocation = strrep(fileNameForMesh, fileSavePath, '');    
 
     % Getting SDF Vals
     command = [fullfile('.', 'CGAL', 'SDFRetrival', 'build', 'PropertyVals'), ' ', fileNameForMesh,  ' ', fileSavelocation];
@@ -25,7 +25,10 @@ function diameterVals = analyze_getSDFvalues(fileNameForMesh, options)
     check_CGALSystemOutput(cmdout, status, 'SDF')   
     
     % read the values then from disk back to Matlab
-    txtFilepath= fullfile(fileSavelocation, 'SDFVals.txt');
+    fileOut = 'SDFVals.txt'; % add input argument so this would not be static?
+                             % would need to be given in CGAL as well, you
+                             % could also just rename on the disk
+    txtFilepath= fullfile(fileSavelocation, fileOut);
     fileID = fopen(txtFilepath,'r');
     formatSpec = '%f';
     diameterVals = fscanf(fileID,formatSpec);
