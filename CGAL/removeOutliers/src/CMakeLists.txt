@@ -56,6 +56,6 @@ endif()
 
 include( CGAL_CreateSingleSourceCGALProgram )
 
-create_single_source_cgal_program( "OutlierRem.cpp" )
+create_single_source_cgal_program( "removeOutliers.cpp" )
 
 
