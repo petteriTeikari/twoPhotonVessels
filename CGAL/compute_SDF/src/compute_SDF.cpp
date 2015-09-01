@@ -33,46 +33,42 @@ private:
 };
 
 
-
 int main(int argc,char* argv[])
 {
 	typedef Polyhedron::Facet_iterator                   Facet_iterator;
     typedef Polyhedron::Halfedge_around_facet_circulator Halfedge_facet_circulator;
 
-    std::string location;
-    std::string filePath;
+    if (argc==1){
+        std::cerr << "No input arguments given!" << std::endl;
+        return EXIT_FAILURE;
+    }
+    
+    // PARAMETERS
+    double cone_angle = atof(argv[1]);
+    const std::size_t number_of_rays = atoi(argv[2]);
+    const std::size_t number_of_clusters = atoi(argv[3]);
+    double smoothing_lambda = atof(argv[4]);    
+    bool postprocess = atoi(argv[5]);
+    
+    const char* input_filename = argv[6];
+    const char* filePath = argv[7];
+    const char* fileOutSDFs = argv[8];
+    const char* fileOutSDF_segments = argv[9];
     
     // create and read Polyhedron
-    if (argc==1){
-		// TODO: Petteri, maybe change the paths when providing no arguments to something else
-    	location= "/home/highschoolintern/Desktop/TestReconstruction2/testReconstruction_4slicesPhysical_reconstruction_isolatedRemoved_decimated.off";
-    	filePath= "/home/highschoolintern/Desktop/SDFPropertyMap/build";
-
-    }else {
-    	location= argv[1];
-    	filePath= argv[2];
-    }
-
-   std::cout << location.c_str() << "\n";
-
-   Polyhedron mesh;
-    std::ifstream input(location.c_str());
+    Polyhedron mesh;
+    std::ifstream input(input_filename);
     if ( !input || !(input >> mesh) || mesh.empty() ) {
-      std::cerr << "Not a valid off file." << std::endl;
-      
+      std::cerr << "Not a valid off file." << std::endl;      
       return EXIT_FAILURE;
     }
-
 
     // assign id field for each facet
     std::size_t facet_id = 0;
     for(Polyhedron::Facet_iterator facet_it = mesh.facets_begin();
-      facet_it != mesh.facets_end(); ++facet_it, ++facet_id) {
+        facet_it != mesh.facets_end(); ++facet_it, ++facet_id) {
         facet_it->id() = facet_id;
-
     }
-
-
 
     for (  Facet_iterator i = mesh.facets_begin(); i != mesh.facets_end(); ++i) {
         Halfedge_facet_circulator j = i->facet_begin();
@@ -85,49 +81,50 @@ int main(int argc,char* argv[])
         } while ( ++j != i->facet_begin());
         //std::cout << std::endl;
     }
-
-
-
-
-// create a property-map for SDF values
+    
+    // create a property-map for SDF values
     std::vector<double> sdf_values(mesh.size_of_facets());
     Facet_with_id_pmap<double> sdf_property_map(sdf_values);
-    CGAL::sdf_values(mesh, sdf_property_map);
+    
+    // Compute the SDF
+    CGAL::sdf_values(mesh, sdf_property_map, cone_angle, number_of_rays, postprocess);
 
-
-
-
-// access SDF values (with constant-complexity)
-std::ofstream SDF(filePath.c_str());
-SDF.open("SDFVals.txt");
+    // access SDF values (with constant-complexity)
+    std::ofstream SDF(filePath);
+    SDF.open(fileOutSDFs);
 
     for(Polyhedron::Facet_const_iterator facet_it = mesh.facets_begin();
-      facet_it != mesh.facets_end(); ++facet_it) {
-        std::cout << sdf_property_map[facet_it] << " \n";
-   SDF << sdf_property_map[facet_it] << std::endl;
+        facet_it != mesh.facets_end(); ++facet_it) {
+        // std::cout << sdf_property_map[facet_it] << " \n"; // for printing
+        SDF << sdf_property_map[facet_it] << std::endl; // for disk write
     }
+    
     SDF.close();
-    std::cout << std::endl; // Printing the SDF values
-
-
+    // std::cout << std::endl; // Printing the SDF values
     std::ofstream SDFfile;
-
+    SDFfile.close();
 
     // create a property-map for segment-ids
     std::vector<std::size_t> segment_ids(mesh.size_of_facets());
     Facet_with_id_pmap<std::size_t> segment_property_map(segment_ids);
-    CGAL::segmentation_from_sdf_values(mesh, sdf_property_map, segment_property_map);
+    
+    // Compute the SDF segments
+    CGAL::segmentation_from_sdf_values(mesh, sdf_property_map, segment_property_map, number_of_clusters, smoothing_lambda);
 
     // access segment-ids (with constant-complexity)
-    for(Polyhedron::Facet_const_iterator facet_it = mesh.facets_begin();
-      facet_it != mesh.facets_end(); ++facet_it) {
-        std::cout << segment_property_map[facet_it] << " ";
-    }
-    std::cout << std::endl; // Printing the SDF Segment IDs
+    std::ofstream SDFid(filePath);
+    SDFid.open(fileOutSDF_segments);
     
-        // These IDs could be saved to disk maybe as well, and used in piecewise denoising or something?
-
-    SDFfile.close();
+    for(Polyhedron::Facet_const_iterator facet_it = mesh.facets_begin();
+        facet_it != mesh.facets_end(); ++facet_it) {
+        // std::cout << segment_property_map[facet_it] << " \n"; // for printing
+        SDFid << segment_property_map[facet_it] << std::endl; // for disk write
+    }
+    
+    SDFid.close();
+    // std::cout << std::endl; // Printing the SDF Segment IDs    
+    std::ofstream SDFfile_id;
+    SDFfile_id.close();
 
 }
 
