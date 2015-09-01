@@ -5,6 +5,13 @@ function mesh_checkCGALSystemOutput(cmdout, status, filterName)
     end
 
     % Check that everything went ok
+    if status == 1
+        if strcmp(cmdout, 'Not a valid off file.')
+            warning('CGAL does not seem to think that this is a valid .OFF file, even though you can probably open it in Meshlab?')
+            return
+        end
+    end
+    
     if strfind(cmdout, 'error while loading shared libraries')
         if strfind(cmdout, 'libCGAL')
             cmdout
