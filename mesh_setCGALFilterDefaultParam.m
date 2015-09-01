@@ -17,11 +17,11 @@ function param = mesh_setCGALFilterDefaultParam()
         param.analyzePoints.nb_neighbors = 6;
 
         % remove outliers
-        param.removeOutliers.removed_percentage = 5;
+        param.removeOutliers.removed_percentage = 10;
         param.removeOutliers.nb_neighbors = 24;
 
         % WLOP simplification (consolidation)
-        param.WLOP.retain_percentage = 25;  % percentage of points to retain.
+        param.WLOP.retain_percentage = 5;  % percentage of points to retain.
         param.WLOP.neighbor_radius = 0.5;   % neighbors size.
 
         % normal estimation
@@ -44,7 +44,7 @@ function param = mesh_setCGALFilterDefaultParam()
     %% MESH OPERATIONS
     
         % these could be re-defined after the point cloud simplification
-        param.poissonReconstruction.sm_angleangle = 20; % 20, Min triangle angle in degrees.
+        param.poissonReconstruction.sm_angle = 20; % 20, Min triangle angle in degrees.
         param.poissonReconstruction.sm_radius = 30; % 30, Max triangle size w.r.t. point set average spacing.
         param.poissonReconstruction.sm_distance = 0.375; % 0.375, Surface Approximation error w.r.t. point set average spacing.
         param.poissonReconstruction.sm_sphere_radiusMultiplier = 5; % 5, multiply sphere radius

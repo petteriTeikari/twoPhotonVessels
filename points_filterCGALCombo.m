@@ -21,12 +21,16 @@ function [pointsOut, normalsOut, fileOut, paramOut] = points_filterCGALCombo(mes
                 else
                     transposedTrue = false;
                 end
+                
+                tic;
                 xyz_write (inputMesh, point_num, xyz)                
+                timing.init_xyz_write = toc;
             
             elseif strcmp(source, 'meshFile')
-                
+                timing = [];
                 
             elseif strcmp(source, 'pointCloudFile')
+                timing = [];
                 
             else
                 error(['Source: "', source, '", not defined!']) 
@@ -35,7 +39,7 @@ function [pointsOut, normalsOut, fileOut, paramOut] = points_filterCGALCombo(mes
         
         %% Computations
         
-            timing = [];
+            
         
             % Get average spacing (Input)
             functionFolder = 'analyzePoints';
