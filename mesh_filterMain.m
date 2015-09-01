@@ -1,4 +1,4 @@
-function reconstructionOut = mesh_filterMain(reconstruction, operation, algorithm, options, t, ch)
+function reconstructionOut = mesh_filterMain(reconstruction, operation, algorithm, options, t, ch, param)
     
     %% INPUT CHECK
 
@@ -15,13 +15,16 @@ function reconstructionOut = mesh_filterMain(reconstruction, operation, algorith
             algorithm = 'CGALcombo';
             options = [];
             t = 1;
-            ch = 1;
+            ch = 1;            
+            param = mesh_setCGALFilterDefaultParam(); % set default parameter values
+            
         else
             % save(fullfile('testData', 'testMeshFilter.mat'), 'reconstruction')
         end
         reconstructionOut = reconstruction;
     
     %% FILTERING
+    
     
         if strcmp(operation, 'repair')
 
@@ -43,9 +46,12 @@ function reconstructionOut = mesh_filterMain(reconstruction, operation, algorith
                disp('CGAL Outlier Removal call here')
 
             elseif strcmp(algorithm, 'CGALcombo')
-                disp('CGAL Outlier Removal call here')
-                param = points_setCGALcomboDefaultParam();
-                pointsOut = points_filterCGALCombo(reconstruction, param);
+                disp('Simplify the mesh via point cloud operations')                
+                source = 'matlabMesh';
+                [pointsOut, normalsOut, paramOut] = points_filterCGALCombo(reconstruction, param, source);
+                
+                disp('Reconstruct mesh from the simplified point cloud')
+                reconstructionOut = mesh_CGAL_reconstructionFromPoints(pointsOut, normalsOut, paramOut, param);
                
             else
                 error(['You wanted algorithm: "', algorithm, '" which is not implemented'])
@@ -67,14 +73,3 @@ function reconstructionOut = mesh_filterMain(reconstruction, operation, algorith
             error('this kind of doing not implemented')
 
         end
-        
-        
-    
-        
-        
-              
-            
-        
-            
-            
-        

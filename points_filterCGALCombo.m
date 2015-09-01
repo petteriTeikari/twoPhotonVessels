@@ -1,8 +1,8 @@
-function [pointsOut, normalsOut] = points_filterCGALCombo(meshIn, param)
+function [pointsOut, normalsOut, paramOut] = points_filterCGALCombo(meshIn, param, source)
         
         % For the workflow see:
         % http://doc.cgal.org/latest/Point_set_processing_3/#Point_set_processing_3
-        CGALpath = fullfile(fullfile('.', 'CGAL'));
+        
         
         %% we need to first write the input mesh to disk as .xyz file
         
@@ -10,6 +10,7 @@ function [pointsOut, normalsOut] = points_filterCGALCombo(meshIn, param)
             meshFilename = 'test.xyz';
             inputMesh = fullfile(pathOut, meshFilename);
 
+            if strcmp(source, 'matlabMesh')
                 % write using a subfunction
                 point_num = length(meshIn.vertices);
                 xyz = meshIn.vertices;
@@ -21,118 +22,68 @@ function [pointsOut, normalsOut] = points_filterCGALCombo(meshIn, param)
                     transposedTrue = false;
                 end
                 xyz_write (inputMesh, point_num, xyz)                
+            
+            elseif strcmp(source, 'meshFile')
+                
+                
+            elseif strcmp(source, 'pointCloudFile')
+                
+            else
+                error(['Source: "', source, '", not defined!']) 
+            end
+            
         
+        %% Computations
         
-        %% Analyze the mesh
+            timing = [];
         
-            functionFolder = 'analyzePoints'; 
-            parameters = mesh_constructCGALparameters(param.(functionFolder));        
-            pathFull = fullfile(CGALpath, functionFolder, 'build');
-            fName = functionFolder; % try to keep the same name        
-            command = [fullfile(pathFull, fName), parameters, inputMesh]; % construct the call
-
-                disp('Compute average spacing of the vertices:'); disp(command); tic;
-                [status, cmdout] = system(command); % return average spacing
-                mesh_checkCGALSystemOutput(cmdout, status, fName)  
-                timing.averageSpacing = toc;
-                averageSpacing = cmdout;
+            % Get average spacing (Input)
+            functionFolder = 'analyzePoints';
+            [pointAnalysis, ~, timing] = points_CGAL_filterCall(functionFolder, inputMesh, param, timing);
+                timing.analyzePointsInput = timing.(functionFolder);
         
-        %% Remove outliers
-        
+            % Remove outliers
             functionFolder = 'removeOutliers'; 
-            parameters = mesh_constructCGALparameters(param.(functionFolder));        
-            pathFull = fullfile(CGALpath, functionFolder, 'build');
-            fName = functionFolder; % try to keep the same name  
-            outputMesh = strrep(inputMesh, '.xyz', ['_', functionFolder, '.xyz']);
-            command = [fullfile(pathFull, fName), parameters, inputMesh, ' ', outputMesh]; % construct the call
-
-                disp('Remove outliers from the vertex point cloud:'); disp(command); tic;
-                [status, cmdout] = system(command); % return average spacing
-                mesh_checkCGALSystemOutput(cmdout, status, fName)  
-                timing.outlierRemoval = toc;
-        
-        %% Simplify with WLOP        
-        
-            % re-define the input mesh, using the output of the outline
-            % removal algorithm
-            inputMesh_WLOP = outputMesh;
-        
-            functionFolder = 'WLOP'; 
-            parameters = mesh_constructCGALparameters(param.(functionFolder));        
-            pathFull = fullfile(CGALpath, functionFolder, 'build');
-            fName = functionFolder; % try to keep the same name  
-            outputMesh = strrep(inputMesh, '.xyz', ['_', functionFolder, '.xyz']);
-            command = [fullfile(pathFull, fName), parameters, inputMesh_WLOP, ' ', outputMesh]; % construct the call
-
-                disp('WLOP:'); disp(command); tic;
-                [status, cmdout] = system(command); % return average spacing
-                mesh_checkCGALSystemOutput(cmdout, status, fName)  
-                timing.WLOP = toc;
-        
-        %% Estimate Normals
-        
-            inputMesh_normals = outputMesh;
+            [~, outputMesh_outlier, timing] = points_CGAL_filterCall(functionFolder, inputMesh, param, timing);
             
-            functionFolder = 'normalEstimation'; 
-            parameters = mesh_constructCGALparameters(param.(functionFolder));        
-            pathFull = fullfile(CGALpath, functionFolder, 'build');
-            fName = functionFolder; % try to keep the same name  
-            outputMesh = strrep(inputMesh, '.xyz', ['_', functionFolder, '.xyz']);
-            command = [fullfile(pathFull, fName), parameters, inputMesh_normals, ' ', outputMesh]; % construct the call
-
-                disp('normalEstimation:'); disp(command); tic;
-                [status, cmdout] = system(command); % return average spacing
-                mesh_checkCGALSystemOutput(cmdout, status, fName)  
-                timing.normalEstimation = toc;
-        
-        %% Bilateral Smoothing
-        
-            inputMesh_smoothing = outputMesh;
+            % Simplify with WLOP     
+            functionFolder = 'WLOP';            
+            [~, outputMesh_WLOP, timing] = points_CGAL_filterCall(functionFolder, outputMesh_outlier, param, timing);
             
+            % Estimate normals
+            functionFolder = 'normalEstimation';
+            [~, outputMesh_normals, timing] = points_CGAL_filterCall(functionFolder, outputMesh_WLOP, param, timing);
+            
+            % Bilateral Smoothing
             functionFolder = 'bilateralSmoothing'; 
-            parameters = mesh_constructCGALparameters(param.(functionFolder));        
-            pathFull = fullfile(CGALpath, functionFolder, 'build');
-            fName = functionFolder; % try to keep the same name  
-            outputMesh = strrep(inputMesh, '.xyz', ['_', functionFolder, '.xyz']);
-            command = [fullfile(pathFull, fName), parameters, inputMesh_smoothing, ' ', outputMesh]; % construct the call
-
-                disp('bilateralSmoothing:'); disp(command); tic;
-                [status, cmdout] = system(command); % return average spacing
-                mesh_checkCGALSystemOutput(cmdout, status, fName)  
-                timing.bilateralSmoothing = toc;
-        
-        
-        %% Edge-Aware Resampling (EAR)
+            [~, outputMesh_bilateral, timing] = points_CGAL_filterCall(functionFolder, outputMesh_normals, param, timing);
             
-            inputMesh_EAR = outputMesh;
-        
-            functionFolder = 'EAR'; 
-            parameters = mesh_constructCGALparameters(param.(functionFolder));        
-            pathFull = fullfile(CGALpath, functionFolder, 'build');
-            fName = functionFolder; % try to keep the same name  
-            outputMesh = strrep(inputMesh, '.xyz', ['_', functionFolder, '.xyz']);
-            command = [fullfile(pathFull, fName), parameters, inputMesh_EAR, ' ', outputMesh]; % construct the call
-
-                disp('EAR:'); disp(command); tic;
-                [status, cmdout] = system(command); % return average spacing
-                mesh_checkCGALSystemOutput(cmdout, status, fName)  
-                timing.EAR = toc;
+            % Edge-Aware Resampling (EAR)            
+            functionFolder = 'EAR';
+            [~, outputMesh_EAR, timing] = points_CGAL_filterCall(functionFolder, outputMesh_bilateral, param, timing);
             
-        averageSpacing
-        timing
+            % Get average spacing (Output)
+            functionFolder = 'analyzePoints';
+            [pointAnalysisPost, ~, timing] = points_CGAL_filterCall(functionFolder, outputMesh_EAR, param, timing);
+            
+            
+        %% Return variables
         
-        % read the output point cloud
-        point_num = xyz_header_read (outputMesh);
-        pointsOut = xyz_data_read (outputMesh, point_num);
-        
-        % this actually reads in the same as the above two lines, now with
-        % the normals stored in columns 4 -> 6
-        normalsRaw = dlmread(outputMesh, ' ');
-        normalsOut = normalsRaw(:, 4:6);
-        
-        % transpose back if needed
-        if transposedTrue
-            pointsOut = pointsOut';
-            xyz = xyz';
-        end
-        whos
+            paramOut.averageSpacingPre = pointAnalysis.averageSpacing;
+            paramOut.averageSpacingPost = pointAnalysisPost.averageSpacing;
+            paramOut.timing = timing;
+
+            % read the output point cloud
+            point_num = xyz_header_read (outputMesh_EAR);
+            pointsOut = xyz_data_read (outputMesh_EAR, point_num);
+
+            % this actually reads in the same as the above two lines, now with
+            % the normals stored in columns 4 -> 6
+            normalsRaw = dlmread(outputMesh_EAR, ' ');
+            normalsOut = normalsRaw(:, 4:6);
+
+            % transpose back if needed
+            if transposedTrue
+                pointsOut = pointsOut';
+                xyz = xyz';
+            end
