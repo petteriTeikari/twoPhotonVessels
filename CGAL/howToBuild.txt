@@ -1,0 +1,61 @@
+# Building CGAL projects
+
+add maybe a script later to do this automatically from Git clone
+
+## From the CGAL git clone
+
+additional libraries that might not be found
+
+sudo apt-get install libqglviewer-dev libmpfi-dev libipe-dev
+
+and download OpenMesh (http://www.openmesh.org/), 
+and install it from the source (extract, make build, cd build, cmake ../, make, sudo make install)
+
+and Eigen3 (http://eigen.tuxfamily.org/)
+
+### Install with cmake / ccmake
+
+See the: "Here is an example of how to build the library in Release:"
+for example with the Eigen3-flag 
+cmake -DEIGEN3_INCLUDE_DIR=/usr/local/include/eigen3 -DCMAKE_BUILD_TYPE=Release ../..
+
+## Bilateral Smoothing
+
+
+### Possible errors
+
+`fatal error: CGAL/bilateral_smooth_point_set.h: No such file or directory`
+`#include <CGAL/bilateral_smooth_point_set.h>`
+
+**Solution:**
+
+## OutlierRemoval
+
+### Possible errors
+
+`OutlierRemoval/src/OutlierRem.cpp:30:31: error:`
+`invalid conversion from ‘char*’ to ‘int’ [-fpermissive] int percentageRem=argv[2];`
+
+**Solution:**
+
+## SDFRetrival
+
+`cd '$MAIN$/CGAL/SDFRetrival/'`
+`cd build`
+`cmake ../src`
+
+### Possible errors
+
+`fatal error: CGAL/mesh_segmentation.h: No such file or directory`
+`#include <CGAL/mesh_segmentation.h>`
+
+**Solution:**
+
+## WLOP
+
+### Possible errors
+
+'fatal error: CGAL/wlop_simplify_and_regularize_point_set.h: No such file or directory' 
+'#include <CGAL/wlop_simplify_and_regularize_point_set.h>' 
+
+**Solution:**
