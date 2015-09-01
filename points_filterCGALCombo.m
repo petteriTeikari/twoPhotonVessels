@@ -1,4 +1,4 @@
-function [pointsOut, normalsOut, paramOut] = points_filterCGALCombo(meshIn, param, source)
+function [pointsOut, normalsOut, fileOut, paramOut] = points_filterCGALCombo(meshIn, param, source)
         
         % For the workflow see:
         % http://doc.cgal.org/latest/Point_set_processing_3/#Point_set_processing_3
@@ -68,6 +68,8 @@ function [pointsOut, normalsOut, paramOut] = points_filterCGALCombo(meshIn, para
             
             
         %% Return variables
+        
+            fileOut = outputMesh_EAR;
         
             paramOut.averageSpacingPre = pointAnalysis.averageSpacing;
             paramOut.averageSpacingPost = pointAnalysisPost.averageSpacing;

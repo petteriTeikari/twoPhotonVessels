@@ -21,7 +21,7 @@ function param = mesh_setCGALFilterDefaultParam()
         param.removeOutliers.nb_neighbors = 24;
 
         % WLOP simplification (consolidation)
-        param.WLOP.retain_percentage = 20;  % percentage of points to retain.
+        param.WLOP.retain_percentage = 25;  % percentage of points to retain.
         param.WLOP.neighbor_radius = 0.5;   % neighbors size.
 
         % normal estimation
@@ -38,7 +38,7 @@ function param = mesh_setCGALFilterDefaultParam()
         param.EAR.sharpness_angle = 25;         % control sharpness of the result, e.g. 25
         param.EAR.edge_sensitivity = 0;         % higher values will sample more points near the edges, e.g. 0
         param.EAR.neighbor_radiusEAR = 0.25;    % initial size of neighborhood, e.g. 0.25
-        param.EAR.resamplingFactor = 0.5;       % smaller than 1 for downsampling
+        param.EAR.resamplingFactor = 1;       % smaller than 1 for downsampling
         
         
     %% MESH OPERATIONS

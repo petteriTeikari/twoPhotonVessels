@@ -6,7 +6,12 @@ function [variables, outputMesh, timing] = points_CGAL_filterCall(functionFolder
 
     pathFull = fullfile(param.CGALpath, functionFolder, 'build');
     fName = functionFolder; % try to keep the same name  
-    outputMesh = strrep(inputMesh, '.xyz', ['_', functionFolder, '.xyz']);
+    
+    if strcmp(functionFolder, 'poissonReconstruction')
+        outputMesh = strrep(inputMesh, '.xyz', ['_', functionFolder, '.off']);
+    else
+        outputMesh = strrep(inputMesh, '.xyz', ['_', functionFolder, '.xyz']);
+    end
     
     % try to build similar filters with similarish syntax
     if strcmp(functionFolder, 'analyzePoints')

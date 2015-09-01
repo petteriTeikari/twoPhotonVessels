@@ -10,7 +10,9 @@ function reconstructionOut = mesh_filterMain(reconstruction, operation, algorith
             pathCode = strrep(fullPath, fileName, '');
             if ~isempty(pathCode); cd(pathCode); end
 
-            load(fullfile('testData', 'testMeshFilter.mat'))
+            % load(fullfile('testData', 'testMeshFilter.mat'))
+            load(fullfile('testData', 'testMeshFilter_hiRes.mat'))
+            
             operation = 'simplification'; % sequential, on top of previous
             algorithm = 'CGALcombo';
             options = [];
@@ -46,12 +48,13 @@ function reconstructionOut = mesh_filterMain(reconstruction, operation, algorith
                disp('CGAL Outlier Removal call here')
 
             elseif strcmp(algorithm, 'CGALcombo')
+                
                 disp('Simplify the mesh via point cloud operations')                
                 source = 'matlabMesh';
-                [pointsOut, normalsOut, paramOut] = points_filterCGALCombo(reconstruction, param, source);
+                [pointsOut, normalsOut, fileOut, paramOut] = points_filterCGALCombo(reconstruction, param, source);
                 
                 disp('Reconstruct mesh from the simplified point cloud')
-                reconstructionOut = mesh_CGAL_reconstructionFromPoints(pointsOut, normalsOut, paramOut, param);
+                reconstructionOut = mesh_CGAL_reconstructionFromPoints(pointsOut, normalsOut, fileOut, paramOut, param);
                
             else
                 error(['You wanted algorithm: "', algorithm, '" which is not implemented'])
