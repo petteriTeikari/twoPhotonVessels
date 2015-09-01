@@ -1,10 +1,13 @@
  % Uses command-line CGAL implementation of SHAPE DIAMETER FUNCTION (SDF)
-function diameterVals = analyze_getSDFvalues(fileNameForMesh, options)
+function [diameterVals, segmentIDs] = analyze_getSDFvalues(fileNameForMesh, options)
 
     if nargin == 2
         disp('"options" is a lazy placeholder if we need to pass some parameters eventually')
     elseif nargin == 1
         options = [];
+    elseif nargin == 0
+        options = [];
+        fileNameForMesh = fullfile('tempData', 'test2.off');
     end
     
     % the full path to the .off file is save in "reconstructMeshFromSegmentation.m"    
@@ -15,67 +18,71 @@ function diameterVals = analyze_getSDFvalues(fileNameForMesh, options)
         fileSavePathCell = strsplit(fileNameForMesh, '\');
     end    
     fileSavePath = fileSavePathCell{end};
-    fileSavelocation = strrep(fileNameForMesh, fileSavePath, '');    
+    fileSavelocation = strrep(fileNameForMesh, fileSavePath, '');       
+    
+    fileNameForSDFs = fullfile(fileSavelocation, 'SDF_out.txt');
+    fileNameForSDF_segments = fullfile(fileSavelocation, 'SDF_ids.txt');
 
     % Getting SDF Vals
-    command = [fullfile('.', 'CGAL', 'SDFRetrival', 'build', 'PropertyVals'), ' ', fileNameForMesh,  ' ', fileSavelocation];
+    functionName = 'compute_SDF';
+    functionCall = fullfile('.', 'CGAL', functionName, 'build', functionName);
+    
+    param.SDF.cone_angle = 2.0 / 3.0 * pi();
+    param.SDF.number_of_rays = 25;
+    param.SDF.number_of_clusters = 5;
+    param.SDF.smoothing_lambda = 0.26;
+    param.SDF.postprocess = true;
+    
+    parameters = mesh_constructCGALparameters(param.SDF);    
+    
+    command = [functionCall, parameters, ...
+                             ' ', fileNameForMesh,  ' ', fileSavelocation, ...
+                             ' ', fileNameForSDFs,  ' ', fileNameForSDF_segments];
         
     % the call on terminal to compute the SDFs
     tic;
     disp('Computing SDF Values (using CGAL via system command)')
     [status, cmdout] = system(command);
-    check_CGALSystemOutput(cmdout, status, 'SDF')  
+    mesh_checkCGALSystemOutput(cmdout, status, 'SDF')  
     timing_SDF = toc; disp([' ... took ', num2str(timing_SDF), ' seconds'])
-    
-    % read the values then from disk back to Matlab
-    fileOut = 'SDFVals.txt'; % add input argument so this would not be static?
-                             % would need to be given in CGAL as well, you
-                             % could also just rename on the disk
         
-    % try to open the file
-    txtFilepath= fullfile(fileSavelocation, fileOut);
-    fileID = fopen(txtFilepath,'r');
+    % try to open the SDF file
+    % txtFilepath = fullfile(fileSavelocation, fileNameForSDFs);
+    txtFilepath = fileNameForSDFs;
+    diameterVals = returnValues(txtFilepath, fileNameForSDFs);
     
-    if fileID == -1
-        disp(['The file could not be found from: ', txtFilepath])
-        disp('  .. trying to open from current directory')
-        % get the current path (where this .m file is)
-        fileName = mfilename; fullPath = mfilename('fullpath');
-        pathCode = strrep(fullPath, fileName, '');
-        if ~isempty(pathCode); cd(pathCode); end
-        txtFilepath= fullfile(pathCode, fileOut);
-        fileID = fopen(txtFilepath,'r');
-        if fileID == -1
-            error('Still not working with the current working directory, fix the paths?')            
-        else
-            disp(['   -> which was successful, file found from: ', txtFilepath])
-        end
-    end
-    formatSpec = '%f';
-    diameterVals = fscanf(fileID,formatSpec);
-    fclose(fileID);
+    % try to open the SDF segments file
+    % txtFilepath = fullfile(fileSavelocation, fileNameForSDF_segments);
+    txtFilepath = fileNameForSDF_segments;
+    segmentIDs = returnValues(txtFilepath, fileNameForSDF_segments);
+    
+    whos('diameterVals', 'segmentIDs')
+    pause
     
 end
 
-function check_CGALSystemOutput(cmdout, status, filterName)
+function values = returnValues(txtFilepath, fileName)
+        
+    fileID = fopen(txtFilepath,'r');
 
-    if status == 139
-        error('Segmentation fault? Why? The file could not be processed')
-    end
-
-    % Check that everything went ok
-    if strfind(cmdout, 'error while loading shared libraries')
-        if strfind(cmdout, 'libCGAL')
-            cmdout
-            error('CGAL Library not found! Did you build from the source yourself?')
-        else
-            cmdout
-            error('here2')
+        if fileID == -1
+            disp(['The file could not be found from: ', txtFilepath])
+            disp('  .. trying to open from current directory')
+            % get the current path (where this .m file is)
+            fileName = mfilename; fullPath = mfilename('fullpath');
+            pathCode = strrep(fullPath, fileName, '');
+            if ~isempty(pathCode); cd(pathCode); end
+            txtFilepath= fullfile(pathCode, fileName);
+            fileID = fopen(txtFilepath,'r');
+            if fileID == -1
+                error('Still not working with the current working directory, fix the paths?')            
+            else
+                disp(['   -> which was successful, file found from: ', txtFilepath])
+            end
         end
-    elseif strfind(cmdout, 'No such file or directory')
-        cmdout
-        error(['Folder not found, have you built the ',  filterName, ' filter already?'])
-    else
-        cmdout
-    end
+
+        formatSpec = '%f';
+        values = fscanf(fileID,formatSpec);
+        fclose(fileID);
+
 end

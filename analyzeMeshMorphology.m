@@ -21,7 +21,7 @@ function analysis = analyzeMeshMorphology(reconstruction, options, visualizeOn)
         % or Figs 4.2-4 from http://adm.irbbarcelona.org/image-j-fiji
 
         % GET SDF Values
-        analysis.SDF_diameterVals = analyze_getSDFvalues(reconstruction.meshOnDisk, plotOn, options);
+        [analysis.SDF_diameterVals, analysis.SDF_segmentIDs] = analyze_getSDFvalues(reconstruction.meshOnDisk, plotOn, options);
     
         % Visualize the mesh with the SDF values
         plotType = 'SDF';
