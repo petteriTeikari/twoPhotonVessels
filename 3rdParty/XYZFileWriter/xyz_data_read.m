@@ -74,6 +74,5 @@ function xyz = xyz_data_read ( input_filename, point_num )
 %  Close the file.
 %
   fclose ( input_unit );
-whos
   return
 
