@@ -23,6 +23,7 @@ function vesselness = vesselnessFilter(imageStack, vesselAlgorithm, scales, opti
         
         vesselness.extraParam.scaleStep = scales(2) - scales(1);
         vesselness.extraParam.dummy = []; % algorithm specific values
+        
 
         sizeIn = size(imageStack);
         if length(sizeIn) < 3
@@ -57,6 +58,7 @@ function vesselness = vesselnessFilter(imageStack, vesselAlgorithm, scales, opti
             % actuall call
             vesselness.data = vesselness_OOF_wrapper(double(imageStack), [scales(1) scales(end)], opts);
             vesselness.extraParam.OOF_responseType = opts.responsetype;
+            vesselness.dictionary = []; % no dictionary
             
     
         %% OPTIMALLY ORIENTED FLUX (OOF) with OFA (Oriented Flux Asymmetry)
@@ -75,6 +77,7 @@ function vesselness = vesselnessFilter(imageStack, vesselAlgorithm, scales, opti
             oofOFA = vesselness_OofOFA_wrapper(double(imageStack), scales);
 
             vesselness.data = oofOFA;        
+            vesselness.dictionary = []; % no dictionary
     
 
         %% MDOF : Multi-Directional Oriented Flux         
@@ -87,6 +90,8 @@ function vesselness = vesselnessFilter(imageStack, vesselAlgorithm, scales, opti
             
             MDOF = vesselness_MDOF_ImageJ_wrapper(imageStack, [scales(1) scales(end)], vesselness.extraParam.scaleStep);
             vesselness.data = MDOF;            
+            vesselness.dictionary = []; % no dictionary
+
  
        
         %% VESSEL ENHANCEMENT DIFFUSION (VED) 
@@ -96,6 +101,11 @@ function vesselness = vesselnessFilter(imageStack, vesselAlgorithm, scales, opti
             disp('  VED not implemented yet')
                 % http://www.mathworks.com/matlabcentral/fileexchange/24409-hessian-based-frangi-vesselness-filter
         
+        elseif strcmp(vesselAlgorithm, 'learnedFilters')
+            
+            disp('PLACEHOLDER')
+
+                
         elseif strcmp(vesselAlgorithm, 'someCoolOne')
             
             %

@@ -81,7 +81,7 @@ function process_SingleFile(path, tiffPath, fileName, options)
             
     %% IMAGE DENOISING
             
-        options.denoisingAlgorithm = 'NLMeansPoisson'; % 'NLMeansPoisson'; % 'PureDenoise', 'GuidedFilter'
+        options.denoisingAlgorithm = 'BM4D'; % 'NLMeansPoisson', 'PureDenoise', 'GuidedFilter'
         
         for t = 1 : length(options.tP)
             [denoisedStack{ch}{options.tP(t)}, timing.denoising(ch,t)] = denoiseMicroscopyImage(imageStack{ch}{options.tP(t)}(:,:,:), options.denoisingAlgorithm, options, options.tP(t), ch);            
@@ -139,10 +139,12 @@ function process_SingleFile(path, tiffPath, fileName, options)
     
         % probably needed? - simplification - downsampling - smoothing        
         operations = {'repair'; 'simplification'; 'smoothing'}; % sequential, on top of previous
+        algorithms = {'Basic'; 'WLOP'; 'bilateral'};
+        param = mesh_setCGALFilterDefaultParam(); % set default parameter values
         
         for o = 1 : length(operations)
             for t = 1 : length(options.tP)           
-                reconstruction{ch}{options.tP(t)} = filterReconstructedMesh(reconstruction{ch}{options.tP(t)}, operations{o}, options, options.tP(t), ch);
+                reconstruction{ch}{options.tP(t)} = mesh_filterMain(reconstruction{ch}{options.tP(t)}, operations{o}, algorithms{o}, options, options.tP(t), ch, param);
             end
         end        
         

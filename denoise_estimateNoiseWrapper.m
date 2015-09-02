@@ -1,6 +1,27 @@
-function [sigma, fitparams, p, q] = denoise_estimateNoiseWrapper(im, options)
+function sigma = denoise_estimateNoiseWrapper(im, estimateMethod, options)
     
+    sigma = [];
+
     % IMPLEMENTATION 1
+    if strcmp(estimateMethod, 'noiseLevel')
+        
+        % http://www.mathworks.com/matlabcentral/fileexchange/36921-noise-level-estimation-from-a-single-image
+        
+        %  Reference: 
+        %  Xinhao Liu, Masayuki Tanaka and Masatoshi Okutomi 
+        %  Noise Level Estimation Using Weak Textured Patches of a Single Noisy Image 
+        %  IEEE International Conference on Image Processing (ICIP), 2012.
+        % 
+        % Xinhao Liu, Masayuki Tanaka and Masatoshi Okutomi, 
+        % Single-image Noise Level Estimation for Blind Denoising, 
+        % IEEE Transactions on Image Processing, Vol.22, No.12, pp.5226-5237, 2013.
+    
+        sigma = NoiseLevel(im);
+
+    
+        
+    % IMPLEMENTATION 2
+    elseif strcmp(estimateMethod, 'fastHybrid')
 
         % S. M. Yang and S. C. Tai: "Fast and reliable image-noise estimation using a hybrid approach". Journal of Electronic Imaging 19(3), pp. 033007-1–15, 2010. 
         % http://dx.doi.org/10.1117/1.3476329
@@ -12,10 +33,14 @@ function [sigma, fitparams, p, q] = denoise_estimateNoiseWrapper(im, options)
 
         valrange = 4096; % 12-bit input
         p = 0.1; % 0.1 default value
-        sigma.Noise_test = noiseest(imTest, valrange, p);
-        sigma.Noise_test_refined = refinednoiseest(imTest, valrange);
+        sigma_Noise_test = noiseest(imTest, valrange, p);
+        sigma = refinednoiseest(imTest, valrange);
+        
+        q = [];
+        fitparams = [];
 
-    % IMPLEMENTATION 2
+    % IMPLEMENTATION 3
+    elseif strcmp(estimateMethod, 'ClipPoisGaus_stdEst2D')
 
         % To estimate poisson noise, see e.g. 
         % http://stackoverflow.com/questions/18813068/estimate-poisson-noise-in-matlab
@@ -76,3 +101,11 @@ function [sigma, fitparams, p, q] = denoise_estimateNoiseWrapper(im, options)
             q = sqrt(fitparams(1));
             p = -fitparams(2)/fitparams(1);
         end
+        
+        % This method is quite slow        
+        sigma = [];
+        
+    else
+        
+        error([estimateMethod, '?, typo in your method as this is not implemented?'])
+    end

@@ -13,13 +13,15 @@ function [denoised, fileOutName] = denoise_guidedFilterWrapper(imageIn, guide, .
         disp('Denoising the stack using Guided Filter')
         disp(' from: http://research.microsoft.com/en-us/um/people/kahe/eccv10/')
         disp(['  - iter = ', num2str(NoOfIter), ', w = ', num2str(win_size), ', \epsilon = ', num2str(epsilon)])
+        disp('SLICE:')
         
         % The Original code published back in 2010
         % Guided Image Filtering, by Kaiming He, Jian Sun, and Xiaoou Tang, in ECCV 2010
         for slice = 1 : size(imageIn, 3)       
+            fprintf('%d ', slice)
             im = imageIn(:,:,slice);
             g = guide(:,:,slice);
-            for i = 1 : NoOfIter
+            for i = 1 : NoOfIter                
                 im = guided_filter(im, g, epsilon, win_size);
                 g = im;
             end        
@@ -42,10 +44,11 @@ function [denoised, fileOutName] = denoise_guidedFilterWrapper(imageIn, guide, .
         disp('Denoising the stack using Fast Guided Filter')
         disp(' from: http://research.microsoft.com/en-us/um/people/kahe/eccv10/')
         disp(['  - iter = ', num2str(NoOfIter), ', w = ', num2str(win_size), ', \epsilon = ', num2str(epsilon), ', s = ', num2str(subsampleFactor)])
-
+        disp('SLICE:')
         
         % Fast Guided Filter, by Kaiming He and Jian Sun, in arXiv 2015.
         for slice = 1 : size(imageIn, 3)       
+            fprintf('%d ', slice)
             im = imageIn(:,:,slice);
             g = guide(:,:,slice);
             for i = 1 : NoOfIter
