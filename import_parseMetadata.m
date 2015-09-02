@@ -58,7 +58,8 @@ function metadata = import_parseMetadata(data, options)
     
     % Time points 'how to retrieve from OIB?'
     metadata.main.numberOfStacks = length(data{1,1});
-    metadata.main.noOfTimePoints = metadata.main.numberOfStacks / metadata.main.stackSizeZ;
+    metadata.main.numberOfStacksPerChannel = metadata.main.numberOfStacks / metadata.main.noOfChannels;
+    metadata.main.noOfTimePoints = metadata.main.numberOfStacks / metadata.main.stackSizeZ / metadata.main.noOfChannels;
         disp('   .. no of time points derived from numberOfStacks and stackSizeZ (PT)')
 
    

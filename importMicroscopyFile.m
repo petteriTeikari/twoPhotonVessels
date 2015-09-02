@@ -1,5 +1,38 @@
 function [data, imageStack, metadata, options] = importMicroscopyFile(fileName, path, tiffPath, options)
 
+    % if no options are given
+    if nargin == 2
+                
+        tiffPath = path; % use same now              
+        
+        options.noOfCores = 2;
+        init_parallelComputing(options.noOfCores)
+        
+        % fileName = 'CP-20150616-TR70-mouse1-scan8-son2_subset_noLeakage.ome.tif';
+        % path = 'data';          
+        options.pathBigFiles = fullfile(path,'out'); % don't save all the big files to Dropbox
+        options.batchFlag = false;
+        options.denoiseOnly = false; % just denoise, and save to disk, useful for overnight pre-batch processing
+        options.denoiseLoadFromDisk = true; % if this file/timepoint/channel already denoised
+            % this collides with the resizeStacks2D, as we can now resize
+            % the stack while the loaded stack could be full-size
+        % options.vesselnessLoadFromDisk = true;  
+        options.segmentationLoadFromDisk = false;  
+        
+        % debug/development flag to speed up the development, for actual
+        % processing of files, put all to false
+        options.useOnlyFirstTimePoint = false;
+        options.useOnlySubsetOfStack = false;
+        options.resizeStacks2D = false;
+        options.resize2D_factor = 1 / 16;
+        options.skipImportBioFormats = false;
+        options.loadFromTIFF = false; % loading directly from the denoised OME-TIFF (if found)
+                
+        options.manualTimePoints = false;
+        options.tP = [1]; % manual time point definition
+        
+    end
+
     %% DEVELOPMENT ACCELERATION
 
         if options.skipImportBioFormats
@@ -113,9 +146,11 @@ function [data, imageStack, metadata, options] = importMicroscopyFile(fileName, 
         % import_displayImportedDataDebug(data) % for debug
      
         
-    %% RESHAPE        
-
+    %% RESHAPE  
+    
         [imageStack, metadata.labels] = import_cellStackToMatrix(data{1,1}, metadata, path, options);
+        
+        
         % imageStack 1x6 210764448  cell   
         % imageStack{tStack}(yRes,xRes,zStacks)        
         
@@ -194,6 +229,9 @@ function [data, imageStack, metadata, options] = importMicroscopyFile(fileName, 
             options.tP(2) = options.noOfTimePoints;
             warning(['Only ', num2str(options.noOfTimePoints), ' input time points, need to reduce the limit to that'])
         end
+        
+        disp('Imported')
+            disp([' ', num2str(length(imageStack)), ' channels, with ', num2str(length(imageStack{1})), ' time points, and ', num2str(size(imageStack{1}{1},3)), ' XYZ stacks'])
         
         disp(' ')
         disp('IMPORT DONE')
