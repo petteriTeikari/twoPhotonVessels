@@ -10,3 +10,9 @@
 [submodule "3rdParty/shrinkage-fields"]
 	path = 3rdParty/shrinkage-fields
 	url = https://github.com/uschmidt83/shrinkage-fields.git
+[submodule "3rdParty/boundedline-pkg"]
+	path = 3rdParty/boundedline-pkg
+	url = https://github.com/kakearney/boundedline-pkg.git
+[submodule "ITK/ITK-TubularGeodesics"]
+	path = ITK/ITK-TubularGeodesics
+	url = https://github.com/fethallah/ITK-TubularGeodesics.git
